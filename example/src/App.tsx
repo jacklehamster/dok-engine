@@ -1,10 +1,9 @@
 import React from 'react'
 
-import { ExampleComponent } from 'dok-lib'
-import 'dok-lib/dist/index.css'
+import 'dok-engine/dist/index.css'
 
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+  return <>Example</>;
 }
 
 export default App
