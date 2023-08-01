@@ -1,7 +1,7 @@
 {
    "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/package.json",
    "name": "dok-engine",
-   "version": "1.0.1",
+   "version": "1.0.2",
    "description": "Template for packages for dok engine",
    "author": "jacklehamster",
    "license": "MIT",
