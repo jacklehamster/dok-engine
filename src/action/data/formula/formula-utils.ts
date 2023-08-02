@@ -1,7 +1,6 @@
-import { Resolution } from "../Resolution";
 import { FORMULA_SEPARATORS, Formula } from "./Formula";
 
-export function hasFormula(resolution: Resolution): boolean {
+export function hasFormula(resolution: any): boolean {
     if (isFormula(resolution)) {
         return true;
     }
