@@ -21,13 +21,14 @@ export class CallExternalConvertor extends Convertor<CallExternalCommand, Writer
         const externalName = resolveString(action.callExternal.name);
         const argumentsArray = resolveArray(action.callExternal.arguments);
         context.accumulator.add({
-            execute(writerInventory, writerExecutor) {
-                const external = writerInventory.context.externals[writerExecutor.evaluate(externalName) ?? ""];
+            execute(writerExecutor) {
+                const { context } = writerExecutor.inventory;
+                const external = context.externals[writerExecutor.evaluate(externalName) ?? ""];
                 const args = writerExecutor.evaluate(argumentsArray) as Resolution[];
                 const argsValues = args.map(resolution => resolveAny(resolution));
                 const argsResult = new Array(argsValues.length);
-                writerInventory.context.accumulator.add({
-                    execute(_, executor) {
+                context.accumulator.add({
+                    execute(executor) {
                         executor.evaluateArray(argsValues, argsResult);
                         external(...argsResult);
                     },

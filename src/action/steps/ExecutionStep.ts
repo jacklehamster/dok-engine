@@ -5,5 +5,5 @@ export type StepId = number;
 
 export interface ExecutionStep<I extends Inventory = Inventory> {
     description?: string;
-    execute?(parameters: I, executor: Executor): void;
+    execute?(executor: Executor<I>): void;
 }

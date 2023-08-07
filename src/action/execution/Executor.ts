@@ -4,16 +4,19 @@ import { ValueOf } from "../data/resolution/ValueOf";
 import { StepId } from "../steps/ExecutionStep";
 import { StepAccumulator } from "../steps/StepAccumulator";
 
-export interface Executor {
+export interface Executor<I extends Inventory = Inventory> {
     skipNextStep(): Executor;
     jumpTo(step: StepId): Executor;
     evaluate<T>(value: ValueOf<T>): T | null;
     evaluateArray<T>(values: ValueOf<T>[], result: (T|null)[]): void;
     ifCondition(bool: ValueOf<boolean>): Executor;
     reportError(error: ConvertError): void;
+    get inventory(): I;
 }
 
 class NoopExecutor implements Executor {
+    inventory: Inventory = {};
+
     static INSTANCE: NoopExecutor = new NoopExecutor();
 
     jumpTo(): Executor {
@@ -88,7 +91,7 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
         const executionStep = this.accumulator.getStep(step);
         if (executionStep) {
             console.log("Executing", executionStep.description);
-            executionStep.execute?.(this.inventory, this);
+            executionStep.execute?.(this);
             if (this.errors.length) {
                 throw new Error("Errors:" + JSON.stringify(this.errors));
             }

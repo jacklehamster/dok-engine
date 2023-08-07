@@ -1,6 +1,5 @@
 import { Action } from "../Action";
 import { Context, Convertor } from "../../convertor/Convertor";
-import { Inventory } from "../../data/inventory/Inventory";
 import { IfAction } from "./IfAction";
 import { resolveBoolean } from "../../data/resolution/BooleanResolution";
 import { Executor } from "../../execution/Executor";
@@ -17,14 +16,14 @@ export class IfConvertor extends Convertor {
         if (!elseProp) {
             //  Skip next step depending on condition
             accumulator.add({
-                execute(_: Inventory, executor: Executor) {
+                execute(executor: Executor) {
                     const bool = executor.evaluate(condition) ?? false;
                     executor.ifCondition(bool).skipNextStep();
                 },
             });
             //  Next step jumps over "then" actions
             accumulator.add({
-                execute(_, executor: Executor) {
+                execute(executor: Executor) {
                     executor.jumpTo(endAnchor);
                 },
             });
@@ -34,14 +33,14 @@ export class IfConvertor extends Convertor {
             //  If then else action
             //  Skip next step depending on condition
             accumulator.add({
-                execute(_: Inventory, executor: Executor) {
+                execute(executor: Executor) {
                     const bool = executor.evaluate(condition) ?? false;
                     executor.ifCondition(bool).skipNextStep();
                 },
             });
             //  Next step jumps to "else" anchor
             accumulator.add({
-                execute(_, executor: Executor) {
+                execute(executor: Executor) {
                     executor.jumpTo(elseAnchor);
                 },
             });
@@ -49,7 +48,7 @@ export class IfConvertor extends Convertor {
             asArray(thenProp).forEach(action => subConvertor.convert(action, context));
             //  Jump to "end" anchor
             accumulator.add({
-                execute(_, executor: Executor) {
+                execute(executor: Executor) {
                     executor.jumpTo(endAnchor);
                 },
             });

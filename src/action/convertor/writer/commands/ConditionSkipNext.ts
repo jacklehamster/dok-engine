@@ -1,7 +1,6 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
 import { isFormula } from "../../../data/formula/formula-utils";
-import { Inventory } from "../../../data/inventory/Inventory";
 import { resolveBoolean } from "../../../data/resolution/BooleanResolution";
 import { resolveAny } from "../../../data/resolution/Resolution";
 import { StringResolution } from "../../../data/resolution/StringResolution";
@@ -20,12 +19,13 @@ export class SkipNextConvertor extends Convertor<SkipNextCommand, WriterInventor
     convert({skipNextOnCondition}: SkipNextCommand, writerContext: WriterContext): void {
         const conditionField = resolveAny(skipNextOnCondition);
         writerContext.accumulator.add({
-            execute(writerInventory, writerExecutor) {
+            execute(writerExecutor) {
+                const { context } = writerExecutor.inventory;
                 const conditionFormula = writerExecutor.evaluate(conditionField);
                 const condition = resolveBoolean(conditionFormula);
                 //  Skip next step depending on condition
-                writerInventory.context.accumulator.add({
-                    execute(_: Inventory, executor: Executor) {
+                context.accumulator.add({
+                    execute(executor: Executor) {
                         const bool = executor.evaluate(condition) ?? false;
                         executor.ifCondition(bool).skipNextStep();
                     },

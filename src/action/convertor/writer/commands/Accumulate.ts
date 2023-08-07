@@ -17,7 +17,7 @@ export class AccumulateConvertor extends Convertor<AccumulateCommand, WriterInve
         const actionsResolution = resolveArray(action.accumulate);
         context.accumulator.add({
             description: `Accumulate steps using the actions in field "${action.accumulate}".`,
-            execute(writerInventory, writerExecutor) {
+            execute(writerExecutor) {
                 const actions = writerExecutor.evaluate(actionsResolution);
                 if (!Array.isArray(actions)) {
                     writerExecutor.reportError({
@@ -28,7 +28,8 @@ export class AccumulateConvertor extends Convertor<AccumulateCommand, WriterInve
                     })
                     return;
                 }
-                actions.forEach(action => writerInventory.context.subConvertor.convert(action, writerInventory.context));
+                const { context } = writerExecutor.inventory;
+                actions.forEach(action => context.subConvertor.convert(action, context));
             },
         });
     }
