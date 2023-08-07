@@ -5,4 +5,5 @@ import { Context } from "../Convertor";
 export interface WriterInventory extends Inventory {
     action:  Action;
     context: Context;
+    labels: Record<string, number>;
 }

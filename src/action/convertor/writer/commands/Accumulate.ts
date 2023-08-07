@@ -1,11 +1,11 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
-import { isFormula } from "../../../data/formula/formula-utils";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
 import { stringOrNull } from "../../../utils/type-utils";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
+import { verifyType } from "../validation/verifyType";
 import { WriterCommand } from "./WriterCommand";
 
 export interface AccumulateCommand extends Action {
@@ -39,13 +39,6 @@ export class AccumulateConvertor extends Convertor<AccumulateCommand, WriterInve
     }
 
     validationErrors(action: AccumulateCommand, errors: ConvertError[]): void {
-        if (!Array.isArray(action.accumulate) && !isFormula(action.accumulate)) {
-            errors.push({
-                code: "WRONG_TYPE",
-                field: "accumulate",
-                wrongType: typeof(action.accumulate),
-                neededType: "array|formula",
-            });
-        }
+        verifyType(action, "accumulate", ["array", "formula"], errors);
     }
 }

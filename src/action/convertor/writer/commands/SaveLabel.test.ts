@@ -5,17 +5,17 @@ import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
-import { AccumulateCommand, AccumulateConvertor } from "./Accumulate";
+import { SaveLabelCommand, SaveLabelConvertor } from "./SaveLabel";
 
-describe('test accumulate', () => {
-    let convertor: AccumulateConvertor;
+describe('test SaveLabel', () => {
+    let convertor: SaveLabelConvertor;
     let writerContext: WriterContext;
     let convert = jest.fn();
     let actionContext: Context;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        convertor = new AccumulateConvertor();
+        convertor = new SaveLabelConvertor();
         writerContext = new WriterContext();
         actionContext = {
             accumulator: new StepAccumulator(),
@@ -25,56 +25,76 @@ describe('test accumulate', () => {
         actionContext.subConvertor.convert = convert;
     });
 
-    it('accumulates actions in subconvertor', () => {
+    it('save label', () => {
         convertor.convert({
-            accumulate: [{ name: "testWriterAction" }, { name: "testWriterAction2"}],
+            label: "testLabel",
         }, writerContext);
 
         const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action: {
-                actions: [{ name: "testAction" }, { name: "testAction2" }]
             },
             context: actionContext,
             labels: {},
         } });
         executor.executeUtilStop();
 
-        expect(convert).toBeCalledWith({name: "testWriterAction"}, actionContext);
-        expect(convert).toBeCalledWith({name: "testWriterAction2"}, actionContext);
+        expect(executor.inventory.labels).toEqual({ testLabel: 0 });
     });
 
-    it('accumulate actions using formula', () => {
+    it('has error on duplicate label', () => {
         convertor.convert({
-            accumulate: "~{action.actions}",
+            label: "testLabel",
+        }, writerContext);
+        convertor.convert({
+            label: "testLabel",
         }, writerContext);
 
         const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action: {
-                actions: [{ name: "testAction" }, { name: "testAction2" }]
             },
             context: actionContext,
             labels: {},
         } });
         executor.executeUtilStop();
+        expect(executor.errors).toEqual([{
+            code: "DUPLICATE_LABEL",
+            label: "testLabel",
+        }]);
+    });
 
-        expect(convert).toBeCalledWith({name: "testAction"}, actionContext);
-        expect(convert).toBeCalledWith({name: "testAction2"}, actionContext);
+
+    it('has error on invalid formula', () => {
+        convertor.convert({
+            label: "~{123}",
+        }, writerContext);
+
+        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+            action: {
+            },
+            context: actionContext,
+            labels: {},
+        } });
+        executor.executeUtilStop();
+        expect(executor.errors).toEqual([{
+            code: "INVALID_FORMULA",
+            formula: "~{123}",
+        }]);
     });
 
     it('validates on proper WriterCommand', () => {
         expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeFalsy();
-        expect(convertor.validate({ accumulate: "~{action.actions}" })).toBeTruthy();
+        expect(convertor.validate({ label: "test" })).toBeTruthy();
     });
 
-    it('has validation errors when accumulate is an invalid type', () => {
+    it('has validation errors when field is an invalid type', () => {
         const errors: ConvertError[] = [];
-        const command = { accumulate: 123 };
-        convertor.validationErrors(command as unknown as AccumulateCommand, errors);
+        const command = { label: 123 };
+        convertor.validationErrors(command as unknown as SaveLabelCommand, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
-            field: "accumulate",
+            field: "label",
             wrongType: "number",
-            neededType: "array|formula",
+            neededType: "string",
             object: command,
         }]);
     });

@@ -1,12 +1,12 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
-import { isFormula } from "../../../data/formula/formula-utils";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
+import { verifyType } from "../validation/verifyType";
 import { WriterCommand } from "./WriterCommand";
 
 export interface CallExternalCommand extends Action {
@@ -42,21 +42,7 @@ export class CallExternalConvertor extends Convertor<CallExternalCommand, Writer
     }
 
     validationErrors(action: CallExternalCommand, errors: ConvertError[]): void {
-        if (typeof(action.callExternal?.name) !== "string") {
-            errors.push({
-                code: "WRONG_TYPE",
-                field: "callExternal.name",
-                wrongType: typeof(action.callExternal?.name),
-                neededType: "string",
-            });
-        }
-        if (!isFormula(action.callExternal?.arguments) && !Array.isArray(action.callExternal?.arguments)) {
-            errors.push({
-                code: "WRONG_TYPE",
-                field: "callExternal.arguments",
-                wrongType: typeof(action.callExternal?.arguments),
-                neededType: "array|formula",
-            });
-        }
+        verifyType(action.callExternal, "name", ["string"], errors);
+        verifyType(action.callExternal, "arguments", ["array", "formula"], errors);
     }
 }

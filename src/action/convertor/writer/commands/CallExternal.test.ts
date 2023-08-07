@@ -38,6 +38,7 @@ describe('test callExternal', () => {
                 log: [1, 2, "~{x}"],
             },
             context: actionContext,
+            labels: {},
         } });
         executor.executeUtilStop();
 
@@ -56,20 +57,23 @@ describe('test callExternal', () => {
 
     it('has validation errors when callExternal is invalid', () => {
         const errors: ConvertError[] = [];
-        convertor.validationErrors({ callExternal: {
+        const command = { callExternal: {
             name: 123,
             arguments: 123,
-        } } as unknown as CallExternalCommand, errors);
+        } };
+        convertor.validationErrors(command as unknown as CallExternalCommand, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
-            field: "callExternal.name",
+            field: "name",
             wrongType: "number",
             neededType: "string",
+            object: command.callExternal,
         }, {
             code: "WRONG_TYPE",
-            field: "callExternal.arguments",
+            field: "arguments",
             wrongType: "number",
             neededType: "array|formula",
+            object: command.callExternal,
         }]);
     });
 });

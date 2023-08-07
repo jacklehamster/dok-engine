@@ -7,9 +7,6 @@ import { EMPTY_VALUEOF, ValueOf } from "./ValueOf";
 export type StringResolution = Formula | string;
 
 export function resolveString(resolution: StringResolution): ValueOf<string> {
-    if (typeof(resolution) === "string") {
-        return resolution;
-    }
     if (isFormula(resolution)) {
         const evaluator = getFormulaEvaluator(resolution);
         return {
@@ -18,6 +15,9 @@ export function resolveString(resolution: StringResolution): ValueOf<string> {
                 return typeof(value) === "string" ? value : null;
             },
         };
+    }
+    if (typeof(resolution) === "string") {
+        return resolution;
     }
     return EMPTY_VALUEOF;
 }

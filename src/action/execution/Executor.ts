@@ -93,7 +93,7 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
             console.log("Executing", executionStep.description);
             executionStep.execute?.(this);
             if (this.errors.length) {
-                throw new Error("Errors:" + JSON.stringify(this.errors));
+                return false;
             }
             return true;
         }

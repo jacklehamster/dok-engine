@@ -43,6 +43,7 @@ export class CodedConvertor extends Convertor {
             inventory: {
                 action,
                 context,
+                labels: {},
             },
             accumulator: writerContext.accumulator,
         });

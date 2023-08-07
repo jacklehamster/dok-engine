@@ -1,14 +1,13 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
-import { isFormula } from "../../../data/formula/formula-utils";
 import { resolveBoolean } from "../../../data/resolution/BooleanResolution";
 import { resolveAny } from "../../../data/resolution/Resolution";
 import { StringResolution } from "../../../data/resolution/StringResolution";
 import { Executor } from "../../../execution/Executor";
-import { typeIsAnyOf } from "../../../utils/type-utils";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
+import { verifyType } from "../validation/verifyType";
 import { WriterCommand } from "./WriterCommand";
 
 export interface SkipNextCommand extends Action {
@@ -39,13 +38,6 @@ export class SkipNextConvertor extends Convertor<SkipNextCommand, WriterInventor
     }
 
     validationErrors(command: SkipNextCommand, errors: ConvertError[]): void {
-        if (!typeIsAnyOf(command.skipNextOnCondition, "boolean") && !isFormula(command.skipNextOnCondition)) {
-            errors.push({
-                code: "WRONG_TYPE",
-                field: "skipNextOnCondition",
-                wrongType: typeof(command.skipNextOnCondition),
-                neededType: "boolean|Formula",
-            });
-        }
+        verifyType(command, "skipNextOnCondition", ["boolean", "formula"], errors);
     }
 }

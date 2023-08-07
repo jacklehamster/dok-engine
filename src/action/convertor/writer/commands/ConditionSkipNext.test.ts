@@ -31,6 +31,7 @@ describe('test conditionSkipNext', () => {
         const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action,
             context: actionContext,
+            labels: {},
         } });
         executor.executeUtilStop();
 
@@ -88,12 +89,14 @@ describe('test conditionSkipNext', () => {
 
     it('has validation errors when field type is invalid', () => {
         const errors: ConvertError[] = [];
-        convertor.validationErrors({ skipNextOnCondition: {} } as unknown as SkipNextCommand, errors);
+        const command = { skipNextOnCondition: {} };
+        convertor.validationErrors(command as unknown as SkipNextCommand, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
             field: "skipNextOnCondition",
             wrongType: "object",
-            neededType: "boolean|Formula",
+            neededType: "boolean|formula",
+            object: command,
         }]);
     });
 });
