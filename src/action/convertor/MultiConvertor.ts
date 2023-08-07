@@ -1,24 +1,32 @@
 import { Action } from "../actions/Action";
-import { StepAccumulator } from "../steps/StepAccumulator";
-import { Convertor } from "./Convertor";
-import { Validator } from "./validators/Validator";
+import { ConvertError } from "../actions/error/errors";
+import { Inventory } from "../data/inventory/Inventory";
+import { Context, Convertor } from "./Convertor";
 
-export interface ConversionIntercept {
-    validator: Validator;
-    convertor: Convertor;
-}
+export class MultiConvertor<A extends Action = Action, I extends Inventory = Inventory, C extends Context = Context> extends Convertor<A, I, C> {
+    convertors: Convertor<A>[];
 
-
-export class MultiConvertor implements Convertor {
-    intercepts: ConversionIntercept[] = [];
-
-    constructor(intercepts: ConversionIntercept[]) {
-        this.intercepts = intercepts;
+    constructor(...convertors: Convertor<A>[]) {
+        super();
+        this.convertors = convertors;
     }
-    convert(action: Action, accumulator: StepAccumulator, subconvertor: Convertor): void {
-        for (let intercept of this.intercepts) {
-            if (intercept.validator.validate(action)) {
-                intercept.convertor.convert(action, accumulator, subconvertor);
+
+    convert(action: A, context: C): void {
+        for (let convertor of this.convertors) {
+            if (convertor.validate(action)) {
+                convertor.convert(action, context);
+            }
+        }
+    }
+
+    validate(): boolean {
+        return true;
+    }
+
+    validationErrors(action: A, errors: ConvertError[]): void {
+        for (let convertor of this.convertors) {
+            if (convertor.validate(action)) {
+                convertor.validationErrors(action, errors);
             }
         }
     }

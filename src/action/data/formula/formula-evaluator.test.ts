@@ -4,13 +4,13 @@ describe('calculateEvaluator', () => {
     it('should calculate evaluator', () => {
         const formula = "~{3 + 10}";
         const evaluator = getFormulaEvaluator(formula);
-        expect(calculateEvaluator(evaluator, undefined, formula, 0)).toEqual(13);
+        expect(calculateEvaluator(evaluator, undefined, formula)).toEqual(13);
     });
 
     it('should calculate evaluator with scope', () => {
         const formula = "~{3 + x}";
         const evaluator = getFormulaEvaluator(formula);
-        expect(calculateEvaluator(evaluator, {x: 6}, formula, 0)).toEqual(9);
+        expect(calculateEvaluator(evaluator, {x: 6}, formula)).toEqual(9);
     });
 });
 

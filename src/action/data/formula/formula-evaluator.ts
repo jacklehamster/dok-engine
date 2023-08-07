@@ -1,16 +1,16 @@
 import * as math from "mathjs";
 import { FORMULA_SEPARATORS, Formula } from "./Formula";
 import { getInnerFormulas, isFormula, isSimpleInnerFormula } from "./formula-utils";
-import { Parameters } from "../parameters/Parameters";
+import { Inventory } from "../inventory/Inventory";
 
-export function calculateEvaluator<T>(evaluator: math.EvalFunction, parameters: Parameters = {}, formula: Formula, defaultValue: T): T {
+export function calculateEvaluator<T>(evaluator: math.EvalFunction, parameters: Inventory = {}, formula: Formula): T | null {
     const scope = parameters;
     try {
-        return evaluator.evaluate(scope ?? {}) ?? defaultValue;
+        return evaluator.evaluate(scope ?? {}) ?? null;
     } catch (e) {
         console.error("Error: " + e + " on formula: " + formula + ", scope: ", JSON.parse(JSON.stringify(scope)));
     }
-    return defaultValue;
+    return null;
 }
 
 function getEvaluator(formula: string): math.EvalFunction {

@@ -13,7 +13,7 @@
                 "--runTestsByPath",
                 "${jest.testFile}"
             ],
-            "cwd": "/Users/vincent/dok-actions",
+            "cwd": "/Users/vincent/dok-engine",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "disableOptimisticBPs": true,

@@ -43,6 +43,7 @@ export function getInnerFormulas(formula: Formula): FormulaChunk[] {
     }).filter(({ textSuffix, formula}) => textSuffix.length || formula.length);
 }
 
+// eslint-disable-next-line no-control-regex
 const IDENTIFIER_REGEX = /^([^\x00-\x7F]|[A-Za-z_])([^\x00-\x7F]|\w)+$/;
 
 export function isSimpleInnerFormula(innerFormula: string) {
