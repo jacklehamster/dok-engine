@@ -1,3 +1,4 @@
+import { Convertor } from "../Convertor";
 import { MultiConvertor } from "../MultiConvertor";
 import { WriterContext } from "./WriterContext";
 import { WriterInventory } from "./WriterInventory";
@@ -17,4 +18,8 @@ export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterIn
             new JumpToLabelConvertor(),
         );
     }    
+}
+
+
+export abstract class WriterBaseConvertor extends Convertor<WriterCommand, WriterInventory, WriterContext> {
 }
