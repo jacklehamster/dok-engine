@@ -1,4 +1,3 @@
-import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
@@ -6,10 +5,12 @@ import { StringResolution, resolveString } from "../../../data/resolution/String
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
+import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
+import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 
-export interface CallExternalCommand extends Action {
+export interface CallExternalCommand extends WriterBaseCommand {
     callExternal: {
         name: StringResolution;
         arguments: ArrayResolution,
@@ -17,11 +18,14 @@ export interface CallExternalCommand extends Action {
 }
 
 export class CallExternalConvertor extends Convertor<CallExternalCommand, WriterInventory, WriterContext> {
-    convert(action: CallExternalCommand, context: WriterContext): void {
-        const externalName = resolveString(action.callExternal.name);
-        const argumentsArray = resolveArray(action.callExternal.arguments);
+    convert(command: CallExternalCommand, context: WriterContext): void {
+        const externalName = resolveString(command.callExternal.name);
+        const argumentsArray = resolveArray(command.callExternal.arguments);
         context.accumulator.add({
             execute(writerExecutor) {
+                if (!shouldConvert(command, writerExecutor)) {
+                    return;
+                }
                 const { context } = writerExecutor.inventory;
                 const external = context.externals[writerExecutor.evaluate(externalName) ?? ""];
                 const args = writerExecutor.evaluate(argumentsArray) as Resolution[];

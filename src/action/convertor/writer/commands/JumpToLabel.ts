@@ -1,27 +1,30 @@
-import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
 import { resolveString } from "../../../data/resolution/StringResolution";
-import { Executor } from "../../../execution/Executor";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
+import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
+import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 
-export interface JumpToLabelCommand extends Action {
+export interface JumpToLabelCommand extends WriterBaseCommand {
     jumpTo: string;
 }
 
 export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterInventory, WriterContext> {
-    convert({jumpTo}: JumpToLabelCommand, writerContext: WriterContext): void {
-        const jumpToLabel = resolveString(jumpTo);
+    convert(command: JumpToLabelCommand, writerContext: WriterContext): void {
+        const jumpToLabel = resolveString(command.jumpTo);
         writerContext.accumulator.add({
             execute(writerExecutor) {
+                if (!shouldConvert(command, writerExecutor)) {
+                    return;
+                }
                 const { context, labels } = writerExecutor.inventory;
                 const labelValue = writerExecutor.evaluate(jumpToLabel);
                 if (labelValue) {
                     context.accumulator.add({
-                        execute(executor: Executor) {
+                        execute(executor) {
                             if (labels[labelValue] !== undefined) {
                                 executor.jumpTo(labels[labelValue]);
                             } else {
@@ -35,7 +38,7 @@ export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterIn
                 } else {
                     writerExecutor.reportError({
                         code: "INVALID_FORMULA",
-                        formula: jumpTo,
+                        formula: command.jumpTo,
                     });
                 }
             },
