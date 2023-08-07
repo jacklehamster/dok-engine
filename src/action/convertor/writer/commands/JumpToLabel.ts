@@ -1,24 +1,22 @@
+import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
 import { resolveString } from "../../../data/resolution/StringResolution";
 import { Executor } from "../../../execution/Executor";
+import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterBaseConvertor } from "../WriterConvertor";
+import { WriterInventory } from "../WriterInventory";
 import { verifyType } from "../validation/verifyType";
-import { WriterBaseCommand, WriterCommand } from "./WriterCommand";
+import { WriterCommand } from "./WriterCommand";
 
-export interface JumpToLabelCommand extends WriterBaseCommand {
+export interface JumpToLabelCommand extends Action {
     jumpTo: string;
 }
 
-export class JumpToLabelConvertor extends WriterBaseConvertor {
-    convert(command: JumpToLabelCommand, writerContext: WriterContext): void {
-        const jumpToLabel = resolveString(command.jumpTo);
+export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterInventory, WriterContext> {
+    convert({jumpTo}: JumpToLabelCommand, writerContext: WriterContext): void {
+        const jumpToLabel = resolveString(jumpTo);
         writerContext.accumulator.add({
             execute(writerExecutor) {
-                if (!writerContext.shouldConvert(command, writerExecutor)) {
-                    return;
-                }
-
                 const { context, labels } = writerExecutor.inventory;
                 const labelValue = writerExecutor.evaluate(jumpToLabel);
                 if (labelValue) {
@@ -37,7 +35,7 @@ export class JumpToLabelConvertor extends WriterBaseConvertor {
                 } else {
                     writerExecutor.reportError({
                         code: "INVALID_FORMULA",
-                        formula: command.jumpTo,
+                        formula: jumpTo,
                     });
                 }
             },

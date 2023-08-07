@@ -4,10 +4,4 @@ import { SkipNextCommand } from "./ConditionSkipNext";
 import { JumpToLabelCommand } from "./JumpToLabel";
 import { SaveLabelCommand } from "./SaveLabel";
 
-export type WriterCommand = 
-    AccumulateCommand
-    |CallExternalCommand
-    |SkipNextCommand
-    |SaveLabelCommand
-    |JumpToLabelCommand
-;
+export type WriterCommand = AccumulateCommand|CallExternalCommand|SkipNextCommand|SaveLabelCommand|JumpToLabelCommand;

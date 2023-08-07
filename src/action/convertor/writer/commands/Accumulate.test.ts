@@ -1,4 +1,3 @@
-import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
 import { ExecutorBase } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
@@ -26,59 +25,40 @@ describe('test accumulate', () => {
         actionContext.subConvertor.convert = convert;
     });
 
-    function verifyActionsConverted(command: AccumulateCommand, action: Action, actionsExpected: Action[], expectSubConversion: boolean) {
-        expect(actionsExpected.length).not.toBe(0);
-
-        convertor.convert(command, writerContext);
+    it('accumulates actions in subconvertor', () => {
+        convertor.convert({
+            accumulate: [{ name: "testWriterAction" }, { name: "testWriterAction2"}],
+        }, writerContext);
 
         const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
-            action,
+            action: {
+                actions: [{ name: "testAction" }, { name: "testAction2" }]
+            },
             context: actionContext,
             labels: {},
         } });
         executor.executeUtilStop();
 
-        for (let i = 0; i < actionsExpected.length; i++) {
-            if (expectSubConversion) {
-                expect(convert).toBeCalledWith(actionsExpected[i], actionContext);                
-            } else {
-                expect(convert).not.toBeCalledWith(actionsExpected[i], actionContext);                
-            }
-        }
-    }
-
-    it('accumulates actions in subconvertor', () => {
-        verifyActionsConverted({
-            accumulate: [{ name: "testWriterAction" }, { name: "testWriterAction2"}],            
-        }, {
-            actions: [{ name: "testAction" }, { name: "testAction2" }]
-        }, [
-            {name: "testWriterAction"},
-            {name: "testWriterAction2"},
-        ], true);
+        expect(convert).toBeCalledWith({name: "testWriterAction"}, actionContext);
+        expect(convert).toBeCalledWith({name: "testWriterAction2"}, actionContext);
     });
 
     it('accumulate actions using formula', () => {
-        verifyActionsConverted({
-            accumulate: "~{action.actions}",            
-        }, {
-            actions: [{ name: "testAction" }, { name: "testAction2" }]
-        }, [
-            {name: "testAction"},
-            {name: "testAction2"},
-        ], true);
-    });
+        convertor.convert({
+            accumulate: "~{action.actions}",
+        }, writerContext);
 
-    it('should not accumulate if condition is false', () => {
-        verifyActionsConverted({
-            condition: "~{false}",
-            accumulate: "~{action.actions}",            
-        }, {
-            actions: [{ name: "testAction" }, { name: "testAction2" }]
-        }, [
-            {name: "testAction"},
-            {name: "testAction2"},
-        ], false);
+        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+            action: {
+                actions: [{ name: "testAction" }, { name: "testAction2" }]
+            },
+            context: actionContext,
+            labels: {},
+        } });
+        executor.executeUtilStop();
+
+        expect(convert).toBeCalledWith({name: "testAction"}, actionContext);
+        expect(convert).toBeCalledWith({name: "testAction2"}, actionContext);
     });
 
     it('validates on proper WriterCommand', () => {

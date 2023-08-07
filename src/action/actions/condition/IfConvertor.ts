@@ -6,24 +6,21 @@ import { Executor } from "../../execution/Executor";
 import { ConvertError } from "../error/errors";
 import { asArray } from "../../utils/array-utils";
 
-
-
 export class IfConvertor extends Convertor {
     convert(action: IfAction, context: Context): void {
         const { accumulator, subConvertor } = context;
         const { if: ifProperty, then: thenProp, else: elseProp } = action;
         const condition = resolveBoolean(ifProperty);
 
-        //  Skip next step depending on condition
-        accumulator.add({
-            execute(executor: Executor) {
-                const bool = executor.evaluate(condition) ?? false;
-                executor.ifCondition(bool).skipNextStep();
-            },
-        });
-
         //  If then action
         if (!elseProp) {
+            //  Skip next step depending on condition
+            accumulator.add({
+                execute(executor: Executor) {
+                    const bool = executor.evaluate(condition) ?? false;
+                    executor.ifCondition(bool).skipNextStep();
+                },
+            });
             //  Next step jumps over "then" actions
             accumulator.add({
                 execute(executor: Executor) {
@@ -34,6 +31,13 @@ export class IfConvertor extends Convertor {
             asArray(thenProp).forEach(action => subConvertor.convert(action, context));
         } else {
             //  If then else action
+            //  Skip next step depending on condition
+            accumulator.add({
+                execute(executor: Executor) {
+                    const bool = executor.evaluate(condition) ?? false;
+                    executor.ifCondition(bool).skipNextStep();
+                },
+            });
             //  Next step jumps to "else" anchor
             accumulator.add({
                 execute(executor: Executor) {

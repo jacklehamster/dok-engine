@@ -1,26 +1,24 @@
+import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../actions/error/errors";
 import { resolveBoolean } from "../../../data/resolution/BooleanResolution";
 import { resolveAny } from "../../../data/resolution/Resolution";
 import { StringResolution } from "../../../data/resolution/StringResolution";
 import { Executor } from "../../../execution/Executor";
+import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterBaseConvertor } from "../WriterConvertor";
+import { WriterInventory } from "../WriterInventory";
 import { verifyType } from "../validation/verifyType";
-import { WriterBaseCommand, WriterCommand } from "./WriterCommand";
+import { WriterCommand } from "./WriterCommand";
 
-export interface SkipNextCommand extends WriterBaseCommand {
+export interface SkipNextCommand extends Action {
     skipNextOnCondition: StringResolution,
 }
 
-export class SkipNextConvertor extends WriterBaseConvertor {
-    convert(command: SkipNextCommand, writerContext: WriterContext): void {
-        const conditionField = resolveAny(command.skipNextOnCondition);
+export class SkipNextConvertor extends Convertor<SkipNextCommand, WriterInventory, WriterContext> {
+    convert({skipNextOnCondition}: SkipNextCommand, writerContext: WriterContext): void {
+        const conditionField = resolveAny(skipNextOnCondition);
         writerContext.accumulator.add({
             execute(writerExecutor) {
-                if (!writerContext.shouldConvert(command, writerExecutor)) {
-                    return;
-                }
-
                 const { context } = writerExecutor.inventory;
                 const conditionFormula = writerExecutor.evaluate(conditionField);
                 const condition = resolveBoolean(conditionFormula);
