@@ -12,7 +12,7 @@ export function resolveString(resolution: StringResolution): ValueOf<string> {
         return {
             valueOf(parameters?: Inventory): string | null {
                 const value = evaluator.evaluate(parameters);
-                return typeof(value) === "string" ? value : null;
+                return typeof(value) === "string" ? value : `${value}`;
             },
         };
     }

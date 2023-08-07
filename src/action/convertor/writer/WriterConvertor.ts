@@ -4,6 +4,8 @@ import { WriterInventory } from "./WriterInventory";
 import { AccumulateConvertor } from "./commands/Accumulate";
 import { CallExternalConvertor } from "./commands/CallExternal";
 import { SkipNextConvertor } from "./commands/ConditionSkipNext";
+import { DebugConversionConvertor } from "./commands/DebugConversionCommand";
+import { InventorySetConvertor } from "./commands/InventorySet";
 import { JumpToLabelConvertor } from "./commands/JumpToLabel";
 import { SaveLabelConvertor } from "./commands/SaveLabel";
 import { WriterCommand } from "./commands/WriterCommand";
@@ -15,6 +17,8 @@ export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterIn
             new SkipNextConvertor(),
             new SaveLabelConvertor(),
             new JumpToLabelConvertor(),
+            new DebugConversionConvertor(),
+            new InventorySetConvertor(),
         );
     }    
 }

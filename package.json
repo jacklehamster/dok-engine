@@ -81,7 +81,7 @@
    ],
    "homepage": "https://github.com/jacklehamster/dok-engine#readme",
    "dependencies": {
-      "mathjs": "^11.8.0",
+      "mathjs": "^11.9.1",
       "uuid": "^9.0.0"
    }
 }

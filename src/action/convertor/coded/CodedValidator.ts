@@ -1,4 +1,4 @@
-import { ConvertError } from "../../actions/error/errors";
+import { ConvertError } from "../../error/errors";
 
 type Type = "array"|"string";
 

@@ -1,4 +1,4 @@
-import { ConvertError } from "../../../actions/error/errors";
+import { ConvertError } from "../../../error/errors";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
@@ -22,6 +22,7 @@ export class CallExternalConvertor extends Convertor<CallExternalCommand, Writer
         const externalName = resolveString(command.callExternal.name);
         const argumentsArray = resolveArray(command.callExternal.arguments);
         writerContext.accumulator.add({
+            description: `Convert: call external: ${externalName}(${command.callExternal.arguments})`,
             execute(writerExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
@@ -32,6 +33,7 @@ export class CallExternalConvertor extends Convertor<CallExternalCommand, Writer
                 const argsValues = args.map(resolution => resolveAny(resolution));
                 const argsResult = new Array(argsValues.length);
                 context.accumulator.add({
+                    description: `Execute: ${externalName}(${args.join(",")})`,
                     execute(executor) {
                         executor.evaluateArray(argsValues, argsResult);
                         external(...argsResult);

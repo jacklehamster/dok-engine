@@ -1,5 +1,5 @@
 import { Action } from "../../../actions/Action";
-import { ConvertError } from "../../../actions/error/errors";
+import { ConvertError } from "../../../error/errors";
 import { ExecutorBase } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";

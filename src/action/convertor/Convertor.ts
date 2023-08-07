@@ -1,5 +1,5 @@
 import { Action } from "../actions/Action";
-import { ConvertError } from "../actions/error/errors";
+import { ConvertError } from "../error/errors";
 import { Inventory } from "../data/inventory/Inventory";
 import { Externals } from "../execution/externals/Externals";
 import { StepAccumulator } from "../steps/StepAccumulator";
@@ -12,6 +12,8 @@ export interface Context<A extends Action = Action, I extends Inventory = Invent
 
 export abstract class Convertor<A extends Action = Action, I extends Inventory = Inventory, C extends Context<A, I> = Context> {
     abstract validate(action: Action): boolean;
+
+    priority: number = 0;
 
     get name() {
         return this.constructor.name;

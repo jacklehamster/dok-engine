@@ -1,4 +1,4 @@
-import { ConvertError } from "../../../actions/error/errors";
+import { ConvertError } from "../../../error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
@@ -13,9 +13,12 @@ export interface SaveLabelCommand extends WriterBaseCommand {
 }
 
 export class SaveLabelConvertor extends Convertor<SaveLabelCommand, WriterInventory, WriterContext> {
+    priority: number = 1;
+
     convert(command: SaveLabelCommand, writerContext: WriterContext): void {
         const labelResolution = resolveString(command.label);
         writerContext.accumulator.add({
+            description: `Convert: Save label ${command.label}`,
             execute(writerExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;

@@ -1,32 +1,33 @@
-import { Context } from "../../convertor/Convertor";
+import { Context, Convertor } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { ExecutorBase } from "../../execution/Executor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
-import { IfConvertor } from "./IfConvertor";
+import { IF_CONVERTOR } from "./IfConvertor";
 
 describe('IfConvertor', () => {
     let context: Context;
     let log = jest.fn();
     let executor: ExecutorBase;
 
-    let convertor: IfConvertor;
+    let convertor: Convertor;
 
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
             subConvertor: new MultiConvertor(
                 LOG_CONVERTOR,
+                IF_CONVERTOR,
             ),
             accumulator: new StepAccumulator(),
             externals: { log },
         };
         executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {} });
-        convertor = new IfConvertor();
+        convertor = IF_CONVERTOR;
     });
 
     it('Ignore action without if', () => {
-        expect(new IfConvertor().validate({})).toBeFalsy();
+        expect(convertor.validate({})).toBeFalsy();
     });
 
     it('convert then if true', () => {
@@ -51,6 +52,49 @@ describe('IfConvertor', () => {
             },
             else: {
                 log: [456],
+            },
+        }, context);
+        executor.executeUtilStop();
+        expect(log).toBeCalledWith(456);
+    });
+
+    it('convert then if true. else missing', () => {
+        convertor.convert({
+            if: true,
+            then: {
+                log: [123],
+            },
+        }, context);
+        executor.executeUtilStop();
+        expect(log).toBeCalledWith(123);
+    });
+
+    it('convert then if true with nesting', () => {
+        convertor.convert({
+            if: true,
+            then: {
+                if: true,
+                then: {
+                    log: [123],
+                },
+            },
+        }, context);
+        executor.executeUtilStop();
+        expect(log).toBeCalledWith(123);
+    });
+
+    it('convert else with nesting', () => {
+        convertor.convert({
+            if: false,
+            then: {
+            },
+            else: {
+                if: false,
+                then: {
+
+                }, else: {
+                    log: [456],
+                }
             },
         }, context);
         executor.executeUtilStop();

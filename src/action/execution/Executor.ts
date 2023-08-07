@@ -1,4 +1,4 @@
-import { ConvertError } from "../actions/error/errors";
+import { ConvertError } from "../error/errors";
 import { Inventory } from "../data/inventory/Inventory";
 import { ValueOf } from "../data/resolution/ValueOf";
 import { StepId } from "../steps/ExecutionStep";
@@ -48,11 +48,13 @@ interface Props<I extends Inventory = Inventory> {
     inventory: I;
 }
 
+let nextExecutorId = 1;
 export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
     nextStep: StepId = 0;
     accumulator: StepAccumulator<I>;
     inventory: I;
     errors: ConvertError[] = [];
+    id: number = 0;
 
     constructor({accumulator, inventory}: Props<I>) {
         this.inventory = inventory;
@@ -77,7 +79,7 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
     }
 
     evaluate<T>(value: ValueOf<T>): T | null {
-        return value.valueOf(this.inventory);
+        return value.valueOf(this.inventory) ?? null;
     }
 
     evaluateArray<T>(values: ValueOf<T>[], result: (T|null)[]): void {
@@ -90,7 +92,7 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
         const step = this.nextStep++;
         const executionStep = this.accumulator.getStep(step);
         if (executionStep) {
-            console.log("Executing", executionStep.description);
+            console.log(`${this.id}-${step}`, executionStep.description);
             executionStep.execute?.(this);
             if (this.errors.length) {
                 return false;
@@ -105,11 +107,20 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
     }
 
     executeUtilStop() {
-        for (let i = 0; i < MAX_STEPS_PER_EXECUTION; i++) {
+        if (!this.id) {
+            this.id = nextExecutorId++;
+        }
+        let i;
+        for (i = 0; i < MAX_STEPS_PER_EXECUTION; i++) {
             if (!this.executeSingleStep()) {
-                return;
+                break;
             }
         }
-        throw new Error(`Execution is considered stuck after running ${MAX_STEPS_PER_EXECUTION} steps.`);
+        if (i >= MAX_STEPS_PER_EXECUTION) {
+            throw new Error(`Execution is considered stuck after running ${MAX_STEPS_PER_EXECUTION} steps.`);
+        }
+        if (this.errors.length) {
+            console.error("Errors in execution: ", this.errors);
+        }
     }
 }

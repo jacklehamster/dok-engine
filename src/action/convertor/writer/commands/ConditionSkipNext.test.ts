@@ -1,4 +1,4 @@
-import { ConvertError } from "../../../actions/error/errors";
+import { ConvertError } from "../../../error/errors";
 import { Inventory } from "../../../data/inventory/Inventory";
 import { ExecutorBase } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";

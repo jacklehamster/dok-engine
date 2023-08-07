@@ -1,7 +1,6 @@
-import { ConvertError } from "../../../actions/error/errors";
+import { ConvertError } from "../../../error/errors";
 import { resolveBoolean } from "../../../data/resolution/BooleanResolution";
-import { resolveAny } from "../../../data/resolution/Resolution";
-import { StringResolution } from "../../../data/resolution/StringResolution";
+import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
@@ -11,13 +10,14 @@ import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 
 export interface SkipNextCommand extends WriterBaseCommand {
-    skipNextOnCondition: StringResolution,
+    skipNextOnCondition: Resolution,
 }
 
 export class SkipNextConvertor extends Convertor<SkipNextCommand, WriterInventory, WriterContext> {
     convert(command: SkipNextCommand, writerContext: WriterContext): void {
         const conditionField = resolveAny(command.skipNextOnCondition);
         writerContext.accumulator.add({
+            description: `Convert: Skip next if "${command.skipNextOnCondition}".`,
             execute(writerExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
@@ -27,6 +27,7 @@ export class SkipNextConvertor extends Convertor<SkipNextCommand, WriterInventor
                 const condition = resolveBoolean(conditionFormula);
                 //  Skip next step depending on condition
                 context.accumulator.add({
+                    description: `Execute: Skip next if "${conditionFormula}".`,
                     execute(executor) {
                         const bool = executor.evaluate(condition) ?? false;
                         executor.ifCondition(bool).skipNextStep();

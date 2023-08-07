@@ -1,5 +1,5 @@
 import { Action } from "../actions/Action";
-import { ConvertError } from "../actions/error/errors";
+import { ConvertError } from "../error/errors";
 import { Inventory } from "../data/inventory/Inventory";
 import { Context, Convertor } from "./Convertor";
 
@@ -8,7 +8,13 @@ export class MultiConvertor<A extends Action = Action, I extends Inventory = Inv
 
     constructor(...convertors: Convertor<A>[]) {
         super();
-        this.convertors = convertors;
+        this.convertors = convertors.sort((c1, c2) => {
+            if (c1.priority !== c2.priority) {
+                return c2.priority - c1.priority;
+            }
+            return c1.name.localeCompare(c2.name);
+        });
+        console.log(this.convertors.map(({name}) => name));
     }
 
     convert(action: A, context: C): void {

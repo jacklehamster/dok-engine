@@ -1,7 +1,15 @@
-import * as math from "mathjs";
 import { FORMULA_SEPARATORS, Formula } from "./Formula";
 import { getInnerFormulas, isFormula, isSimpleInnerFormula } from "./formula-utils";
 import { Inventory } from "../inventory/Inventory";
+import { create, all } from 'mathjs'
+
+const math = create(all);
+
+math.import({
+    defined(value: any) {
+        return value !== undefined;
+    },
+});
 
 export function calculateEvaluator<T>(evaluator: math.EvalFunction, parameters: Inventory = {}, formula: Formula): T | null {
     const scope = parameters;
