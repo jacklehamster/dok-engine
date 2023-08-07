@@ -7,8 +7,8 @@ import { StepAccumulator } from "../steps/StepAccumulator";
 export interface Executor {
     skipNextStep(): Executor;
     jumpTo(step: StepId): Executor;
-    evaluate<T>(value: ValueOf<T>, inventory: Inventory): T | null;
-    evaluateArray<T>(values: ValueOf<T>[], parameters: Inventory, result: (T|null)[]): void;
+    evaluate<T>(value: ValueOf<T>): T | null;
+    evaluateArray<T>(values: ValueOf<T>[], result: (T|null)[]): void;
     ifCondition(bool: ValueOf<boolean>): Executor;
     reportError(error: ConvertError): void;
 }
@@ -73,13 +73,13 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
         return this;
     }
 
-    evaluate<T>(value: ValueOf<T>, parameters: Inventory): T | null {
-        return value.valueOf(parameters);
+    evaluate<T>(value: ValueOf<T>): T | null {
+        return value.valueOf(this.inventory);
     }
 
-    evaluateArray<T>(values: ValueOf<T>[], parameters: Inventory, result: (T|null)[]): void {
+    evaluateArray<T>(values: ValueOf<T>[], result: (T|null)[]): void {
         for (let i = 0; i < values.length; i++) {
-            result[i] = this.evaluate(values[i], parameters);
+            result[i] = this.evaluate(values[i]);
         }
     }
 

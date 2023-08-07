@@ -17,8 +17,8 @@ export class IfConvertor extends Convertor {
         if (!elseProp) {
             //  Skip next step depending on condition
             accumulator.add({
-                execute(parameters: Inventory, executor: Executor) {
-                    const bool = executor.evaluate(condition, parameters) ?? false;
+                execute(_: Inventory, executor: Executor) {
+                    const bool = executor.evaluate(condition) ?? false;
                     executor.ifCondition(bool).skipNextStep();
                 },
             });
@@ -34,8 +34,8 @@ export class IfConvertor extends Convertor {
             //  If then else action
             //  Skip next step depending on condition
             accumulator.add({
-                execute(parameters: Inventory, executor: Executor) {
-                    const bool = executor.evaluate(condition, parameters) ?? false;
+                execute(_: Inventory, executor: Executor) {
+                    const bool = executor.evaluate(condition) ?? false;
                     executor.ifCondition(bool).skipNextStep();
                 },
             });

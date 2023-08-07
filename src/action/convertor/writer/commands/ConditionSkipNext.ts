@@ -21,12 +21,12 @@ export class SkipNextConvertor extends Convertor<SkipNextCommand, WriterInventor
         const conditionField = resolveAny(skipNextOnCondition);
         writerContext.accumulator.add({
             execute(writerInventory, writerExecutor) {
-                const conditionFormula = writerExecutor.evaluate(conditionField, writerInventory);
+                const conditionFormula = writerExecutor.evaluate(conditionField);
                 const condition = resolveBoolean(conditionFormula);
                 //  Skip next step depending on condition
                 writerInventory.context.accumulator.add({
-                    execute(parameters: Inventory, executor: Executor) {
-                        const bool = executor.evaluate(condition, parameters) ?? false;
+                    execute(_: Inventory, executor: Executor) {
+                        const bool = executor.evaluate(condition) ?? false;
                         executor.ifCondition(bool).skipNextStep();
                     },
                 });

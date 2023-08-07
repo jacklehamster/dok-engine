@@ -18,7 +18,7 @@ export class AccumulateConvertor extends Convertor<AccumulateCommand, WriterInve
         context.accumulator.add({
             description: `Accumulate steps using the actions in field "${action.accumulate}".`,
             execute(writerInventory, writerExecutor) {
-                const actions = writerExecutor.evaluate(actionsResolution, writerInventory);
+                const actions = writerExecutor.evaluate(actionsResolution);
                 if (!Array.isArray(actions)) {
                     writerExecutor.reportError({
                         code: "WRONG_TYPE",
