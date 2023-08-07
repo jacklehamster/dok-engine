@@ -1,16 +1,18 @@
 import { ConvertError } from "../../../actions/error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
+import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterBaseConvertor } from "../WriterConvertor";
+import { WriterInventory } from "../WriterInventory";
+import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
-import { WriterBaseCommand, shouldConvert } from "./WriterBaseCommand";
+import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 
 export interface SaveLabelCommand extends WriterBaseCommand {
     label: StringResolution;
 }
 
-export class SaveLabelConvertor extends WriterBaseConvertor {
+export class SaveLabelConvertor extends Convertor<SaveLabelCommand, WriterInventory, WriterContext> {
     convert(command: SaveLabelCommand, writerContext: WriterContext): void {
         const labelResolution = resolveString(command.label);
         writerContext.accumulator.add({
@@ -18,7 +20,6 @@ export class SaveLabelConvertor extends WriterBaseConvertor {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
-
                 const { context, labels } = writerExecutor.inventory;
                 const labelValue = writerExecutor.evaluate(labelResolution);
                 if (labelValue) {

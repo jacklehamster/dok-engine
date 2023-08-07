@@ -1,29 +1,30 @@
 import { ConvertError } from "../../../actions/error/errors";
 import { resolveString } from "../../../data/resolution/StringResolution";
-import { Executor } from "../../../execution/Executor";
+import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterBaseConvertor } from "../WriterConvertor";
+import { WriterInventory } from "../WriterInventory";
+import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
-import { WriterBaseCommand, WriterCommand } from "./WriterCommand";
+import { WriterBaseCommand } from "./WriterBaseCommand";
+import { WriterCommand } from "./WriterCommand";
 
 export interface JumpToLabelCommand extends WriterBaseCommand {
     jumpTo: string;
 }
 
-export class JumpToLabelConvertor extends WriterBaseConvertor {
+export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterInventory, WriterContext> {
     convert(command: JumpToLabelCommand, writerContext: WriterContext): void {
         const jumpToLabel = resolveString(command.jumpTo);
         writerContext.accumulator.add({
             execute(writerExecutor) {
-                if (!writerContext.shouldConvert(command, writerExecutor)) {
+                if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
-
                 const { context, labels } = writerExecutor.inventory;
                 const labelValue = writerExecutor.evaluate(jumpToLabel);
                 if (labelValue) {
                     context.accumulator.add({
-                        execute(executor: Executor) {
+                        execute(executor) {
                             if (labels[labelValue] !== undefined) {
                                 executor.jumpTo(labels[labelValue]);
                             } else {

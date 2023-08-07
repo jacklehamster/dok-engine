@@ -1,8 +1,10 @@
 import { ConvertError } from "../../../actions/error/errors";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
 import { stringOrNull } from "../../../utils/type-utils";
+import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterBaseConvertor } from "../WriterConvertor";
+import { WriterInventory } from "../WriterInventory";
+import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
@@ -11,16 +13,15 @@ export interface AccumulateCommand extends WriterBaseCommand {
     accumulate: ArrayResolution;
 }
 
-export class AccumulateConvertor extends WriterBaseConvertor {
+export class AccumulateConvertor extends Convertor<AccumulateCommand, WriterInventory, WriterContext> {
     convert(command: AccumulateCommand, writerContext: WriterContext): void {
         const actionsResolution = resolveArray(command.accumulate);
         writerContext.accumulator.add({
             description: `Accumulate steps using the actions in field "${command.accumulate}".`,
             execute(writerExecutor) {
-                if (!writerContext.shouldConvert(command, writerExecutor)) {
+                if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
-
                 const actions = writerExecutor.evaluate(actionsResolution);
                 if (!Array.isArray(actions)) {
                     writerExecutor.reportError({
