@@ -29,4 +29,9 @@ describe('getFormulaEvaluator', () => {
         const evaluator = getFormulaEvaluator("~prefix-{3 + x}-suffix");
         expect(evaluator.evaluate({ x: 10 })).toEqual("prefix-13-suffix")
     });
+
+    it('should properly get nested formula', () => {
+        const evaluator = getFormulaEvaluator("~~{3 + 10}");
+        expect(evaluator.evaluate()).toEqual("~{3 + 10}");
+    });
 });

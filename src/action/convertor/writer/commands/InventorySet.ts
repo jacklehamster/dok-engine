@@ -9,13 +9,15 @@ import { WriterCommand } from "./WriterCommand";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
 
 export interface InventorySetCommand extends WriterBaseCommand {
-    variable: StringResolution;
+    variable?: Resolution;
+    property: StringResolution;
     value: Resolution;
 }
 
 export class InventorySetConvertor extends Convertor<InventorySetCommand, WriterInventory, WriterContext> {
     convert(command: InventorySetCommand, writerContext: WriterContext): void {
-        const variableNameField = resolveString(command.variable);
+        const variableNameField = resolveAny(command.variable);
+        const propertyField = resolveString(command.property);
         const valueFormulaField = resolveAny(command.value);
         writerContext.accumulator.add({
             description: `Convert: Update "${command.variable}" to ${command.value}.`,
@@ -23,33 +25,36 @@ export class InventorySetConvertor extends Convertor<InventorySetCommand, Writer
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
-                const variableNameFieldValue = writerExecutor.evaluate(variableNameField);
-                if (variableNameFieldValue) {
-                    const variableNameValue = resolveString(variableNameFieldValue);
-                    const valueFieldValue = writerExecutor.evaluate(valueFormulaField);
-                    const valueFormulaValue = resolveAny(valueFieldValue);
-                    const { context } = writerExecutor.inventory;
-                    context.accumulator.add({
-                        description: `Execute: ${variableNameFieldValue} = ${valueFieldValue}`,
-                        execute(executor) {
-                            const variable = executor.evaluate(variableNameValue);
-                            const value = executor.evaluate(valueFormulaValue);
-                            if (variable) {
-                                executor.inventory[variable] = value;
-                            } else {
-                                writerExecutor.reportError({
-                                    code: "INVALID_FORMULA",
-                                    formula: variableNameFieldValue,
-                                });            
-                            }
-                        },
-                    });
-                } else {
-                    writerExecutor.reportError({
-                        code: "INVALID_FORMULA",
-                        formula: command.variable,
-                    });
+                const propertyFieldValue = writerExecutor.evaluate(propertyField);
+                if (!propertyFieldValue) {
+                    console.error("Property field missing.");
+                    return;
                 }
+                
+                const variableName = writerExecutor.evaluate(variableNameField);
+                const valueFieldValue = writerExecutor.evaluate(valueFormulaField);
+                const variableNameValue = resolveAny(variableName);
+                const valueFormulaValue = resolveAny(valueFieldValue);
+                const { context } = writerExecutor.inventory;
+                context.accumulator.add({
+                    description: `Execute: ${variableNameValue}[${propertyFieldValue}] = ${valueFieldValue}`,
+                    execute(executor) {
+                        const variable = executor.evaluate(variableNameValue);
+                        const subject = variable ?? executor.inventory;
+                        if (typeof(subject) === "object") {
+                            executor.inventory.value = subject[propertyFieldValue];
+                            const value = executor.evaluate(valueFormulaValue);
+                                subject[propertyFieldValue] = value;
+                        } else {
+                            writerExecutor.reportError({
+                                code: "WRONG_TYPE",
+                                field: variableName,
+                                neededType: "object",
+                                wrongType: typeof(subject),
+                            });            
+                        }
+                    },
+                });
             },
         });
     }

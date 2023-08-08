@@ -26,15 +26,15 @@ describe('test Inventory Set', () => {
         actionContext.subConvertor.convert = convert;
     });
 
-    it('set variable', () => {
+    it('set', () => {
         convertor.convert({
-            variable: "~{action.variable}",
+            property: "~{action.property}",
             value: "~{action.value}",
         }, writerContext);
 
         const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action: {
-                variable: "test",
+                property: "test",
                 value: 123,
             },
             context: actionContext,
@@ -45,22 +45,53 @@ describe('test Inventory Set', () => {
 
         const actionExecutor = new ExecutorBase<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {},
+            inventory: {
+            },
         });
         actionExecutor.executeUtilStop()
         expect(actionExecutor.inventory.test).toEqual(123);
     });
 
-    it('increment variable', () => {
+
+    it('set with subject', () => {
         convertor.convert({
             variable: "~{action.variable}",
+            property: "~{action.property}",
             value: "~{action.value}",
         }, writerContext);
 
         const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action: {
-                variable: "test",
-                value: "~{test + 1}",
+                variable: "~{test}",
+                property: "prop",
+                value: 123,
+            },
+            context: actionContext,
+            labels: {
+            },
+        } });
+        executor.executeUtilStop();
+
+        const actionExecutor = new ExecutorBase<Inventory>({
+            accumulator: actionContext.accumulator,
+            inventory: {
+                test: {},
+            },
+        });
+        actionExecutor.executeUtilStop()
+        expect(actionExecutor.inventory.test).toEqual({prop: 123});
+    });
+
+    it('increment variable', () => {
+        convertor.convert({
+            variable: "~{action.variable}",
+            property: "~{action.property}",
+            value: "~~{value + 1}",
+        }, writerContext);
+
+        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+            action: {
+                property: "test",
             },
             context: actionContext,
             labels: {
@@ -78,7 +109,7 @@ describe('test Inventory Set', () => {
 
     it('validates on proper WriterCommand', () => {
         expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeFalsy();
-        expect(convertor.validate({ variable: "~{variable}", value: "~{value}" })).toBeTruthy();
+        expect(convertor.validate({ variable: "~{variable}", property: "~{property}", value: "~{value}" })).toBeTruthy();
     });
 
     it('has validation errors when field is an invalid type', () => {

@@ -1,6 +1,6 @@
 import { ConvertError } from "../../error/errors";
 
-type Type = "array"|"string";
+type Type = "array"|"string"|"object";
 
 export interface Validation {
     field?: string;

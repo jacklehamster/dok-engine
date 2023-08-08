@@ -17,12 +17,20 @@ export function isFormula(value: Formula | any) {
     if (!value) {
         return false;
     }
-    if (typeof(value) !== "string" && typeof(value) !== "object") {
+    if (typeof(value) !== "string") {
         return false;
     }
-    const formula = typeof(value) === "string" ? value : value.formula;
+    const formula = value;
     const [startCharacter, prefix, suffix] = FORMULA_SEPARATORS.map(char => formula?.indexOf(char));
     return startCharacter === 0 && prefix > startCharacter && suffix > prefix;
+}
+
+export function isNestedFormula(value: Formula | any) {
+    if(!isFormula(value)) {
+        return false;
+    }
+    const formula = value as string;
+    return formula.indexOf(`${FORMULA_SEPARATORS[0]}${FORMULA_SEPARATORS[0]}`) === 0;
 }
 
 interface FormulaChunk {
