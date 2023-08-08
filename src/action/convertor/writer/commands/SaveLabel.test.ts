@@ -64,7 +64,7 @@ describe('test SaveLabel', () => {
 
 
     it('validates on proper WriterCommand', () => {
-        expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeFalsy();
+        expect(convertor.validate({ call: [] })).toBeFalsy();
         expect(convertor.validate({ label: "test" })).toBeTruthy();
     });
 

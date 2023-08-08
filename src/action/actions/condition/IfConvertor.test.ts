@@ -20,9 +20,11 @@ describe('IfConvertor', () => {
                 IF_CONVERTOR,
             ),
             accumulator: new StepAccumulator(),
-            externals: { log },
+            externals: { },
         };
-        executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {} });
+        executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {
+            log,
+        } });
         convertor = IF_CONVERTOR;
     });
 

@@ -108,7 +108,7 @@ describe('test Inventory Set', () => {
     });
 
     it('validates on proper WriterCommand', () => {
-        expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeFalsy();
+        expect(convertor.validate({ call: [] })).toBeFalsy();
         expect(convertor.validate({ subject: "~{variable}", property: "~{property}", value: "~{value}" })).toBeTruthy();
     });
 

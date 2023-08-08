@@ -75,7 +75,7 @@ describe('test JumpToLabel', () => {
     });
 
     it('validates on proper WriterCommand', () => {
-        expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeFalsy();
+        expect(convertor.validate({ call: [] })).toBeFalsy();
         expect(convertor.validate({ jumpTo: "test" })).toBeTruthy();
     });
 

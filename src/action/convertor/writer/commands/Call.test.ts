@@ -6,17 +6,17 @@ import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
-import { CallExternalCommand, CallExternalConvertor } from "./CallExternal";
+import { CallCommand, CallConvertor } from "./CallMethod";
 
-describe('test callExternal', () => {
-    let convertor: CallExternalConvertor;
+describe('test call', () => {
+    let convertor: CallConvertor;
     let writerContext: WriterContext;
     let actionContext: Context;
     let log = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
-        convertor = new CallExternalConvertor();
+        convertor = new CallConvertor();
         writerContext = new WriterContext();
         actionContext = {
             accumulator: new StepAccumulator(),
@@ -25,12 +25,10 @@ describe('test callExternal', () => {
         };
     });
 
-    it('call external with arguments', () => {
+    it('call with arguments', () => {
         convertor.convert({
-            callExternal: {
-                name: "log",
-                arguments: "~{action.log}"
-            },
+            subject: "~~{log}",
+            call: "~{action.log}",
         }, writerContext);
 
         const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
@@ -44,63 +42,27 @@ describe('test callExternal', () => {
 
         const actionExecutor = new ExecutorBase<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {x: 3},
-        });
-        actionExecutor.executeUtilStop()
-        expect(log).toBeCalledWith(1, 2, 3);
-    });
-
-    it('call external with subjects', () => {
-        convertor.convert({
-            subject: "~{action.subject}",
-            callExternal: {
-                name: "log",
-                arguments: "~{action.log}",
-            },
-        }, writerContext);
-
-        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
-            action: {
-                subject: "~{gl}",
-                log: [1, 2, 3],
-            },
-            context: actionContext,
-            labels: {},
-        } });
-        executor.executeUtilStop();
-
-        const actionExecutor = new ExecutorBase<Inventory>({
-            accumulator: actionContext.accumulator,
-            inventory: {gl: {log}},
+            inventory: {x: 3, log},
         });
         actionExecutor.executeUtilStop()
         expect(log).toBeCalledWith(1, 2, 3);
     });
 
     it('validates on proper WriterCommand', () => {
-        expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeTruthy();
+        expect(convertor.validate({ call: [] })).toBeTruthy();
         expect(convertor.validate({ accumulate: "~{action.actions}" })).toBeFalsy();
     });
 
     it('has validation errors when callExternal is invalid', () => {
         const errors: ConvertError[] = [];
-        const command = { callExternal: {
-            name: 123,
-            arguments: 123,
-        } };
-        convertor.validationErrors(command as unknown as CallExternalCommand, errors);
+        const command = { call: 123 };
+        convertor.validationErrors(command as unknown as CallCommand, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
-            field: "name",
-            wrongType: "number",
-            neededType: "string",
-            object: command.callExternal,
-        }, {
-            code: "WRONG_TYPE",
-            field: "arguments",
+            field: "call",
             wrongType: "number",
             neededType: "array|formula",
-            object: command.callExternal,
+            object: command,
         }]);
     });
 });

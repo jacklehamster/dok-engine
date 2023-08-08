@@ -4,10 +4,8 @@ export const LOG_CONVERTOR = new CodedConvertor({
     field: "log",
     writerCommands: [
         {
-            callExternal: {
-                name: "log",
-                arguments: "~{action.log}",
-            },
+            subject: "~~{log}",
+            call: "~{action.log}",
         },
     ],
     validations: [

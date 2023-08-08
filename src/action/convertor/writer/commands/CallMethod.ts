@@ -1,7 +1,6 @@
 import { ConvertError } from "../../../error/errors";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
-import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
@@ -9,36 +8,41 @@ import { getSubjectResolution, shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
+import { typeIsAnyOf } from "../../../utils/type-utils";
 
-export interface CallExternalCommand extends WriterBaseCommand {
-    callExternal: {
-        name: StringResolution;
-        arguments?: ArrayResolution,
-    };
+export interface CallCommand extends WriterBaseCommand {
+    call: ArrayResolution,
 }
 
-export class CallExternalConvertor extends Convertor<CallExternalCommand, WriterInventory, WriterContext> {
-    convert(command: CallExternalCommand, writerContext: WriterContext): void {
-        const externalName = resolveString(command.callExternal.name);
-        const argumentsArray = resolveArray(command.callExternal.arguments ?? []);
+export class CallConvertor extends Convertor<CallCommand, WriterInventory, WriterContext> {
+    convert(command: CallCommand, writerContext: WriterContext): void {
+        const argumentsArray = resolveArray(command.call ?? []);
         writerContext.accumulator.add({
-            description: `Convert: call external: ${externalName}(${command.callExternal.arguments})`,
+            description: `Convert: call external: ${command.subject}(${command.call})`,
             execute(writerExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
                 const { context } = writerExecutor.inventory;
-                const subjectResolution = getSubjectResolution(command, writerExecutor, context.externals);
-                const externalNameValue = writerExecutor.evaluate(externalName) ?? "";
+                const subjectResolution = getSubjectResolution(command, writerExecutor);
+
                 const args = writerExecutor.evaluate(argumentsArray) as Resolution[];
                 const argsValues = args.map(resolution => resolveAny(resolution));
                 const argsResult = new Array(argsValues.length);
                 context.accumulator.add({
-                    description: `Execute: ${externalName}(${args.join(",")})`,
+                    description: `Execute: ${command.subject}(${args.join(",")})`,
                     execute(executor) {
                         executor.evaluateArray(argsValues, argsResult);
                         const subject = executor.evaluate(subjectResolution);
-                        subject[externalNameValue](...argsResult);
+                        if (typeIsAnyOf(subject, "function")) {
+                            subject(...argsResult);
+                        } else {
+                            executor.reportError({
+                                code: "WRONG_TYPE",
+                                field: "" + command.subject,
+                                neededType: "function",
+                            })
+                        }
                     },
                 });
             },
@@ -46,11 +50,10 @@ export class CallExternalConvertor extends Convertor<CallExternalCommand, Writer
     }
 
     validate(action: WriterCommand): boolean {
-        return action.callExternal !== undefined;
+        return action.call !== undefined;
     }
 
-    validationErrors(action: CallExternalCommand, errors: ConvertError[]): void {
-        verifyType(action.callExternal, "name", ["string"], errors);
-        verifyType(action.callExternal, "arguments", ["array", "formula"], errors);
+    validationErrors(action: CallCommand, errors: ConvertError[]): void {
+        verifyType(action, "call", ["array", "formula"], errors);
     }
 }

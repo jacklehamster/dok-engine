@@ -18,9 +18,11 @@ describe('WhileConvertor', () => {
                 SET_CONVERTOR,
             ),
             accumulator: new StepAccumulator(),
-            externals: { log },
+            externals: {},
         };
-        executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {} });
+        executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {
+            log,
+        } });
     });
 
     it('Ignore action without while', () => {
