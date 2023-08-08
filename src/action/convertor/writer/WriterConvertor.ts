@@ -20,5 +20,5 @@ export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterIn
             new DebugConversionConvertor(),
             new InventorySetConvertor(),
         );
-    }    
+    }
 }

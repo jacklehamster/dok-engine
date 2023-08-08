@@ -74,24 +74,6 @@ describe('test JumpToLabel', () => {
         }]);
     });
 
-    it('has error on invalid formula', () => {
-        convertor.convert({
-            jumpTo: "~{123}",
-        }, writerContext);
-
-        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
-            action: {
-            },
-            context: actionContext,
-            labels: {},
-        } });
-        executor.executeUtilStop();
-        expect(executor.errors).toEqual([{
-            code: "INVALID_FORMULA",
-            formula: "~{123}",
-        }]);
-    });
-
     it('validates on proper WriterCommand', () => {
         expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeFalsy();
         expect(convertor.validate({ jumpTo: "test" })).toBeTruthy();

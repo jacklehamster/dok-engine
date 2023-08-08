@@ -55,14 +55,14 @@ describe('test Inventory Set', () => {
 
     it('set with subject', () => {
         convertor.convert({
-            variable: "~{action.variable}",
+            subject: "~{action.subject}",
             property: "~{action.property}",
             value: "~{action.value}",
         }, writerContext);
 
         const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action: {
-                variable: "~{test}",
+                subject: "~{test}",
                 property: "prop",
                 value: 123,
             },
@@ -84,7 +84,7 @@ describe('test Inventory Set', () => {
 
     it('increment variable', () => {
         convertor.convert({
-            variable: "~{action.variable}",
+            subject: "~{action.subject}",
             property: "~{action.property}",
             value: "~~{value + 1}",
         }, writerContext);
@@ -109,12 +109,12 @@ describe('test Inventory Set', () => {
 
     it('validates on proper WriterCommand', () => {
         expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeFalsy();
-        expect(convertor.validate({ variable: "~{variable}", property: "~{property}", value: "~{value}" })).toBeTruthy();
+        expect(convertor.validate({ subject: "~{variable}", property: "~{property}", value: "~{value}" })).toBeTruthy();
     });
 
     it('has validation errors when field is an invalid type', () => {
         const errors: ConvertError[] = [];
-        const command = { variable: "test" };
+        const command = { property: "test" };
         convertor.validationErrors(command as unknown as InventorySetCommand, errors);
         expect(errors).toEqual([{
             code: "MISSING_PROPERTY",

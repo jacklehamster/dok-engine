@@ -4,7 +4,8 @@ import { Action } from "../Action";
 
 export interface SetAction extends Action {
     set: {
-        variable: StringResolution;
+        subject: Resolution;
+        property: StringResolution;
         value: Resolution;
     }
 }

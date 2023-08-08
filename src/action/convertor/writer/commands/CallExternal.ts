@@ -5,7 +5,7 @@ import { StringResolution, resolveString } from "../../../data/resolution/String
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
-import { shouldConvert } from "../convert-utils";
+import { getSubjectResolution, shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
@@ -13,14 +13,14 @@ import { WriterCommand } from "./WriterCommand";
 export interface CallExternalCommand extends WriterBaseCommand {
     callExternal: {
         name: StringResolution;
-        arguments: ArrayResolution,
+        arguments?: ArrayResolution,
     };
 }
 
 export class CallExternalConvertor extends Convertor<CallExternalCommand, WriterInventory, WriterContext> {
     convert(command: CallExternalCommand, writerContext: WriterContext): void {
         const externalName = resolveString(command.callExternal.name);
-        const argumentsArray = resolveArray(command.callExternal.arguments);
+        const argumentsArray = resolveArray(command.callExternal.arguments ?? []);
         writerContext.accumulator.add({
             description: `Convert: call external: ${externalName}(${command.callExternal.arguments})`,
             execute(writerExecutor) {
@@ -28,7 +28,8 @@ export class CallExternalConvertor extends Convertor<CallExternalCommand, Writer
                     return;
                 }
                 const { context } = writerExecutor.inventory;
-                const external = context.externals[writerExecutor.evaluate(externalName) ?? ""];
+                const subjectResolution = getSubjectResolution(command, writerExecutor, context.externals);
+                const externalNameValue = writerExecutor.evaluate(externalName) ?? "";
                 const args = writerExecutor.evaluate(argumentsArray) as Resolution[];
                 const argsValues = args.map(resolution => resolveAny(resolution));
                 const argsResult = new Array(argsValues.length);
@@ -36,7 +37,8 @@ export class CallExternalConvertor extends Convertor<CallExternalCommand, Writer
                     description: `Execute: ${externalName}(${args.join(",")})`,
                     execute(executor) {
                         executor.evaluateArray(argsValues, argsResult);
-                        external(...argsResult);
+                        const subject = executor.evaluate(subjectResolution);
+                        subject[externalNameValue](...argsResult);
                     },
                 });
             },

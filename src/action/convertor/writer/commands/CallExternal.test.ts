@@ -50,6 +50,33 @@ describe('test callExternal', () => {
         expect(log).toBeCalledWith(1, 2, 3);
     });
 
+    it('call external with subjects', () => {
+        convertor.convert({
+            subject: "~{action.subject}",
+            callExternal: {
+                name: "log",
+                arguments: "~{action.log}",
+            },
+        }, writerContext);
+
+        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+            action: {
+                subject: "~{gl}",
+                log: [1, 2, 3],
+            },
+            context: actionContext,
+            labels: {},
+        } });
+        executor.executeUtilStop();
+
+        const actionExecutor = new ExecutorBase<Inventory>({
+            accumulator: actionContext.accumulator,
+            inventory: {gl: {log}},
+        });
+        actionExecutor.executeUtilStop()
+        expect(log).toBeCalledWith(1, 2, 3);
+    });
+
     it('validates on proper WriterCommand', () => {
         expect(convertor.validate({ callExternal: { name: "test", arguments: [] } })).toBeTruthy();
         expect(convertor.validate({ accumulate: "~{action.actions}" })).toBeFalsy();

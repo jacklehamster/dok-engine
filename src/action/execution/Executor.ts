@@ -42,12 +42,14 @@ class NoopExecutor implements Executor {
 }
 
 const MAX_STEPS_PER_EXECUTION = 1000;
+const MAX_STEPS_TAKEN = 5000;
 
 interface Props<I extends Inventory = Inventory> {
     accumulator: StepAccumulator;
     inventory: I;
 }
 
+let stepCount = 0;
 let nextExecutorId = 1;
 export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
     nextStep: StepId = 0;
@@ -89,6 +91,10 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
     }
 
     executeSingleStep() {
+        stepCount++;
+        if (stepCount > MAX_STEPS_TAKEN) {
+            throw new Error(`${MAX_STEPS_TAKEN} steps taken without completing.`)
+        }
         const step = this.nextStep++;
         const executionStep = this.accumulator.getStep(step);
         if (executionStep) {
