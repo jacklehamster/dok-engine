@@ -21,7 +21,6 @@ describe('test conditionSkipNext', () => {
         actionContext = {
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
-            externals: { },
         };
     });
 

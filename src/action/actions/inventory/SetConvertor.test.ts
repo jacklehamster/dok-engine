@@ -6,14 +6,12 @@ import { SET_CONVERTOR } from "./SetConvertor";
 
 describe('SetConvertor', () => {
     let context: Context;
-    let log = jest.fn();
     let executor: ExecutorBase;
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
             subConvertor: new MultiConvertor(),
             accumulator: new StepAccumulator(),
-            externals: { log },
         };
         executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {name: "inventory"} });
     });

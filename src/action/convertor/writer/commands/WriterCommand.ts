@@ -1,5 +1,4 @@
 import { AccumulateCommand } from "./Accumulate";
-import { CallExternalCommand } from "./CallExternal";
 import { CallCommand } from "./CallMethod";
 import { SkipNextCommand } from "./ConditionSkipNext";
 import { DebugConversionCommand } from "./DebugConversionCommand";
@@ -9,7 +8,6 @@ import { SaveLabelCommand } from "./SaveLabel";
 
 export type WriterCommand = 
     |AccumulateCommand
-    |CallExternalCommand
     |CallCommand
     |SkipNextCommand
     |SaveLabelCommand

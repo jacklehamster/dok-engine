@@ -21,7 +21,6 @@ describe('test JumpToLabel', () => {
         actionContext = {
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
-            externals: {},
         };
         actionContext.subConvertor.convert = convert;
     });

@@ -1,13 +1,11 @@
 import { Action } from "../actions/Action";
 import { ConvertError } from "../error/errors";
 import { Inventory } from "../data/inventory/Inventory";
-import { Externals } from "../execution/externals/Externals";
 import { StepAccumulator } from "../steps/StepAccumulator";
 
 export interface Context<A extends Action = Action, I extends Inventory = Inventory> {
     accumulator: StepAccumulator<I>,
     subConvertor: Convertor<A, I, Context<A, I>>,
-    externals: Externals,
 };
 
 export abstract class Convertor<A extends Action = Action, I extends Inventory = Inventory, C extends Context<A, I> = Context> {

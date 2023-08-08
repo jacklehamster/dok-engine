@@ -18,7 +18,6 @@ describe('WhileConvertor', () => {
                 SET_CONVERTOR,
             ),
             accumulator: new StepAccumulator(),
-            externals: {},
         };
         executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {
             log,

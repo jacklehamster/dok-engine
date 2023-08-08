@@ -21,7 +21,6 @@ describe('test call', () => {
         actionContext = {
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
-            externals: { log },
         };
     });
 
@@ -53,7 +52,7 @@ describe('test call', () => {
         expect(convertor.validate({ accumulate: "~{action.actions}" })).toBeFalsy();
     });
 
-    it('has validation errors when callExternal is invalid', () => {
+    it('has validation errors when call is invalid', () => {
         const errors: ConvertError[] = [];
         const command = { call: 123 };
         convertor.validationErrors(command as unknown as CallCommand, errors);

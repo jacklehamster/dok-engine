@@ -13,7 +13,6 @@ describe('LogConvertor', () => {
         context = {
             subConvertor: new MultiConvertor(),
             accumulator: new StepAccumulator(),
-            externals: {},
         };
         executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {
             log,

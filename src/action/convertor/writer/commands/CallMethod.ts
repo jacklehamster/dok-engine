@@ -18,7 +18,7 @@ export class CallConvertor extends Convertor<CallCommand, WriterInventory, Write
     convert(command: CallCommand, writerContext: WriterContext): void {
         const argumentsArray = resolveArray(command.call ?? []);
         writerContext.accumulator.add({
-            description: `Convert: call external: ${command.subject}(${command.call})`,
+            description: `Convert: call: ${command.subject}(${command.call})`,
             execute(writerExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;

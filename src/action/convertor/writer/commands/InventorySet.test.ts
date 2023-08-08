@@ -21,7 +21,6 @@ describe('test Inventory Set', () => {
         actionContext = {
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
-            externals: {},
         };
         actionContext.subConvertor.convert = convert;
     });

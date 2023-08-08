@@ -20,7 +20,6 @@ describe('test SaveLabel', () => {
         actionContext = {
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
-            externals: {},
         };
         actionContext.subConvertor.convert = convert;
     });
