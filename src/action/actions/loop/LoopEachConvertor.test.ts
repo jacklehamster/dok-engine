@@ -2,11 +2,10 @@ import { Context } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
-import { SET_CONVERTOR } from "../inventory/SetConvertor";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
-import { WHILE_CONVERTOR } from "./WhileConvertor";
+import { LOOP_EACH_CONVERTOR } from "./LoopEachConvertor";
 
-describe('WhileConvertor', () => {
+describe('LoopEachConvertor', () => {
     let context: Context;
     let log = jest.fn();
     let executor: Executor;
@@ -15,7 +14,6 @@ describe('WhileConvertor', () => {
         context = {
             subConvertor: new MultiConvertor(
                 LOG_CONVERTOR,
-                SET_CONVERTOR,
             ),
             accumulator: new StepAccumulator(),
         };
@@ -25,24 +23,21 @@ describe('WhileConvertor', () => {
         } });
     });
 
-    it('Ignore action without while', () => {
-        expect(WHILE_CONVERTOR.validate({})).toBeFalsy();
+    it('Ignore action without loop', () => {
+        expect(LOOP_EACH_CONVERTOR.validate({})).toBeFalsy();
     });
 
-    it('convert while loop', () => {
-        WHILE_CONVERTOR.convert({
-            while: "~{x < 5}",
+    it('convert loop', () => {
+        LOOP_EACH_CONVERTOR.convert({
+            loopEach: [0, "one", "2", "III"],
             do: [
-                { log: ["~{x}"] },
-                { set: { property: "x", value: "~{value + 1}" } },
+                { log: ["~{element}"] },
             ],
         }, context);
-        executor.inventory.x = 0
         executor.executeUtilStop();
         expect(log).toBeCalledWith(0);
-        expect(log).toBeCalledWith(1);
-        expect(log).toBeCalledWith(2);
-        expect(log).toBeCalledWith(3);
-        expect(log).toBeCalledWith(4);
+        expect(log).toBeCalledWith("one");
+        expect(log).toBeCalledWith("2");
+        expect(log).toBeCalledWith("III");
     });
 });

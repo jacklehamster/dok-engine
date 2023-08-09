@@ -1,5 +1,5 @@
 import { ConvertError } from "../../../error/errors";
-import { ExecutorBase } from "../../../execution/Executor";
+import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
@@ -29,11 +29,11 @@ describe('test SaveLabel', () => {
             label: "testLabel",
         }, writerContext);
 
-        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
-            action: {
-            },
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+            action: {},
             context: actionContext,
             labels: {},
+            stash: [],
         } });
         executor.executeUtilStop();
 
@@ -48,11 +48,12 @@ describe('test SaveLabel', () => {
             label: "testLabel",
         }, writerContext);
 
-        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action: {
             },
             context: actionContext,
             labels: {},
+            stash: [],
         } });
         executor.executeUtilStop();
         expect(executor.errors).toEqual([{

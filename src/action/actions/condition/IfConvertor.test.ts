@@ -1,6 +1,6 @@
 import { Context, Convertor } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
-import { ExecutorBase } from "../../execution/Executor";
+import { Executor } from "../../execution/Executor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
 import { IF_CONVERTOR } from "./IfConvertor";
@@ -8,7 +8,7 @@ import { IF_CONVERTOR } from "./IfConvertor";
 describe('IfConvertor', () => {
     let context: Context;
     let log = jest.fn();
-    let executor: ExecutorBase;
+    let executor: Executor;
 
     let convertor: Convertor;
 
@@ -21,8 +21,9 @@ describe('IfConvertor', () => {
             ),
             accumulator: new StepAccumulator(),
         };
-        executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {
+        executor = new Executor({ accumulator: context.accumulator, inventory: {
             log,
+            stash: [],
         } });
         convertor = IF_CONVERTOR;
     });

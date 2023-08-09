@@ -2,7 +2,7 @@ import { Context } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
-import { SET_CONVERTOR } from "./SetConvertor";
+import { ASSIGN_CONVERTOR } from "./AssignConvertor";
 
 describe('SetConvertor', () => {
     let context: Context;
@@ -19,41 +19,31 @@ describe('SetConvertor', () => {
         } });
     });
 
-    it('Ignore action without set', () => {
-        expect(SET_CONVERTOR.validate({})).toBeFalsy();
-        expect(SET_CONVERTOR.validate({set: {}})).toBeTruthy();
+    it('Ignore action without =', () => {
+        expect(ASSIGN_CONVERTOR.validate({})).toBeFalsy();
+        expect(ASSIGN_CONVERTOR.validate({"=": ["a", 123]})).toBeTruthy();
     });
 
     it('convert set', () => {
-        SET_CONVERTOR.convert({
-            set: {
-                property: "abc",
-                value: 123,
-            },
+        ASSIGN_CONVERTOR.convert({
+            "=": ["abc", 123],
         }, context);
         executor.executeUtilStop();
         expect(executor.inventory.abc).toEqual(123);
     });
 
     it('convert set with formula', () => {
-        SET_CONVERTOR.convert({
-            set: {
-                property: "abc",
-                value: "~{100 + 50}",
-            },
+        ASSIGN_CONVERTOR.convert({
+            "=": ["abc", "~{100 + 50}"],
         }, context);
         executor.executeUtilStop();
         expect(executor.inventory.abc).toEqual(150);
     });
 
-    it('convert set with subject', () => {
+    it('convert assign with subject', () => {
         executor.inventory.abc = {};
-        SET_CONVERTOR.convert({
-            set: {
-                subject: "~{abc}",
-                property: "a",
-                value: 123,
-            },
+        ASSIGN_CONVERTOR.convert({
+            "=": ["~{abc}", "a", 123],
         }, context);
         executor.executeUtilStop();
         expect(executor.inventory.abc.a).toEqual(123);

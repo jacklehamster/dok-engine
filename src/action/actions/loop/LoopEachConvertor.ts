@@ -1,7 +1,7 @@
 import { CodedConvertor } from "../../convertor/coded/CodedConvertor";
 
-export const LOOP_CONVERTOR = new CodedConvertor({
-    field: "loop",
+export const LOOP_EACH_CONVERTOR = new CodedConvertor({
+    field: "loopEach",
     validations: [
         {
             field: "do",
@@ -14,15 +14,19 @@ export const LOOP_CONVERTOR = new CodedConvertor({
     ],
     writerCommands: [
         {
-            stash: ["idx", "length"],
+            stash: ["idx", "array", "length", "element"]
         },
         {
             property: "idx",
             value: 0,
         },
         {
+            property: "array",
+            value: "~{action.loopEach}",
+        },
+        {
             property: "length",
-            value: "~{action.loop}"
+            value: "~~{length(array)}",
         },
         {
             label: "loopStartAnchor",
@@ -32,11 +36,15 @@ export const LOOP_CONVERTOR = new CodedConvertor({
             jumpTo: "endAnchor",
         },
         {
+            property: "element",
+            value: "~~{at(array, idx)}",
+        },
+        {
             accumulate: "~{action.do}",
         },
         {
             property: "idx",
-            value: "~~{value + 1}"
+            value: "~~{value + 1}",
         },
         {
             jumpTo: "loopStartAnchor",

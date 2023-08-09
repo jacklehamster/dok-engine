@@ -9,9 +9,22 @@ math.import({
     defined(value: any) {
         return value !== undefined;
     },
+    length(value: any) {
+        if (!Array.isArray(value)) {
+            console.error(`${value} is not an array.`);
+        }
+        return value.length;
+    },
+    at(value: any, index: number) {
+        if (!Array.isArray(value)) {
+            console.error(`${value} is not an array.`);
+        }
+        console.log(value);
+        return value[index];
+    },
 });
 
-export function calculateEvaluator<T>(evaluator: math.EvalFunction, parameters: Inventory = {}, formula: Formula): T | null {
+export function calculateEvaluator<T>(evaluator: math.EvalFunction, parameters: Inventory, formula: Formula): T | null {
     const scope = parameters;
     try {
         return evaluator.evaluate(scope ?? {}) ?? null;

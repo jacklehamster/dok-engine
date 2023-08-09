@@ -33,7 +33,7 @@ export class InventorySetConvertor extends Convertor<InventorySetCommand, Writer
                 const valueFormulaValue = resolveAny(valueFieldValue);
                 const { context } = writerExecutor.inventory;
                 context.accumulator.add({
-                    description: `Execute: ${command.subject}[${propertyFieldValue}] = ${valueFieldValue}`,
+                    description: `Execute: ${command.subject??""}[${propertyFieldValue}] = ${valueFieldValue}`,
                     execute(executor) {
                         const subject = executor.evaluate(subjectResolution);
                         if (typeof(subject) === "object") {

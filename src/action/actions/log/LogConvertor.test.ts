@@ -1,21 +1,22 @@
 import { Context } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
-import { ExecutorBase } from "../../execution/Executor";
+import { Executor } from "../../execution/Executor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "./LogConvertor";
 
 describe('LogConvertor', () => {
     let context: Context;
     let log = jest.fn();
-    let executor: ExecutorBase;
+    let executor: Executor;
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
             subConvertor: new MultiConvertor(),
             accumulator: new StepAccumulator(),
         };
-        executor = new ExecutorBase({ accumulator: context.accumulator, inventory: {
+        executor = new Executor({ accumulator: context.accumulator, inventory: {
             log,
+            stash: [],
         } });
     });
 

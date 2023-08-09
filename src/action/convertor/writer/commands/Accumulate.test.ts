@@ -1,6 +1,6 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../error/errors";
-import { ExecutorBase } from "../../../execution/Executor";
+import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
@@ -30,10 +30,11 @@ describe('test accumulate', () => {
 
         convertor.convert(command, writerContext);
 
-        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action,
             context: actionContext,
             labels: {},
+            stash: [],
         } });
         executor.executeUtilStop();
 
@@ -93,7 +94,7 @@ describe('test accumulate', () => {
             code: "WRONG_TYPE",
             field: "accumulate",
             wrongType: "number",
-            neededType: "array|formula",
+            neededType: "array|object|formula",
             object: command,
         }]);
     });

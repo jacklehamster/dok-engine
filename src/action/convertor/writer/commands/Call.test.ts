@@ -1,6 +1,6 @@
 import { ConvertError } from "../../../error/errors";
 import { Inventory } from "../../../data/inventory/Inventory";
-import { ExecutorBase } from "../../../execution/Executor";
+import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
@@ -30,18 +30,19 @@ describe('test call', () => {
             call: "~{action.log}",
         }, writerContext);
 
-        const executor = new ExecutorBase<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
             action: {
                 log: [1, 2, "~{x}"],
             },
             context: actionContext,
             labels: {},
+            stash: [],
         } });
         executor.executeUtilStop();
 
-        const actionExecutor = new ExecutorBase<Inventory>({
+        const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {x: 3, log},
+            inventory: {x: 3, log, stash: []},
         });
         actionExecutor.executeUtilStop()
         expect(log).toBeCalledWith(1, 2, 3);

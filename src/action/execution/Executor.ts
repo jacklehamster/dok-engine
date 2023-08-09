@@ -3,15 +3,18 @@ import { Inventory } from "../data/inventory/Inventory";
 import { ValueOf } from "../data/resolution/ValueOf";
 import { StepId } from "../steps/ExecutionStep";
 import { StepAccumulator } from "../steps/StepAccumulator";
+import Door from "./Door";
 
-export interface Executor<I extends Inventory = Inventory> {
-    skipNextStep(): Executor;
-    jumpTo(step: StepId): Executor;
+export interface IExecutor<I extends Inventory = Inventory> {
+    skipNextStep(): IExecutor;
+    jumpTo(step: StepId): IExecutor;
     evaluate<T>(value: ValueOf<T>): T | null;
     evaluateArray<T>(values: ValueOf<T>[], result: (T|null)[]): void;
-    ifCondition(bool: ValueOf<boolean>): Executor | null;
+    ifCondition(bool: ValueOf<boolean>): IExecutor | null;
     reportError(error: ConvertError): void;
     get inventory(): I;
+    stash(itemKeys: string[]): void;
+    unstash(): void;
 }
 
 const MAX_STEPS_PER_EXECUTION = 1000;
@@ -24,29 +27,37 @@ interface Props<I extends Inventory = Inventory> {
 
 let stepCount = 0;
 let nextExecutorId = 1;
-export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
-    nextStep: StepId = 0;
-    accumulator: StepAccumulator<I>;
-    inventory: I;
-    errors: ConvertError[] = [];
+export class Executor<I extends Inventory = Inventory> implements IExecutor {
+    //  Executor ID
     id: number = 0;
+
+    //  steps followed by the executor
+    accumulator: StepAccumulator<I>;
+
+    //  doors that can lead to new execution
+    doors: Record<string, Door> = {};
+
+    //  state
+    nextStep: StepId = 0;           //  Upcoming step
+    inventory: I;                   //  inventory carried
+    errors: ConvertError[] = [];    //  any error encountered
 
     constructor({accumulator, inventory}: Props<I>) {
         this.inventory = inventory;
         this.accumulator = accumulator;
     }
 
-    jumpTo(step: StepId): Executor {
+    jumpTo(step: StepId): IExecutor {
         this.nextStep = step;
         return this;
     }
 
-    skipNextStep(): Executor {
+    skipNextStep(): IExecutor {
         this.nextStep++;
         return this;
     }
 
-    ifCondition(bool: boolean): Executor | null {
+    ifCondition(bool: boolean): IExecutor | null {
         if (!bool) {
             return null;
         }
@@ -100,6 +111,24 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
         }
         if (this.errors.length) {
             console.error("Errors in execution: ", this.errors);
+        }
+    }
+
+    stash(itemKeys: string[]): void {
+        const items: Record<string, any> = {};
+        this.inventory.stash.push(items);
+        for (let key of itemKeys) {
+            items[key] = this.inventory[key];
+        }
+    }
+
+    unstash(): void {
+        const items = this.inventory.stash.pop();
+        if (items) {
+            const inventory = this.inventory as Inventory;
+            for (let key in items) {
+                inventory[key] = items[key];
+            }
         }
     }
 }

@@ -8,6 +8,8 @@ import { DebugConversionConvertor } from "./commands/DebugConversionCommand";
 import { InventorySetConvertor } from "./commands/InventorySet";
 import { JumpToLabelConvertor } from "./commands/JumpToLabel";
 import { SaveLabelConvertor } from "./commands/SaveLabel";
+import { StashConvertor } from "./commands/Stash";
+import { UnstashConvertor } from "./commands/Unstash";
 import { WriterCommand } from "./commands/WriterCommand";
 
 export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterInventory, WriterContext> {
@@ -19,6 +21,8 @@ export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterIn
             new JumpToLabelConvertor(),
             new DebugConversionConvertor(),
             new InventorySetConvertor(),
+            new StashConvertor(),
+            new UnstashConvertor(),
         );
     }
 }

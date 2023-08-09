@@ -5,10 +5,11 @@ import { BasicType } from "../types/basic-types";
 import { resolveArray } from "./ArrayResolution";
 import { BooleanResolution } from "./BooleanResolution";
 import { NumberResolution } from "./NumberResolution";
+import { ObjectResolution } from "./ObjectResolution";
 import { StringResolution } from "./StringResolution";
 import { ValueOf } from "./ValueOf";
 
-export type Resolution = BasicType | BooleanResolution | StringResolution | NumberResolution;
+export type Resolution = BasicType | BooleanResolution | StringResolution | NumberResolution | ObjectResolution;
 
 export function resolveAny(resolution: Resolution): ValueOf<any> {
     const type = typeof(resolution);

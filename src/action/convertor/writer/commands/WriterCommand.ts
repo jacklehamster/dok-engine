@@ -5,6 +5,8 @@ import { DebugConversionCommand } from "./DebugConversionCommand";
 import { InventorySetCommand } from "./InventorySet";
 import { JumpToLabelCommand } from "./JumpToLabel";
 import { SaveLabelCommand } from "./SaveLabel";
+import { StashCommand } from "./Stash";
+import { UnstashCommand } from "./Unstash";
 
 export type WriterCommand = 
     |AccumulateCommand
@@ -14,4 +16,6 @@ export type WriterCommand =
     |JumpToLabelCommand
     |DebugConversionCommand
     |InventorySetCommand
+    |StashCommand
+    |UnstashCommand
 ;

@@ -1,6 +1,7 @@
 import { CodedConvertor } from "../../convertor/coded/CodedConvertor";
+import { IfAction } from "./IfAction";
 
-export const IF_CONVERTOR = new CodedConvertor({
+export const IF_CONVERTOR = new CodedConvertor<IfAction>({
     field: "if",
     validations: [
         {

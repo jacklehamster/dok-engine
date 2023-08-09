@@ -1,14 +1,14 @@
 import { Formula } from "../formula/Formula";
 import { calculateEvaluator, getFormulaEvaluator } from "../formula/formula-evaluator";
 import { hasFormula, isFormula } from "../formula/formula-utils";
-import { Inventory } from "../inventory/Inventory";
+import { EMPTY_INVENTORY, Inventory } from "../inventory/Inventory";
 import { BasicType } from "../types/basic-types";
 import { Resolution, resolveAny } from "./Resolution";
 import { ValueOf } from "./ValueOf";
 
 export type ArrayResolution = Formula | Resolution[];
 
-export function resolveArray(resolution: ArrayResolution): ValueOf<any[]> {
+export function resolveArray(resolution: ArrayResolution): ValueOf<BasicType[]> {
     //  check if we have any resolution to perform
     if (!hasFormula(resolution)) {
         if (!Array.isArray(resolution)) {
@@ -17,16 +17,13 @@ export function resolveArray(resolution: ArrayResolution): ValueOf<any[]> {
         const array = resolution as BasicType[];
         return { valueOf: () => array };
     }
-    if (!resolution) {
-        return { valueOf: () => [] };
-    }
     if (isFormula(resolution)) {
         const formula = resolution as Formula;
         const evaluator = getFormulaEvaluator(formula);
         return {
             valueOf(parameters?: Inventory): BasicType[] {
-                return calculateEvaluator<BasicType[] | undefined>(evaluator, parameters, formula) ?? [];
-            }
+                return calculateEvaluator<BasicType[] | undefined>(evaluator, parameters ?? EMPTY_INVENTORY, formula) ?? [];
+            },
         };
     }
     const array = resolution as Resolution[]

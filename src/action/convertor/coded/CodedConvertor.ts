@@ -1,6 +1,6 @@
 import { Action } from "../../actions/Action";
 import { ConvertError } from "../../error/errors";
-import { ExecutorBase } from "../../execution/Executor";
+import { Executor } from "../../execution/Executor";
 import { Context, Convertor } from "../Convertor";
 import { WriterContext } from "../writer/WriterContext";
 import { WriterCommand } from "../writer/commands/WriterCommand";
@@ -13,7 +13,7 @@ interface ConverterConfig {
     writerCommands?: WriterCommand[];
 }
 
-export class CodedConvertor extends Convertor {
+export class CodedConvertor<A extends Action = Action> extends Convertor<A> {
     private field: string;
     private validations: Validation[];
     private writerCommands: WriterCommand[];
@@ -29,7 +29,7 @@ export class CodedConvertor extends Convertor {
         return action[this.field] !== undefined;
     }
 
-    convert(action: Action, context: Context): void {
+    convert(action: A, context: Context): void {
         const writerContext: WriterContext = new WriterContext();
         this.writerCommands?.forEach(command => {
             const errors: ConvertError[] = [];
@@ -39,18 +39,19 @@ export class CodedConvertor extends Convertor {
             }
             writerContext.subConvertor.convert(command, writerContext);
         });
-        const executor: ExecutorBase<WriterInventory> = new ExecutorBase<WriterInventory>({
+        const executor: Executor<WriterInventory> = new Executor<WriterInventory>({
             inventory: {
                 action,
                 context,
                 labels: {},
+                stash: [],
             },
             accumulator: writerContext.accumulator,
         });
         executor.executeUtilStop();
     }
 
-    validationErrors(action: Action, errors: ConvertError[]): void {
+    validationErrors(action: A, errors: ConvertError[]): void {
         this.validations.forEach(({ field, type, error }) => {
             const fieldValue = action[field ?? this.field];
             switch (type) {
