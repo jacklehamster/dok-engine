@@ -14,7 +14,7 @@ export class MultiConvertor<A extends Action = Action, I extends Inventory = Inv
             }
             return c1.name.localeCompare(c2.name);
         });
-        console.log(this.convertors.map(({name}) => name));
+        console.log("Convertor order:", this.convertors.map(({name}) => name));
     }
 
     convert(action: A, context: C): void {

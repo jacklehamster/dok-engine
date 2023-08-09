@@ -14,6 +14,7 @@ export interface IExecutor<I extends Inventory = Inventory> {
     get inventory(): I;
     stash(itemKeys: string[]): void;
     unstash(): void;
+    createDoor(name: string): Door;
 }
 
 const MAX_STEPS_PER_EXECUTION = 1000;
@@ -123,5 +124,11 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
                 inventory[key] = items[key];
             }
         }
+    }
+
+    createDoor(name: string) {
+        return this.doors[name] = {
+            accumulator: new StepAccumulator(),
+        };
     }
 }

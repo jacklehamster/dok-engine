@@ -4,6 +4,7 @@ import { WriterInventory } from "./WriterInventory";
 import { AccumulateConvertor } from "./commands/Accumulate";
 import { CallConvertor } from "./commands/CallMethod";
 import { SkipNextConvertor } from "./commands/ConditionSkipNext";
+import { CreateDoorConvertor } from "./commands/CreateDoor";
 import { DebugConversionConvertor } from "./commands/DebugConversionCommand";
 import { InventorySetConvertor } from "./commands/InventorySet";
 import { JumpToLabelConvertor } from "./commands/JumpToLabel";
@@ -23,6 +24,7 @@ export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterIn
             new InventorySetConvertor(),
             new StashConvertor(),
             new UnstashConvertor(),
+            new CreateDoorConvertor(),
         );
     }
 }

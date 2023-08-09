@@ -1,6 +1,7 @@
 import { AccumulateCommand } from "./Accumulate";
 import { CallCommand } from "./CallMethod";
 import { SkipNextCommand } from "./ConditionSkipNext";
+import { CreateDoorCommand } from "./CreateDoor";
 import { DebugConversionCommand } from "./DebugConversionCommand";
 import { InventorySetCommand } from "./InventorySet";
 import { JumpToLabelCommand } from "./JumpToLabel";
@@ -18,4 +19,5 @@ export type WriterCommand =
     |InventorySetCommand
     |StashCommand
     |UnstashCommand
+    |CreateDoorCommand
 ;
