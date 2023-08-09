@@ -9,6 +9,7 @@ import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { typeIsAnyOf } from "../../../utils/type-utils";
+import { evaluateArray } from "../../../utils/array-utils";
 
 export interface CallCommand extends WriterBaseCommand {
     call: ArrayResolution,
@@ -32,7 +33,7 @@ export class CallConvertor extends Convertor<CallCommand, WriterInventory, Write
                 context.accumulator.add({
                     description: `Execute: ${command.subject}(${args.join(",")})`,
                     execute(executor) {
-                        executor.evaluateArray(argsValues, argsResult);
+                        evaluateArray(argsValues, argsResult, executor);
                         const subject = executor.evaluate(subjectResolution);
                         if (typeIsAnyOf(subject, "function")) {
                             subject(...argsResult);

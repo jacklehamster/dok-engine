@@ -9,7 +9,6 @@ export interface IExecutor<I extends Inventory = Inventory> {
     skipNextStep(): IExecutor;
     jumpTo(step: StepId): IExecutor;
     evaluate<T>(value: ValueOf<T>): T | null;
-    evaluateArray<T>(values: ValueOf<T>[], result: (T|null)[]): void;
     ifCondition(bool: ValueOf<boolean>): IExecutor | null;
     reportError(error: ConvertError): void;
     get inventory(): I;
@@ -66,12 +65,6 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
 
     evaluate<T>(value: ValueOf<T>): T | null {
         return value.valueOf(this.inventory) ?? null;
-    }
-
-    evaluateArray<T>(values: ValueOf<T>[], result: (T|null)[]): void {
-        for (let i = 0; i < values.length; i++) {
-            result[i] = this.evaluate(values[i]);
-        }
     }
 
     executeSingleStep() {

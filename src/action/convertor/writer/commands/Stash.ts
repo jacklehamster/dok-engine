@@ -8,6 +8,7 @@ import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
 import { verifyType } from "../validation/verifyType";
+import { evaluateArray } from "../../../utils/array-utils";
 
 export interface StashCommand extends WriterBaseCommand {
     stash: ArrayResolution;
@@ -30,7 +31,7 @@ export class StashConvertor extends Convertor<StashCommand, WriterInventory, Wri
                 context.accumulator.add({
                     description: `Execute: stash ${stashes}`,
                     execute(executor) {
-                        executor.evaluateArray(stashValues, stashResult);
+                        evaluateArray(stashValues, stashResult, executor);
                         executor.stash(stashResult);
                     },
                 });
