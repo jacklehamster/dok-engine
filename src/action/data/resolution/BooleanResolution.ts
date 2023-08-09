@@ -8,7 +8,7 @@ export type BooleanResolution = Formula | boolean | number | null;
 
 export function resolveBoolean(resolution: BooleanResolution): ValueOf<boolean> {
     if (!resolution)  {
-        return { valueOf: () => false };
+        return false;
     }
     if (typeof(resolution) === "boolean") {
         return resolution;
@@ -24,7 +24,5 @@ export function resolveBoolean(resolution: BooleanResolution): ValueOf<boolean> 
             },
         };
     }
-    return {
-        valueOf: () => false,
-    };
+    return false;
 }

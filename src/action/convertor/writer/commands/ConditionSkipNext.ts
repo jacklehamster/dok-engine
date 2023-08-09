@@ -30,7 +30,7 @@ export class SkipNextConvertor extends Convertor<SkipNextCommand, WriterInventor
                     description: `Execute: Skip next if "${conditionFormula}".`,
                     execute(executor) {
                         const bool = executor.evaluate(condition) ?? false;
-                        executor.ifCondition(bool).skipNextStep();
+                        executor.ifCondition(bool)?.skipNextStep();
                     },
                 });
             },

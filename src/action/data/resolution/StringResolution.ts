@@ -2,7 +2,7 @@ import { Formula } from "../formula/Formula";
 import { getFormulaEvaluator } from "../formula/formula-evaluator";
 import { isFormula } from "../formula/formula-utils";
 import { Inventory } from "../inventory/Inventory";
-import { EMPTY_VALUEOF, ValueOf } from "./ValueOf";
+import { ValueOf } from "./ValueOf";
 
 export type StringResolution = Formula | string;
 
@@ -19,5 +19,5 @@ export function resolveString(resolution: StringResolution): ValueOf<string> {
     if (typeof(resolution) === "string") {
         return resolution;
     }
-    return EMPTY_VALUEOF;
+    return `${resolution}`;
 }

@@ -4,7 +4,7 @@ import { hasFormula, isFormula } from "../formula/formula-utils";
 import { Inventory } from "../inventory/Inventory";
 import { BasicType } from "../types/basic-types";
 import { Resolution, resolveAny } from "./Resolution";
-import { EMPTY_VALUEOF, ValueOf } from "./ValueOf";
+import { ValueOf } from "./ValueOf";
 
 export type ArrayResolution = Formula | Resolution[];
 
@@ -18,7 +18,7 @@ export function resolveArray(resolution: ArrayResolution): ValueOf<any[]> {
         return { valueOf: () => array };
     }
     if (!resolution) {
-        return EMPTY_VALUEOF;
+        return { valueOf: () => [] };
     }
     if (isFormula(resolution)) {
         const formula = resolution as Formula;

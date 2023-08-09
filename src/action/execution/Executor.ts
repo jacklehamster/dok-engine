@@ -9,36 +9,9 @@ export interface Executor<I extends Inventory = Inventory> {
     jumpTo(step: StepId): Executor;
     evaluate<T>(value: ValueOf<T>): T | null;
     evaluateArray<T>(values: ValueOf<T>[], result: (T|null)[]): void;
-    ifCondition(bool: ValueOf<boolean>): Executor;
+    ifCondition(bool: ValueOf<boolean>): Executor | null;
     reportError(error: ConvertError): void;
     get inventory(): I;
-}
-
-class NoopExecutor implements Executor {
-    inventory: Inventory = {};
-
-    static INSTANCE: NoopExecutor = new NoopExecutor();
-
-    jumpTo(): Executor {
-        return this;
-    }
-    skipNextStep(): Executor {
-        return this;
-    }
-    evaluate(): null {
-        return null;
-    }
-    ifCondition(): Executor {
-        return this;
-    }
-
-    reportError(): void {
-        //  DO NOTHING
-    }
-
-    evaluateArray(): void {
-        //  DO NOTHING
-    }
 }
 
 const MAX_STEPS_PER_EXECUTION = 1000;
@@ -73,9 +46,9 @@ export class ExecutorBase<I extends Inventory = Inventory> implements Executor {
         return this;
     }
 
-    ifCondition(bool: boolean): Executor {
+    ifCondition(bool: boolean): Executor | null {
         if (!bool) {
-            return NoopExecutor.INSTANCE;
+            return null;
         }
         return this;
     }

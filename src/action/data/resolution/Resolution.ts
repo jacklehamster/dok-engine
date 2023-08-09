@@ -6,7 +6,7 @@ import { resolveArray } from "./ArrayResolution";
 import { BooleanResolution } from "./BooleanResolution";
 import { NumberResolution } from "./NumberResolution";
 import { StringResolution } from "./StringResolution";
-import { EMPTY_VALUEOF, ValueOf } from "./ValueOf";
+import { ValueOf } from "./ValueOf";
 
 export type Resolution = BasicType | BooleanResolution | StringResolution | NumberResolution;
 
@@ -37,5 +37,7 @@ export function resolveAny(resolution: Resolution): ValueOf<any> {
                 return resolution;
             }
     }
-    return EMPTY_VALUEOF;
+    return {
+        valueOf: () => resolution,
+    };
 }
