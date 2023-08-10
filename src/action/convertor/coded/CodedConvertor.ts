@@ -40,11 +40,13 @@ export class CodedConvertor<A extends Action = Action> extends Convertor<A> {
             writerContext.subConvertor.convert(command, writerContext);
         });
         const executor: Executor<WriterInventory> = new Executor<WriterInventory>({
-            inventory: {
-                action,
-                context,
-                labels: {},
-                stash: [],
+            inventoryInitializer() {
+                return {
+                    action,
+                    context,
+                    labels: {},
+                    stash: [],
+                };
             },
             accumulator: writerContext.accumulator,
         });

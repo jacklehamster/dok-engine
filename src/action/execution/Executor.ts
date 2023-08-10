@@ -4,17 +4,19 @@ import { ValueOf } from "../data/resolution/ValueOf";
 import { StepId } from "../steps/ExecutionStep";
 import { StepAccumulator } from "../steps/StepAccumulator";
 import Door from "./Door";
+import { Obj } from "../data/types/basic-types";
 
 export interface IExecutor<I extends Inventory = Inventory> {
+    get inventory(): I;
+    ifCondition(bool: ValueOf<boolean>): IExecutor | null;
+    evaluate<T>(value: ValueOf<T>): T | null;
     skipNextStep(): IExecutor;
     jumpTo(step: StepId): IExecutor;
-    evaluate<T>(value: ValueOf<T>): T | null;
-    ifCondition(bool: ValueOf<boolean>): IExecutor | null;
-    reportError(error: ConvertError): void;
-    get inventory(): I;
     stash(itemKeys: string[]): void;
     unstash(): void;
     createDoor(name: string): Door;
+    passDoor(name: string, passedInventory: Obj): void;
+    reportError(error: ConvertError): void;
 }
 
 const MAX_STEPS_PER_EXECUTION = 1000;
@@ -22,7 +24,15 @@ const MAX_STEPS_TAKEN = 5000;
 
 interface Props<I extends Inventory = Inventory> {
     accumulator: StepAccumulator;
+    inventoryInitializer(): I;
+    doors?: Record<string, Door>;
+}
+
+export interface State<I extends Inventory = Inventory> {
+    nextStep: StepId;
     inventory: I;
+    accumulator: StepAccumulator<I>;
+    doors: Record<string, Door>;
 }
 
 let stepCount = 0;
@@ -35,16 +45,24 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
     accumulator: StepAccumulator<I>;
 
     //  doors that can lead to new execution
-    doors: Record<string, Door> = {};
+    doors: Record<string, Door>;
 
     //  state
     nextStep: StepId = 0;           //  Upcoming step
     inventory: I;                   //  inventory carried
+    inventoryInitializer: () => I;
+
+    //  error report
     errors: ConvertError[] = [];    //  any error encountered
 
-    constructor({accumulator, inventory}: Props<I>) {
-        this.inventory = inventory;
+    //  state history
+    states: State<I>[] = [];
+
+    constructor({accumulator, inventoryInitializer, doors = {}}: Props<I>) {
+        this.inventoryInitializer = inventoryInitializer;
+        this.inventory = this.inventoryInitializer();
         this.accumulator = accumulator;
+        this.doors = {...doors};
     }
 
     jumpTo(step: StepId): IExecutor {
@@ -82,6 +100,10 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
                 return false;
             }
             return true;
+        } else {
+            if (this.popState()) {
+                return true;
+            }
         }
         return false;
     }
@@ -130,5 +152,39 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
         return this.doors[name] = {
             accumulator: new StepAccumulator(),
         };
+    }
+
+    private pushState() {
+        this.states.push({
+            nextStep: this.nextStep,
+            inventory: this.inventory,
+            accumulator: this.accumulator,
+            doors: this.doors,
+        });
+    }
+
+    private popState(): boolean {
+        const savedState = this.states.pop();
+        if (savedState) {
+            const { nextStep, inventory, accumulator, doors } = savedState;
+            this.nextStep = nextStep;
+            this.inventory = inventory;
+            this.accumulator = accumulator;
+            this.doors = doors;
+            return true;   
+        }
+        return false;
+    }
+
+    passDoor(name: string, passedInventory: Obj) {
+        this.pushState();
+        const door = this.doors[name];
+        this.inventory = this.inventoryInitializer();
+        for (let i in passedInventory) {
+            (this.inventory as Inventory)[i] = passedInventory[i];
+        }
+        this.accumulator = door.accumulator;
+        this.nextStep = 0;
+        this.doors = {...this.doors};
     }
 }

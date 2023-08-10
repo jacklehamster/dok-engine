@@ -30,7 +30,7 @@ describe('test JumpToLabel', () => {
             jumpTo: "testLabel",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {
             },
             context: actionContext,
@@ -38,14 +38,14 @@ describe('test JumpToLabel', () => {
                 testLabel: 123
             },
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {
+            inventoryInitializer: () => ({
                 stash: [],
-            },
+            }),
         });
         actionExecutor.jumpTo = jest.fn();
         actionExecutor.executeUtilStop()
@@ -57,20 +57,20 @@ describe('test JumpToLabel', () => {
             jumpTo: "invalidLabel",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {
             },
             context: actionContext,
             labels: {},
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {
+            inventoryInitializer: () => ({
                 stash: [],
-            },
+            }),
         });
         actionExecutor.executeUtilStop()
         expect(actionExecutor.errors).toEqual([{

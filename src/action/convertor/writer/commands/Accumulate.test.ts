@@ -30,12 +30,12 @@ describe('test accumulate', () => {
 
         convertor.convert(command, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action,
             context: actionContext,
             labels: {},
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         for (let i = 0; i < actionsExpected.length; i++) {

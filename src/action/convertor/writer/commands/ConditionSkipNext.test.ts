@@ -27,19 +27,19 @@ describe('test conditionSkipNext', () => {
     function testWriterCommandWithAction(command: SkipNextCommand, action: Action, expectedSkip: boolean) {
         convertor.convert(command, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action,
             context: actionContext,
             labels: {},
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {
+            inventoryInitializer: () => ({
                 stash: [],
-            },
+            }),
         });
         actionExecutor.skipNextStep = jest.fn();
 

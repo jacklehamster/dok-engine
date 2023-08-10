@@ -30,19 +30,19 @@ describe('test call', () => {
             call: "~{action.log}",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {
                 log: [1, 2, "~{x}"],
             },
             context: actionContext,
             labels: {},
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {x: 3, log, stash: []},
+            inventoryInitializer: () => ({x: 3, log, stash: []}),
         });
         actionExecutor.executeUtilStop()
         expect(log).toBeCalledWith(1, 2, 3);

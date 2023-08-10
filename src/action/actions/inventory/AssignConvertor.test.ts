@@ -13,10 +13,10 @@ describe('SetConvertor', () => {
             subConvertor: new MultiConvertor(),
             accumulator: new StepAccumulator(),
         };
-        executor = new Executor({ accumulator: context.accumulator, inventory: {
+        executor = new Executor({ accumulator: context.accumulator, inventoryInitializer: () => ({
             name: "inventory",
             stash: [],
-        } });
+        }) });
     });
 
     it('Ignore action without =', () => {

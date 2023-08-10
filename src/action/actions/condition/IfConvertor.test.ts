@@ -21,10 +21,11 @@ describe('IfConvertor', () => {
             ),
             accumulator: new StepAccumulator(),
         };
-        executor = new Executor({ accumulator: context.accumulator, inventory: {
+        executor = new Executor({ accumulator: context.accumulator, inventoryInitializer: () => ({
             log,
             stash: [],
-        } });
+            }),
+        });
         convertor = IF_CONVERTOR;
     });
 

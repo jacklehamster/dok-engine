@@ -21,10 +21,10 @@ describe('UnlessConvertor', () => {
             ),
             accumulator: new StepAccumulator(),
         };
-        executor = new Executor({ accumulator: context.accumulator, inventory: {
+        executor = new Executor({ accumulator: context.accumulator, inventoryInitializer: () => ({
             log,
             stash: [],
-        } });
+        }) });
         convertor = UNLESS_CONVERTOR;
     });
 

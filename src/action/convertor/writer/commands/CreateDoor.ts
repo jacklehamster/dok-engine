@@ -35,6 +35,7 @@ export class CreateDoorConvertor extends Convertor<CreateDoorCommand, WriterInve
                 const { context } = writerExecutor.inventory;
 
                 context.accumulator.add({
+                    description: `Execute: Create door ${nameConvertValue}`,
                     execute(executor) {
                         const doorName = executor.evaluate(nameExecResolution);
                         const door = executor.createDoor(doorName ?? "");

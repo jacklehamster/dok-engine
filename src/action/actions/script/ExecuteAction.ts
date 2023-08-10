@@ -1,20 +1,19 @@
 import { CodedConvertor } from "../../convertor/coded/CodedConvertor";
+import { ObjectResolution } from "../../data/resolution/ObjectResolution";
 import { StringResolution } from "../../data/resolution/StringResolution";
 import { Action } from "../Action";
-import { Actions } from "../actions/Actions";
 
-export interface ScriptAction<A extends Action = Action> extends Action {
-    script: {
-        name: StringResolution;
-        actions: Actions<A>;    
-    };
+export interface ExecuteAction extends Action {
+    execute: StringResolution;
+    parameters: ObjectResolution;
 }
 
-export const SCRIPT_CONVERTOR = new CodedConvertor({
-    field: "script",
+
+export const EXECUTE_CONVERTOR = new CodedConvertor({
+    field: "execute",
     validations: [
         {
-            field: "script",
+            field: "parameters",
             type: "object",
             error: {
                 code: "WRONG_TYPE",
@@ -24,9 +23,9 @@ export const SCRIPT_CONVERTOR = new CodedConvertor({
     ],
     writerCommands: [
         {
-            "door": {
-                name: "~{action.script.name}",
-                actions: "~{action.script.actions}"
+            "passDoor": {
+                name: "~{action.execute}",
+                inventory: "~{action.parameters}"
             },
         },
     ],

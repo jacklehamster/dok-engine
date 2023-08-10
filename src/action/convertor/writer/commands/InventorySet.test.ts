@@ -31,7 +31,7 @@ describe('test Inventory Set', () => {
             value: "~{action.value}",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {
                 property: "test",
                 value: 123,
@@ -40,14 +40,14 @@ describe('test Inventory Set', () => {
             labels: {
             },
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {
+            inventoryInitializer: () => ({
                 stash: [],
-            },
+            }),
         });
         actionExecutor.executeUtilStop()
         expect(actionExecutor.inventory.test).toEqual(123);
@@ -61,7 +61,7 @@ describe('test Inventory Set', () => {
             value: "~{action.value}",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {
                 subject: "~{test}",
                 property: "prop",
@@ -71,15 +71,15 @@ describe('test Inventory Set', () => {
             labels: {
             },
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {
+            inventoryInitializer: () => ({
                 test: {},
                 stash: [],
-            },
+            }),
         });
         actionExecutor.executeUtilStop()
         expect(actionExecutor.inventory.test).toEqual({prop: 123});
@@ -92,7 +92,7 @@ describe('test Inventory Set', () => {
             value: "~~{value + 1}",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {
                 property: "test",
             },
@@ -100,15 +100,15 @@ describe('test Inventory Set', () => {
             labels: {
             },
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {
+            inventoryInitializer: () => ({
                 test: 999,
                 stash: [],
-            },
+            }),
         });
         actionExecutor.executeUtilStop()
         expect(actionExecutor.inventory.test).toEqual(1000);

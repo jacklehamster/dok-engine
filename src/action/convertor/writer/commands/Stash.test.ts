@@ -30,24 +30,24 @@ describe('test Stash', () => {
             stash: ["a", "b"],
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {
             },
             context: actionContext,
             labels: {
             },
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
-            inventory: {
+            inventoryInitializer: () => ({
                 a: 123,
                 b: 456,
                 c: 789,
                 stash: [],
-            },
+            }),
         });
         actionExecutor.executeUtilStop()
         expect(actionExecutor.inventory.stash[0]).toEqual({a: 123, b: 456});

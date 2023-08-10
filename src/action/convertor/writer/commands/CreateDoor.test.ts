@@ -30,17 +30,17 @@ describe('test createDoor', () => {
 
         convertor.convert(command, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action,
             context: actionContext,
             labels: {},
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventory: { stash: []},
+            inventoryInitializer: () => ({ stash: []}),
         });
         actionExecutor.executeUtilStop()
 

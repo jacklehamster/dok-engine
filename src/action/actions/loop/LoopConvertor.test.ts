@@ -20,10 +20,10 @@ describe('LoopConvertor', () => {
             ),
             accumulator: new StepAccumulator(),
         };
-        executor = new Executor({ accumulator: context.accumulator, inventory: {
+        executor = new Executor({ accumulator: context.accumulator, inventoryInitializer: () => ({
             log,
             stash: [],
-        } });
+        }) });
     });
 
     it('Ignore action without loop', () => {

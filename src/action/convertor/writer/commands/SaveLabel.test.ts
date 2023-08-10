@@ -29,12 +29,12 @@ describe('test SaveLabel', () => {
             label: "testLabel",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {},
             context: actionContext,
             labels: {},
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
 
         expect(executor.inventory.labels).toEqual({ testLabel: 0 });
@@ -48,13 +48,13 @@ describe('test SaveLabel', () => {
             label: "testLabel",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventory: {
+        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
             action: {
             },
             context: actionContext,
             labels: {},
             stash: [],
-        } });
+        }) });
         executor.executeUtilStop();
         expect(executor.errors).toEqual([{
             code: "DUPLICATE_LABEL",
