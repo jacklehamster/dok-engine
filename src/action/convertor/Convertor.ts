@@ -8,7 +8,7 @@ export interface Context<A extends Action = Action, I extends Inventory = Invent
     subConvertor: Convertor<A, I, Context<A, I>>,
 };
 
-export abstract class Convertor<A extends Action = Action, I extends Inventory = Inventory, C extends Context<A, I> = Context> {
+export abstract class Convertor<A extends Action = Action, I extends Inventory = Inventory, C extends Context<A, I> = Context<A, I>> {
     abstract validate(action: Action): boolean;
 
     priority: number = 0;

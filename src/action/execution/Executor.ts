@@ -3,11 +3,15 @@ import { Inventory } from "../data/inventory/Inventory";
 import { ValueOf } from "../data/resolution/ValueOf";
 import { StepId } from "../steps/ExecutionStep";
 import { StepAccumulator } from "../steps/StepAccumulator";
-import Door from "./Door";
+import { Door } from "./door/Door";
 import { Obj } from "../data/types/basic-types";
+import { Cleanup } from "./cleanup/Cleanup";
+import { Children } from "./children/Children";
 
 export interface IExecutor<I extends Inventory = Inventory> {
     get inventory(): I;
+    get children(): Children;
+    reset(): void;
     ifCondition(bool: ValueOf<boolean>): IExecutor | null;
     evaluate<T>(value: ValueOf<T>): T | null;
     skipNextStep(): IExecutor;
@@ -17,25 +21,15 @@ export interface IExecutor<I extends Inventory = Inventory> {
     createDoor(name: string): Door;
     passDoor(name: string, passedInventory: Obj): void;
     reportError(error: ConvertError): void;
+    addCleanup(cleanup: Cleanup): void;
 }
-
-const MAX_STEPS_PER_EXECUTION = 1000;
-const MAX_STEPS_TAKEN = 5000;
 
 interface Props<I extends Inventory = Inventory> {
-    accumulator: StepAccumulator;
-    inventoryInitializer(): I;
-    doors?: Record<string, Door>;
-}
-
-export interface State<I extends Inventory = Inventory> {
-    nextStep: StepId;
-    inventory: I;
     accumulator: StepAccumulator<I>;
-    doors: Record<string, Door>;
+    inventoryInitializer(): I;
+    doors?: Record<string, Door<I>>;
 }
 
-let stepCount = 0;
 let nextExecutorId = 1;
 export class Executor<I extends Inventory = Inventory> implements IExecutor {
     //  Executor ID
@@ -45,24 +39,33 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
     accumulator: StepAccumulator<I>;
 
     //  doors that can lead to new execution
-    doors: Record<string, Door>;
+    doors: Record<string, Door<I>>;
 
     //  state
-    nextStep: StepId = 0;           //  Upcoming step
+    nextStep: StepId = 0;           //  Next step
     inventory: I;                   //  inventory carried
     inventoryInitializer: () => I;
 
     //  error report
     errors: ConvertError[] = [];    //  any error encountered
 
-    //  state history
-    states: State<I>[] = [];
+    //  cleanup
+    cleanups: Set<Cleanup> = new Set();
 
-    constructor({accumulator, inventoryInitializer, doors = {}}: Props<I>) {
+    //  children
+    children: Children<I> = new Children(this);
+    parent?: Executor<I>;
+
+    constructor({accumulator, inventoryInitializer, doors = {}}: Props<I>, parent?: Executor<I>) {
+        this.parent = parent;
+        this.accumulator = accumulator;
         this.inventoryInitializer = inventoryInitializer;
         this.inventory = this.inventoryInitializer();
-        this.accumulator = accumulator;
         this.doors = {...doors};
+    }
+
+    reset() {
+        this.nextStep = 0;
     }
 
     jumpTo(step: StepId): IExecutor {
@@ -86,48 +89,21 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
         return value.valueOf(this.inventory) ?? null;
     }
 
-    executeSingleStep() {
-        stepCount++;
-        if (stepCount > MAX_STEPS_TAKEN) {
-            throw new Error(`${MAX_STEPS_TAKEN} steps taken without completing.`)
+    executeSingleStep(): Executor<I> | undefined {
+        if (!this.id) {
+            this.id = nextExecutorId++;
         }
         const step = this.nextStep++;
         const executionStep = this.accumulator.getStep(step);
         if (executionStep) {
             console.log(`${this.id}-${step}`, executionStep.description);
-            executionStep.execute?.(this);
-            if (this.errors.length) {
-                return false;
-            }
-            return true;
-        } else {
-            if (this.popState()) {
-                return true;
-            }
+            return executionStep.execute?.(this) ?? this;
         }
-        return false;
+        return this.parent ?? undefined;
     }
 
     reportError(error: ConvertError) {
         this.errors.push(error)
-    }
-
-    executeUtilStop() {
-        if (!this.id) {
-            this.id = nextExecutorId++;
-        }
-        let i;
-        for (i = 0; i < MAX_STEPS_PER_EXECUTION; i++) {
-            if (!this.executeSingleStep()) {
-                break;
-            }
-        }
-        if (i >= MAX_STEPS_PER_EXECUTION) {
-            throw new Error(`Execution is considered stuck after running ${MAX_STEPS_PER_EXECUTION} steps.`);
-        }
-        if (this.errors.length) {
-            console.error("Errors in execution: ", this.errors);
-        }
     }
 
     stash(itemKeys: string[]): void {
@@ -148,43 +124,33 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
         }
     }
 
-    createDoor(name: string) {
+    createDoor(name: string): Door {
         return this.doors[name] = {
             accumulator: new StepAccumulator(),
         };
     }
 
-    private pushState() {
-        this.states.push({
-            nextStep: this.nextStep,
-            inventory: this.inventory,
-            accumulator: this.accumulator,
-            doors: this.doors,
-        });
-    }
-
-    private popState(): boolean {
-        const savedState = this.states.pop();
-        if (savedState) {
-            const { nextStep, inventory, accumulator, doors } = savedState;
-            this.nextStep = nextStep;
-            this.inventory = inventory;
-            this.accumulator = accumulator;
-            this.doors = doors;
-            return true;   
-        }
-        return false;
-    }
-
     passDoor(name: string, passedInventory: Obj) {
-        this.pushState();
         const door = this.doors[name];
-        this.inventory = this.inventoryInitializer();
+        const child = this.spawn();
+        child.accumulator = door.accumulator;
+        const childInventory: Inventory = child.inventory;
         for (let i in passedInventory) {
-            (this.inventory as Inventory)[i] = passedInventory[i];
+            childInventory[i] = passedInventory[i];
         }
-        this.accumulator = door.accumulator;
-        this.nextStep = 0;
-        this.doors = {...this.doors};
+        return child;
+    }
+
+    addCleanup(cleanup: Cleanup): void {
+        this.cleanups.add(cleanup);
+    }
+
+    spawn(): Executor<I> {
+        return this.children.spawn();
+    }
+
+    destroy(): void {
+        this.children.destroy();
+        this.cleanups.forEach(cleanup => cleanup.cleanup());
     }
 }

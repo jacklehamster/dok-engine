@@ -1,5 +1,6 @@
 import { ConvertError } from "../../../error/errors";
 import { Executor } from "../../../execution/Executor";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
@@ -35,7 +36,7 @@ describe('test SaveLabel', () => {
             labels: {},
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         expect(executor.inventory.labels).toEqual({ testLabel: 0 });
     });
@@ -55,7 +56,7 @@ describe('test SaveLabel', () => {
             labels: {},
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(executor.errors).toEqual([{
             code: "DUPLICATE_LABEL",
             label: "testLabel",

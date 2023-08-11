@@ -8,6 +8,7 @@ import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
 import { SkipNextCommand, SkipNextConvertor } from "./ConditionSkipNext";
 import { Action } from "../../../actions/Action";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 
 describe('test conditionSkipNext', () => {
     let convertor: SkipNextConvertor;
@@ -33,7 +34,7 @@ describe('test conditionSkipNext', () => {
             labels: {},
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
@@ -43,7 +44,7 @@ describe('test conditionSkipNext', () => {
         });
         actionExecutor.skipNextStep = jest.fn();
 
-        actionExecutor.executeUtilStop();
+        executeUntilStop(actionExecutor);
         if (expectedSkip) {
             expect(actionExecutor.skipNextStep).toBeCalled();
         } else {

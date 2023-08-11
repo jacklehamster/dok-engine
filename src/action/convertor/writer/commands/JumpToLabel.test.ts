@@ -7,6 +7,7 @@ import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
 import { JumpToLabelCommand, JumpToLabelConvertor } from "./JumpToLabel";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 
 describe('test JumpToLabel', () => {
     let convertor: JumpToLabelConvertor;
@@ -39,7 +40,7 @@ describe('test JumpToLabel', () => {
             },
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
@@ -48,7 +49,7 @@ describe('test JumpToLabel', () => {
             }),
         });
         actionExecutor.jumpTo = jest.fn();
-        actionExecutor.executeUtilStop()
+        executeUntilStop(actionExecutor);
         expect(actionExecutor.jumpTo).toBeCalledWith(123);
     });
 
@@ -64,7 +65,7 @@ describe('test JumpToLabel', () => {
             labels: {},
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
@@ -72,7 +73,7 @@ describe('test JumpToLabel', () => {
                 stash: [],
             }),
         });
-        actionExecutor.executeUtilStop()
+        executeUntilStop(actionExecutor);
         expect(actionExecutor.errors).toEqual([{
             code: "INVALID_LABEL",
             label: "invalidLabel",

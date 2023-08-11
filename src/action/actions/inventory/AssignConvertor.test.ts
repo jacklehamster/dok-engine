@@ -1,6 +1,7 @@
 import { Context } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
+import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { ASSIGN_CONVERTOR } from "./AssignConvertor";
 
@@ -28,7 +29,7 @@ describe('SetConvertor', () => {
         ASSIGN_CONVERTOR.convert({
             "=": ["abc", 123],
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(executor.inventory.abc).toEqual(123);
     });
 
@@ -36,7 +37,7 @@ describe('SetConvertor', () => {
         ASSIGN_CONVERTOR.convert({
             "=": ["abc", "~{100 + 50}"],
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(executor.inventory.abc).toEqual(150);
     });
 
@@ -45,7 +46,7 @@ describe('SetConvertor', () => {
         ASSIGN_CONVERTOR.convert({
             "=": ["~{abc}", "a", 123],
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(executor.inventory.abc.a).toEqual(123);
     });
 });

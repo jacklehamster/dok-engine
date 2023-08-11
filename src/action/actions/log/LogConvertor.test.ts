@@ -1,6 +1,7 @@
 import { Context } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
+import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "./LogConvertor";
 
@@ -28,7 +29,7 @@ describe('LogConvertor', () => {
         LOG_CONVERTOR.convert({
             log: [1, 2, 3],
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(1, 2, 3);
     });
 
@@ -37,7 +38,7 @@ describe('LogConvertor', () => {
             log: ["~{x}"],
         }, context);
         executor.inventory.x = 123
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(123);
     });
 });

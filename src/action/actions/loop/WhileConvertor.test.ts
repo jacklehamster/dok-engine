@@ -1,6 +1,7 @@
 import { Context } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
+import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { SET_CONVERTOR } from "../inventory/SetConvertor";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
@@ -38,7 +39,7 @@ describe('WhileConvertor', () => {
             ],
         }, context);
         executor.inventory.x = 0
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(0);
         expect(log).toBeCalledWith(1);
         expect(log).toBeCalledWith(2);

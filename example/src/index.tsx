@@ -1,7 +1,12 @@
-import './index.css'
+import React from 'react';
+import * as ReactDOMClient from 'react-dom';
+import { App } from './App';
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+
+const root = document.getElementById('root');
+root!.style.height = "100vh";
+root!.style.width = "100vw";
+document.body.style.margin = "0px";
+
+ReactDOMClient.render(<App></App>, root);

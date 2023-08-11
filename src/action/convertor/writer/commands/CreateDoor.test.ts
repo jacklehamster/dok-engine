@@ -1,6 +1,7 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../error/errors";
 import { Executor } from "../../../execution/Executor";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
@@ -36,13 +37,13 @@ describe('test createDoor', () => {
             labels: {},
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({ stash: []}),
         });
-        actionExecutor.executeUtilStop()
+        executeUntilStop(actionExecutor);
 
         for (let i = 0; i < actionsExpected.length; i++) {
             if (expectSubConversion) {

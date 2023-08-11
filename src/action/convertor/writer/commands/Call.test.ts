@@ -7,6 +7,7 @@ import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
 import { CallCommand, CallConvertor } from "./CallMethod";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 
 describe('test call', () => {
     let convertor: CallConvertor;
@@ -38,13 +39,13 @@ describe('test call', () => {
             labels: {},
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({x: 3, log, stash: []}),
         });
-        actionExecutor.executeUtilStop()
+        executeUntilStop(actionExecutor);
         expect(log).toBeCalledWith(1, 2, 3);
     });
 

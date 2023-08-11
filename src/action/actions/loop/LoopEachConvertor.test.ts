@@ -1,6 +1,7 @@
 import { Context } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
+import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
 import { LOOP_EACH_CONVERTOR } from "./LoopEachConvertor";
@@ -34,7 +35,7 @@ describe('LoopEachConvertor', () => {
                 { log: ["~{element}"] },
             ],
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(0);
         expect(log).toBeCalledWith("one");
         expect(log).toBeCalledWith("2");

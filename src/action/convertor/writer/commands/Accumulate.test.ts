@@ -1,6 +1,7 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../error/errors";
 import { Executor } from "../../../execution/Executor";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
@@ -36,7 +37,7 @@ describe('test accumulate', () => {
             labels: {},
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         for (let i = 0; i < actionsExpected.length; i++) {
             if (expectSubConversion) {

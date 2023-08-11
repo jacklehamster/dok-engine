@@ -7,6 +7,7 @@ import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
 import { InventorySetCommand, InventorySetConvertor } from "./InventorySet";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 
 describe('test Inventory Set', () => {
     let convertor: InventorySetConvertor;
@@ -41,7 +42,7 @@ describe('test Inventory Set', () => {
             },
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
@@ -49,7 +50,7 @@ describe('test Inventory Set', () => {
                 stash: [],
             }),
         });
-        actionExecutor.executeUtilStop()
+        executeUntilStop(actionExecutor);
         expect(actionExecutor.inventory.test).toEqual(123);
     });
 
@@ -72,7 +73,7 @@ describe('test Inventory Set', () => {
             },
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
@@ -81,7 +82,7 @@ describe('test Inventory Set', () => {
                 stash: [],
             }),
         });
-        actionExecutor.executeUtilStop()
+        executeUntilStop(actionExecutor);
         expect(actionExecutor.inventory.test).toEqual({prop: 123});
     });
 
@@ -101,7 +102,7 @@ describe('test Inventory Set', () => {
             },
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
@@ -110,7 +111,7 @@ describe('test Inventory Set', () => {
                 stash: [],
             }),
         });
-        actionExecutor.executeUtilStop()
+        executeUntilStop(actionExecutor);
         expect(actionExecutor.inventory.test).toEqual(1000);
     });
 

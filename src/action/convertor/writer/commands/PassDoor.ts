@@ -38,7 +38,7 @@ export class PassDoorConvertor extends Convertor<PassDoorCommand, WriterInventor
                         const doorName = executor.evaluate(nameExecResolution);
                         if (doorName) {
                             const passedInventory = executor.evaluate(passedInventoryResolution) ?? {};
-                            executor.passDoor(doorName, passedInventory);    
+                            return executor.passDoor(doorName, passedInventory);    
                         } else {
                             executor.reportError({
                                 code: "INVALID_DOOR",

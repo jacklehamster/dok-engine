@@ -1,6 +1,7 @@
 import { Context, Convertor } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
+import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
 import { UNLESS_CONVERTOR } from "./UnlessAction";
@@ -39,7 +40,7 @@ describe('UnlessConvertor', () => {
                 log: [123],
             },
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(123);
     });
 
@@ -50,7 +51,7 @@ describe('UnlessConvertor', () => {
                 log: [123],
             },
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).not.toBeCalledWith(123);
     });
 });

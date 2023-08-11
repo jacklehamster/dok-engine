@@ -1,6 +1,7 @@
 import { Context } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
+import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
 import { EXECUTE_CONVERTOR } from "./ExecuteAction";
@@ -50,7 +51,7 @@ describe('ScriptConvertor', () => {
             }
         }, context);
 
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(123);
     });
 });

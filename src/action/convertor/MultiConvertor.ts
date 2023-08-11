@@ -3,7 +3,7 @@ import { ConvertError } from "../error/errors";
 import { Inventory } from "../data/inventory/Inventory";
 import { Context, Convertor } from "./Convertor";
 
-export class MultiConvertor<A extends Action = Action, I extends Inventory = Inventory, C extends Context = Context> extends Convertor<A, I, C> {
+export class MultiConvertor<A extends Action = Action, I extends Inventory = Inventory, C extends Context<A, I> = Context<A, I>> extends Convertor<A, I, C> {
     convertors: Convertor<A>[];
 
     constructor(...convertors: Convertor<A>[]) {

@@ -26,13 +26,17 @@ export function resolveArray(resolution: ArrayResolution): ValueOf<BasicType[]> 
             },
         };
     }
-    const array = resolution as Resolution[]
+    const evaluators = resolution as Resolution[]
 
-    const evaluator = array.map(resolution => resolveAny(resolution));
+    const values: ValueOf<any>[] = evaluators.map(resolution => resolveAny(resolution));
+    const array: BasicType[] = new Array(values.length);
 
     return {
         valueOf(parameters: Inventory): BasicType[] {
-            return evaluator.map(evalItem => evalItem?.valueOf(parameters));
+            for (let i = 0; i < values.length; i++) {
+                array[i] = values[i]?.valueOf(parameters);
+            }
+            return array;
         }
     };
 }

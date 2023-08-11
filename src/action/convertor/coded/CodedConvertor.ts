@@ -6,6 +6,7 @@ import { WriterContext } from "../writer/WriterContext";
 import { WriterCommand } from "../writer/commands/WriterCommand";
 import { WriterInventory } from "../writer/WriterInventory";
 import { Validation } from "./CodedValidator";
+import { executeUntilStop } from "../../execution/utils/execution-utils";
 
 interface ConverterConfig {
     field: string;
@@ -50,7 +51,7 @@ export class CodedConvertor<A extends Action = Action> extends Convertor<A> {
             },
             accumulator: writerContext.accumulator,
         });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
     }
 
     validationErrors(action: A, errors: ConvertError[]): void {

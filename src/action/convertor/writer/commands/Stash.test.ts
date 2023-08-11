@@ -7,6 +7,7 @@ import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { WriterInventory } from "../WriterInventory";
 import { StashCommand, StashConvertor } from "./Stash";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 
 describe('test Stash', () => {
     let convertor: StashConvertor;
@@ -38,7 +39,7 @@ describe('test Stash', () => {
             },
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor<Inventory>({
             accumulator: actionContext.accumulator,
@@ -49,7 +50,7 @@ describe('test Stash', () => {
                 stash: [],
             }),
         });
-        actionExecutor.executeUtilStop()
+        executeUntilStop(actionExecutor);
         expect(actionExecutor.inventory.stash[0]).toEqual({a: 123, b: 456});
     });
 

@@ -1,6 +1,7 @@
 import { Context, Convertor } from "../../convertor/Convertor";
 import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
+import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
 import { IF_CONVERTOR } from "./IfConvertor";
@@ -43,7 +44,7 @@ describe('IfConvertor', () => {
                 log: [456],
             },
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(123);
     });
 
@@ -57,7 +58,7 @@ describe('IfConvertor', () => {
                 log: [456],
             },
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(456);
     });
 
@@ -68,7 +69,7 @@ describe('IfConvertor', () => {
                 log: [123],
             },
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(123);
     });
 
@@ -82,7 +83,7 @@ describe('IfConvertor', () => {
                 },
             },
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(123);
     });
 
@@ -100,7 +101,7 @@ describe('IfConvertor', () => {
                 }
             },
         }, context);
-        executor.executeUtilStop();
+        executeUntilStop(executor);
         expect(log).toBeCalledWith(456);
     });
 });

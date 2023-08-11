@@ -28,11 +28,17 @@ export function resolveObject(resolution: ObjectResolution): ValueOf<Obj> {
     }
     const object = resolution as Obj<Resolution>;
 
-    const evaluator = Object.entries(object).map(([key, resolution]) => [key, resolveAny(resolution)]);
+    const result: Record<string, any> = {};
+    for (let i in object) {
+        result[i] = resolveAny(object[i])
+    }
 
     return {
         valueOf(parameters: Inventory): Obj {
-            return Object.fromEntries(evaluator.map(([key, evalItem]) => [key, evalItem?.valueOf(parameters)]));
+            for (let i in result) {
+                result[i] = result[i]?.valueOf(parameters);
+            }
+            return result;
         }
     };
 }

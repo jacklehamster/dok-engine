@@ -1,6 +1,7 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../error/errors";
 import { Executor } from "../../../execution/Executor";
+import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
@@ -35,7 +36,7 @@ describe('test passDoor', () => {
             labels: {},
             stash: [],
         }) });
-        executor.executeUtilStop();
+        executeUntilStop(executor);
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
@@ -45,10 +46,10 @@ describe('test passDoor', () => {
         const execute = jest.fn();
         const door = actionExecutor.createDoor(doorName);
         door.accumulator.add({
-            description: "test-step",
+            description: "Execute: test-step",
             execute,
         });
-        actionExecutor.executeUtilStop();
+        executeUntilStop(actionExecutor);
 
         expect(execute).toBeCalled();
     }
