@@ -1,12 +1,11 @@
 import { Action } from "../../../actions/Action";
 import { ConvertError } from "../../../error/errors";
-import { Executor } from "../../../execution/Executor";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
+import { WriterExecutor } from "../WriterExecutor";
 import { AccumulateCommand, AccumulateConvertor } from "./Accumulate";
 
 describe('test accumulate', () => {
@@ -31,12 +30,7 @@ describe('test accumulate', () => {
 
         convertor.convert(command, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action,
-            context: actionContext,
-            labels: {},
-            stash: [],
-        }) });
+        const executor = new WriterExecutor(writerContext.accumulator, action, actionContext);
         executeUntilStop(executor);
 
         for (let i = 0; i < actionsExpected.length; i++) {

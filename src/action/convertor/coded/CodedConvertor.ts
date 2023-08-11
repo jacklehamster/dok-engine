@@ -1,12 +1,11 @@
 import { Action } from "../../actions/Action";
 import { ConvertError } from "../../error/errors";
-import { Executor } from "../../execution/Executor";
 import { Context, Convertor } from "../Convertor";
 import { WriterContext } from "../writer/WriterContext";
 import { WriterCommand } from "../writer/commands/WriterCommand";
-import { WriterInventory } from "../writer/WriterInventory";
 import { Validation } from "./CodedValidator";
 import { executeUntilStop } from "../../execution/utils/execution-utils";
+import { WriterExecutor } from "../writer/WriterExecutor";
 
 interface ConverterConfig {
     field: string;
@@ -40,18 +39,10 @@ export class CodedConvertor<A extends Action = Action> extends Convertor<A> {
             }
             writerContext.subConvertor.convert(command, writerContext);
         });
-        const executor: Executor<WriterInventory> = new Executor<WriterInventory>({
-            inventoryInitializer() {
-                return {
-                    action,
-                    context,
-                    labels: {},
-                    stash: [],
-                };
-            },
-            accumulator: writerContext.accumulator,
-        });
-        executeUntilStop(executor);
+        executeUntilStop(new WriterExecutor(
+            writerContext.accumulator,
+            action,
+            context));
     }
 
     validationErrors(action: A, errors: ConvertError[]): void {

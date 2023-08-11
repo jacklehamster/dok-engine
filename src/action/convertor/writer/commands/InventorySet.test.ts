@@ -1,13 +1,12 @@
 import { ConvertError } from "../../../error/errors";
-import { Inventory } from "../../../data/inventory/Inventory";
 import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { InventorySetCommand, InventorySetConvertor } from "./InventorySet";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
+import { WriterExecutor } from "../WriterExecutor";
 
 describe('test Inventory Set', () => {
     let convertor: InventorySetConvertor;
@@ -32,19 +31,14 @@ describe('test Inventory Set', () => {
             value: "~{action.value}",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action: {
+        const executor = new WriterExecutor(writerContext.accumulator, {
                 property: "test",
                 value: 123,
             },
-            context: actionContext,
-            labels: {
-            },
-            stash: [],
-        }) });
+            actionContext);
         executeUntilStop(executor);
 
-        const actionExecutor = new Executor<Inventory>({
+        const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({
                 stash: [],
@@ -62,20 +56,15 @@ describe('test Inventory Set', () => {
             value: "~{action.value}",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action: {
+        const executor = new WriterExecutor(writerContext.accumulator, {
                 subject: "~{test}",
                 property: "prop",
                 value: 123,
             },
-            context: actionContext,
-            labels: {
-            },
-            stash: [],
-        }) });
+            actionContext);
         executeUntilStop(executor);
 
-        const actionExecutor = new Executor<Inventory>({
+        const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({
                 test: {},
@@ -93,18 +82,13 @@ describe('test Inventory Set', () => {
             value: "~~{value + 1}",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action: {
+        const executor = new WriterExecutor(writerContext.accumulator,{
                 property: "test",
             },
-            context: actionContext,
-            labels: {
-            },
-            stash: [],
-        }) });
+            actionContext);
         executeUntilStop(executor);
 
-        const actionExecutor = new Executor<Inventory>({
+        const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({
                 test: 999,

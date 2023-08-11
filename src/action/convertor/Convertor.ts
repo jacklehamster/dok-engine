@@ -1,14 +1,13 @@
 import { Action } from "../actions/Action";
 import { ConvertError } from "../error/errors";
-import { Inventory } from "../data/inventory/Inventory";
 import { StepAccumulator } from "../steps/StepAccumulator";
 
-export interface Context<A extends Action = Action, I extends Inventory = Inventory> {
-    accumulator: StepAccumulator<I>,
-    subConvertor: Convertor<A, I, Context<A, I>>,
+export interface Context<A extends Action = Action> {
+    accumulator: StepAccumulator,
+    subConvertor: Convertor<A, Context<A>>,
 };
 
-export abstract class Convertor<A extends Action = Action, I extends Inventory = Inventory, C extends Context<A, I> = Context<A, I>> {
+export abstract class Convertor<A extends Action = Action, C extends Context<A> = Context<A>> {
     abstract validate(action: Action): boolean;
 
     priority: number = 0;

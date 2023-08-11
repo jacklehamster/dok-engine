@@ -2,10 +2,9 @@ import { Inventory } from "../../data/inventory/Inventory";
 import { resolveBoolean } from "../../data/resolution/BooleanResolution";
 import { resolveAny } from "../../data/resolution/Resolution";
 import { IExecutor } from "../../execution/Executor";
-import { WriterInventory } from "./WriterInventory";
 import { WriterBaseCommand } from "./commands/WriterBaseCommand";
 
-export function shouldConvert(command: WriterBaseCommand, writerExecutor: IExecutor<WriterInventory>) {
+export function shouldConvert(command: WriterBaseCommand, writerExecutor: IExecutor) {
     if (command.condition === undefined) {
         return true;
     }
@@ -26,7 +25,7 @@ export function shouldConvert(command: WriterBaseCommand, writerExecutor: IExecu
 
 export function getSubjectResolution(
         command: WriterBaseCommand,
-        writerExecutor: IExecutor<WriterInventory>,
+        writerExecutor: IExecutor,
         defaultSubject?: any) {
     const subjectConversionResolution = resolveAny(command.subject);
     const subjectConversion = writerExecutor.evaluate(subjectConversionResolution);

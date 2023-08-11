@@ -2,7 +2,6 @@ import { ConvertError } from "../../../error/errors";
 import { asArray } from "../../../utils/array-utils";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
@@ -11,6 +10,7 @@ import { resolveAny } from "../../../data/resolution/Resolution";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 import { ArrayResolution } from "../../../data/resolution/ArrayResolution";
 import { ObjectResolution } from "../../../data/resolution/ObjectResolution";
+import { WriterExecutor } from "../WriterExecutor";
 
 export interface CreateDoorCommand extends WriterBaseCommand {
     door: {
@@ -19,20 +19,20 @@ export interface CreateDoorCommand extends WriterBaseCommand {
     };
 }
 
-export class CreateDoorConvertor extends Convertor<CreateDoorCommand, WriterInventory, WriterContext> {
+export class CreateDoorConvertor extends Convertor<CreateDoorCommand, WriterContext> {
     convert(command: CreateDoorCommand, writerContext: WriterContext): void {
         const nameResolution = resolveString(command.door.name);
         const actionsResolution = resolveAny(command.door.actions);
         writerContext.accumulator.add({
             description: `Convert: Accumulate steps using the actions for door "${command.door.name}".`,
-            execute(writerExecutor) {
+            execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
                 const nameConvertValue = writerExecutor.evaluate(nameResolution);
                 const nameExecResolution = resolveString(nameConvertValue ?? "");
                 const actions = writerExecutor.evaluate(actionsResolution);
-                const { context } = writerExecutor.inventory;
+                const { context } = writerExecutor;
 
                 context.accumulator.add({
                     description: `Execute: Create door ${nameConvertValue}`,

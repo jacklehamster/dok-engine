@@ -2,24 +2,24 @@ import { ConvertError } from "../../../error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { getSubjectResolution, shouldConvert } from "../convert-utils";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
+import { WriterExecutor } from "../WriterExecutor";
 
 export interface InventorySetCommand extends WriterBaseCommand {
     property: StringResolution;
     value: Resolution;
 }
 
-export class InventorySetConvertor extends Convertor<InventorySetCommand, WriterInventory, WriterContext> {
+export class InventorySetConvertor extends Convertor<InventorySetCommand, WriterContext> {
     convert(command: InventorySetCommand, writerContext: WriterContext): void {
         const propertyField = resolveString(command.property);
         const valueFormulaField = resolveAny(command.value);
         writerContext.accumulator.add({
             description: `Convert: Update "${command.property}" to ${command.value}.`,
-            execute(writerExecutor) {
+            execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
@@ -31,7 +31,7 @@ export class InventorySetConvertor extends Convertor<InventorySetCommand, Writer
                 const subjectResolution = getSubjectResolution(command, writerExecutor);
                 const valueFieldValue = writerExecutor.evaluate(valueFormulaField);
                 const valueFormulaValue = resolveAny(valueFieldValue);
-                const { context } = writerExecutor.inventory;
+                const { context } = writerExecutor;
                 context.accumulator.add({
                     description: `Execute: ${command.subject??""}[${propertyFieldValue}] = ${valueFieldValue}`,
                     execute(executor) {

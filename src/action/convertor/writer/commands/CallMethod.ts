@@ -3,28 +3,28 @@ import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayRes
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { getSubjectResolution, shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { typeIsAnyOf } from "../../../utils/type-utils";
 import { evaluateArray } from "../../../utils/array-utils";
+import { WriterExecutor } from "../WriterExecutor";
 
 export interface CallCommand extends WriterBaseCommand {
     call: ArrayResolution,
 }
 
-export class CallConvertor extends Convertor<CallCommand, WriterInventory, WriterContext> {
+export class CallConvertor extends Convertor<CallCommand, WriterContext> {
     convert(command: CallCommand, writerContext: WriterContext): void {
         const argumentsArray = resolveArray(command.call ?? []);
         writerContext.accumulator.add({
             description: `Convert: call: ${command.subject}(${command.call})`,
-            execute(writerExecutor) {
+            execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
-                const { context } = writerExecutor.inventory;
+                const { context } = writerExecutor;
                 const subjectResolution = getSubjectResolution(command, writerExecutor);
 
                 const args = writerExecutor.evaluate(argumentsArray) as Resolution[];

@@ -1,14 +1,13 @@
 import { ConvertError } from "../../../error/errors";
-import { Inventory } from "../../../data/inventory/Inventory";
 import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { SkipNextCommand, SkipNextConvertor } from "./ConditionSkipNext";
 import { Action } from "../../../actions/Action";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
+import { WriterExecutor } from "../WriterExecutor";
 
 describe('test conditionSkipNext', () => {
     let convertor: SkipNextConvertor;
@@ -28,15 +27,12 @@ describe('test conditionSkipNext', () => {
     function testWriterCommandWithAction(command: SkipNextCommand, action: Action, expectedSkip: boolean) {
         convertor.convert(command, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
+        const executor = new WriterExecutor(writerContext.accumulator,
             action,
-            context: actionContext,
-            labels: {},
-            stash: [],
-        }) });
+            actionContext);
         executeUntilStop(executor);
 
-        const actionExecutor = new Executor<Inventory>({
+        const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({
                 stash: [],

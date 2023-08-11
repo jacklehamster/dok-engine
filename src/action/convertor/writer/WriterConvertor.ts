@@ -1,6 +1,5 @@
 import { MultiConvertor } from "../MultiConvertor";
 import { WriterContext } from "./WriterContext";
-import { WriterInventory } from "./WriterInventory";
 import { AccumulateConvertor } from "./commands/Accumulate";
 import { CallConvertor } from "./commands/CallMethod";
 import { SkipNextConvertor } from "./commands/ConditionSkipNext";
@@ -14,7 +13,7 @@ import { StashConvertor } from "./commands/Stash";
 import { UnstashConvertor } from "./commands/Unstash";
 import { WriterCommand } from "./commands/WriterCommand";
 
-export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterInventory, WriterContext> {
+export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterContext> {
     constructor() {
         super(new AccumulateConvertor(),
             new CallConvertor(),

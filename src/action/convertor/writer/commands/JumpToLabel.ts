@@ -2,26 +2,26 @@ import { ConvertError } from "../../../error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
+import { WriterExecutor } from "../WriterExecutor";
 
 export interface JumpToLabelCommand extends WriterBaseCommand {
     jumpTo: StringResolution;
 }
 
-export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterInventory, WriterContext> {
+export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterContext> {
     convert(command: JumpToLabelCommand, writerContext: WriterContext): void {
         const jumpToLabel = resolveString(command.jumpTo);
         writerContext.accumulator.add({
             description: `Convert: Jump to "${command.jumpTo}".`,
-            execute(writerExecutor) {
+            execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
-                const { context, labels } = writerExecutor.inventory;
+                const { context, labels } = writerExecutor;
                 const labelValue = writerExecutor.evaluate(jumpToLabel);
                 if (labelValue) {
                     context.accumulator.add({

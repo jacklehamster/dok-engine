@@ -1,23 +1,29 @@
-import { Inventory } from "../../data/inventory/Inventory";
 import { Executor } from "../Executor";
+import { ObjPool } from "../pool/ObjPool";
 
-export class Children<I extends Inventory = Inventory> {
-    private executor: Executor<I>;
-    private executors: Set<Executor<I>> = new Set();
+export class Children {
+    private executor: Executor;
+    private executors: Set<Executor> = new Set();
+    private pool: ObjPool<Executor>;
 
-    constructor(executor: Executor<I>) {
+    constructor(executor: Executor) {
         this.executor = executor;
+        this.pool = new ObjPool<Executor>(() => new Executor({
+                inventoryInitializer: this.executor.inventoryInitializer,
+                accumulator: this.executor.accumulator,
+                doors: {...this.executor.doors},            
+            }, this.executor),
+            (executor) => executor.cleanup());
     }
 
-    spawn(): Executor<I> {
-        return new Executor<I>({
-            inventoryInitializer: this.executor.inventoryInitializer,
-            accumulator: this.executor.accumulator,
-            doors: {...this.executor.doors},            
-        }, this.executor);
+    spawn(): Executor {
+        return this.pool.get();
     }
 
-    destroy() {
-        this.executors.forEach(executor => executor.destroy());
+    cleanup() {
+        this.executors.forEach(executor => {
+            executor.cleanup();
+            this.pool.recycle(executor);
+        });
     }
 }

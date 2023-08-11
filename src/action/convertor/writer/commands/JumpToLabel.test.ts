@@ -1,13 +1,12 @@
 import { ConvertError } from "../../../error/errors";
-import { Inventory } from "../../../data/inventory/Inventory";
 import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { JumpToLabelCommand, JumpToLabelConvertor } from "./JumpToLabel";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
+import { WriterExecutor } from "../WriterExecutor";
 
 describe('test JumpToLabel', () => {
     let convertor: JumpToLabelConvertor;
@@ -31,18 +30,14 @@ describe('test JumpToLabel', () => {
             jumpTo: "testLabel",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action: {
-            },
-            context: actionContext,
-            labels: {
+        const executor = new WriterExecutor(writerContext.accumulator, {},
+            actionContext,
+            {
                 testLabel: 123
-            },
-            stash: [],
-        }) });
+            });
         executeUntilStop(executor);
 
-        const actionExecutor = new Executor<Inventory>({
+        const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({
                 stash: [],
@@ -58,16 +53,11 @@ describe('test JumpToLabel', () => {
             jumpTo: "invalidLabel",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action: {
-            },
-            context: actionContext,
-            labels: {},
-            stash: [],
-        }) });
+        const executor = new WriterExecutor(writerContext.accumulator, {},
+            actionContext);
         executeUntilStop(executor);
 
-        const actionExecutor = new Executor<Inventory>({
+        const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({
                 stash: [],

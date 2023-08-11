@@ -1,13 +1,12 @@
 import { ConvertError } from "../../../error/errors";
-import { Inventory } from "../../../data/inventory/Inventory";
 import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { CallCommand, CallConvertor } from "./CallMethod";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
+import { WriterExecutor } from "../WriterExecutor";
 
 describe('test call', () => {
     let convertor: CallConvertor;
@@ -31,17 +30,14 @@ describe('test call', () => {
             call: "~{action.log}",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action: {
+        const executor = new WriterExecutor(writerContext.accumulator,
+            {
                 log: [1, 2, "~{x}"],
             },
-            context: actionContext,
-            labels: {},
-            stash: [],
-        }) });
+            actionContext);
         executeUntilStop(executor);
 
-        const actionExecutor = new Executor<Inventory>({
+        const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
             inventoryInitializer: () => ({x: 3, log, stash: []}),
         });

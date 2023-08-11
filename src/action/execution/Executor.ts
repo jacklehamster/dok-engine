@@ -8,9 +8,8 @@ import { Obj } from "../data/types/basic-types";
 import { Cleanup } from "./cleanup/Cleanup";
 import { Children } from "./children/Children";
 
-export interface IExecutor<I extends Inventory = Inventory> {
-    get inventory(): I;
-    get children(): Children;
+export interface IExecutor {
+    get inventory(): Inventory;
     reset(): void;
     ifCondition(bool: ValueOf<boolean>): IExecutor | null;
     evaluate<T>(value: ValueOf<T>): T | null;
@@ -24,27 +23,27 @@ export interface IExecutor<I extends Inventory = Inventory> {
     addCleanup(cleanup: Cleanup): void;
 }
 
-interface Props<I extends Inventory = Inventory> {
-    accumulator: StepAccumulator<I>;
-    inventoryInitializer(): I;
-    doors?: Record<string, Door<I>>;
+interface Props {
+    accumulator: StepAccumulator;
+    inventoryInitializer(): Inventory;
+    doors?: Record<string, Door>;
 }
 
 let nextExecutorId = 1;
-export class Executor<I extends Inventory = Inventory> implements IExecutor {
+export class Executor implements IExecutor {
     //  Executor ID
     id: number = 0;
 
     //  steps followed by the executor
-    accumulator: StepAccumulator<I>;
+    accumulator: StepAccumulator;
 
     //  doors that can lead to new execution
-    doors: Record<string, Door<I>>;
+    doors: Record<string, Door>;
 
     //  state
     nextStep: StepId = 0;           //  Next step
-    inventory: I;                   //  inventory carried
-    inventoryInitializer: () => I;
+    inventory: Inventory;                   //  inventory carried
+    inventoryInitializer: () => Inventory;
 
     //  error report
     errors: ConvertError[] = [];    //  any error encountered
@@ -53,10 +52,10 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
     cleanups: Set<Cleanup> = new Set();
 
     //  children
-    children: Children<I> = new Children(this);
-    parent?: Executor<I>;
+    children: Children = new Children(this);
+    parent?: Executor;
 
-    constructor({accumulator, inventoryInitializer, doors = {}}: Props<I>, parent?: Executor<I>) {
+    constructor({accumulator, inventoryInitializer, doors = {}}: Props, parent?: Executor) {
         this.parent = parent;
         this.accumulator = accumulator;
         this.inventoryInitializer = inventoryInitializer;
@@ -89,7 +88,7 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
         return value.valueOf(this.inventory) ?? null;
     }
 
-    executeSingleStep(): Executor<I> | undefined {
+    executeSingleStep(): Executor | undefined {
         if (!this.id) {
             this.id = nextExecutorId++;
         }
@@ -145,12 +144,12 @@ export class Executor<I extends Inventory = Inventory> implements IExecutor {
         this.cleanups.add(cleanup);
     }
 
-    spawn(): Executor<I> {
+    spawn(): Executor {
         return this.children.spawn();
     }
 
-    destroy(): void {
-        this.children.destroy();
+    cleanup(): void {
+        this.children.cleanup();
         this.cleanups.forEach(cleanup => cleanup.cleanup());
     }
 }

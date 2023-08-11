@@ -6,7 +6,7 @@ import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
+import { WriterExecutor } from "../WriterExecutor";
 import { CreateDoorCommand, CreateDoorConvertor } from "./CreateDoor";
 
 describe('test createDoor', () => {
@@ -31,12 +31,7 @@ describe('test createDoor', () => {
 
         convertor.convert(command, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action,
-            context: actionContext,
-            labels: {},
-            stash: [],
-        }) });
+        const executor = new WriterExecutor(writerContext.accumulator,action, actionContext);
         executeUntilStop(executor);
 
         const actionExecutor = new Executor({

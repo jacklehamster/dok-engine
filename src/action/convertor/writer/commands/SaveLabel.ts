@@ -2,28 +2,28 @@ import { ConvertError } from "../../../error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
 import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
+import { WriterExecutor } from "../WriterExecutor";
 
 export interface SaveLabelCommand extends WriterBaseCommand {
     label: StringResolution;
 }
 
-export class SaveLabelConvertor extends Convertor<SaveLabelCommand, WriterInventory, WriterContext> {
+export class SaveLabelConvertor extends Convertor<SaveLabelCommand, WriterContext> {
     priority: number = 1;
 
     convert(command: SaveLabelCommand, writerContext: WriterContext): void {
         const labelResolution = resolveString(command.label);
         writerContext.accumulator.add({
             description: `Convert: Save label ${command.label}`,
-            execute(writerExecutor) {
+            execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
-                const { context, labels } = writerExecutor.inventory;
+                const { context, labels } = writerExecutor;
                 const labelValue = writerExecutor.evaluate(labelResolution);
                 if (labelValue) {
                     if (labels[labelValue] === undefined) {

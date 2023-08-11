@@ -1,12 +1,11 @@
-import { Inventory } from "../../data/inventory/Inventory";
 import { Executor } from "../Executor";
 
 const MAX_STEPS_TAKEN = 1000;
 
-export function executeUntilStop<I extends Inventory = Inventory>(executor: Executor<I>) {
+export function executeUntilStop(executor: Executor) {
     let stepCount = 0;
 
-    let exec: Executor<I> | undefined = executor;
+    let exec: Executor | undefined = executor;
     while (exec) {
         exec = exec?.executeSingleStep();
 

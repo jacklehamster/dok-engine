@@ -1,10 +1,9 @@
-import { Inventory } from "../data/inventory/Inventory";
 import { ExecutionStep, StepId } from "./ExecutionStep";
 
-export class StepAccumulator<I extends Inventory = Inventory> {
-    private steps: ExecutionStep<I>[] = [];
+export class StepAccumulator {
+    private steps: ExecutionStep[] = [];
 
-    add(step: ExecutionStep<I>): StepId {
+    add(step: ExecutionStep): StepId {
         const id = this.steps.length;
         this.steps[id] = step;
         return id;

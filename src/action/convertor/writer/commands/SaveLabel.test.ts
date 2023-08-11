@@ -1,11 +1,10 @@
 import { ConvertError } from "../../../error/errors";
-import { Executor } from "../../../execution/Executor";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
 import { Context } from "../../Convertor";
 import { MultiConvertor } from "../../MultiConvertor";
 import { WriterContext } from "../WriterContext";
-import { WriterInventory } from "../WriterInventory";
+import { WriterExecutor } from "../WriterExecutor";
 import { SaveLabelCommand, SaveLabelConvertor } from "./SaveLabel";
 
 describe('test SaveLabel', () => {
@@ -30,15 +29,11 @@ describe('test SaveLabel', () => {
             label: "testLabel",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action: {},
-            context: actionContext,
-            labels: {},
-            stash: [],
-        }) });
+        const executor = new WriterExecutor(writerContext.accumulator, {},
+            actionContext);
         executeUntilStop(executor);
 
-        expect(executor.inventory.labels).toEqual({ testLabel: 0 });
+        expect(executor.labels).toEqual({ testLabel: 0 });
     });
 
     it('has error on duplicate label', () => {
@@ -49,13 +44,9 @@ describe('test SaveLabel', () => {
             label: "testLabel",
         }, writerContext);
 
-        const executor = new Executor<WriterInventory>({ accumulator: writerContext.accumulator, inventoryInitializer: () => ({
-            action: {
+        const executor = new WriterExecutor(writerContext.accumulator, {
             },
-            context: actionContext,
-            labels: {},
-            stash: [],
-        }) });
+            actionContext);
         executeUntilStop(executor);
         expect(executor.errors).toEqual([{
             code: "DUPLICATE_LABEL",
