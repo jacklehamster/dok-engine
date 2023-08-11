@@ -25,7 +25,7 @@ export interface IExecutor {
 
 interface Props {
     accumulator: StepAccumulator;
-    inventoryInitializer(): Inventory;
+    inventory?: Record<string, any>;
     doors?: Record<string, Door>;
 }
 
@@ -43,7 +43,7 @@ export class Executor implements IExecutor {
     //  state
     nextStep: StepId = 0;           //  Next step
     inventory: Inventory;                   //  inventory carried
-    inventoryInitializer: () => Inventory;
+    initialInventory: Inventory;
 
     //  error report
     errors: ConvertError[] = [];    //  any error encountered
@@ -55,11 +55,12 @@ export class Executor implements IExecutor {
     children: Children = new Children(this);
     parent?: Executor;
 
-    constructor({accumulator, inventoryInitializer, doors = {}}: Props, parent?: Executor) {
+    constructor({accumulator, inventory = {}, doors = {}}: Props, parent?: Executor) {
         this.parent = parent;
         this.accumulator = accumulator;
-        this.inventoryInitializer = inventoryInitializer;
-        this.inventory = this.inventoryInitializer();
+        const stash: Record<string, any>[] = [];
+        this.initialInventory = { stash, ...inventory};
+        this.inventory = { ...this.initialInventory };
         this.doors = {...doors};
     }
 
@@ -151,5 +152,12 @@ export class Executor implements IExecutor {
     cleanup(): void {
         this.children.cleanup();
         this.cleanups.forEach(cleanup => cleanup.cleanup());
+        for (let i in this.inventory) {
+            if (this.initialInventory[i] !== undefined) {
+                this.inventory[i] = this.initialInventory;
+            } else {
+                delete this.inventory[i];
+            }
+        }
     }
 }

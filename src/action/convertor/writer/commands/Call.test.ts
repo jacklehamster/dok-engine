@@ -39,8 +39,7 @@ describe('test call', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({x: 3, log, stash: []}),
-        });
+            inventory: {x: 3, log } });
         executeUntilStop(actionExecutor);
         expect(log).toBeCalledWith(1, 2, 3);
     });

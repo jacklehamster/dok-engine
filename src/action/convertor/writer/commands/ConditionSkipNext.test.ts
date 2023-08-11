@@ -34,9 +34,6 @@ describe('test conditionSkipNext', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({
-                stash: [],
-            }),
         });
         actionExecutor.skipNextStep = jest.fn();
 

@@ -20,10 +20,9 @@ describe('WhileConvertor', () => {
             ),
             accumulator: new StepAccumulator(),
         };
-        executor = new Executor({ accumulator: context.accumulator, inventoryInitializer: () => ({
+        executor = new Executor({ accumulator: context.accumulator, inventory: {
             log,
-            stash: [],
-        }) });
+        } });
     });
 
     it('Ignore action without while', () => {

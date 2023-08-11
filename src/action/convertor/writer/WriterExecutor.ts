@@ -12,13 +12,7 @@ export class WriterExecutor<A extends Action = Action> extends Executor {
             action:  A,
             context: Context,
             labels: Record<string, number> = {}) {
-        super({
-            accumulator,
-            inventoryInitializer: () => ({
-                stash: [],
-            }),
-            doors: {},
-        });
+        super({ accumulator });
         this.action = action
         this.context = context;
         this.labels = labels;

@@ -40,9 +40,6 @@ describe('test Inventory Set', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({
-                stash: [],
-            }),
         });
         executeUntilStop(actionExecutor);
         expect(actionExecutor.inventory.test).toEqual(123);
@@ -66,10 +63,9 @@ describe('test Inventory Set', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({
+            inventory: {
                 test: {},
-                stash: [],
-            }),
+            },
         });
         executeUntilStop(actionExecutor);
         expect(actionExecutor.inventory.test).toEqual({prop: 123});
@@ -90,10 +86,9 @@ describe('test Inventory Set', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({
+            inventory: {
                 test: 999,
-                stash: [],
-            }),
+            },
         });
         executeUntilStop(actionExecutor);
         expect(actionExecutor.inventory.test).toEqual(1000);

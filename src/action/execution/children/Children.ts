@@ -9,7 +9,7 @@ export class Children {
     constructor(executor: Executor) {
         this.executor = executor;
         this.pool = new ObjPool<Executor>(() => new Executor({
-                inventoryInitializer: this.executor.inventoryInitializer,
+                inventory: this.executor.initialInventory,
                 accumulator: this.executor.accumulator,
                 doors: {...this.executor.doors},            
             }, this.executor),

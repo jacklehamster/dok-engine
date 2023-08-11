@@ -37,12 +37,11 @@ describe('test Stash', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({
+            inventory: {
                 a: 123,
                 b: 456,
                 c: 789,
-                stash: [],
-            }),
+            },
         });
         executeUntilStop(actionExecutor);
         expect(actionExecutor.inventory.stash[0]).toEqual({a: 123, b: 456});

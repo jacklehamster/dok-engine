@@ -36,7 +36,6 @@ describe('test createDoor', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({ stash: []}),
         });
         executeUntilStop(actionExecutor);
 

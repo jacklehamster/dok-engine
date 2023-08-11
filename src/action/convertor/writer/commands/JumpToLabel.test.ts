@@ -39,9 +39,6 @@ describe('test JumpToLabel', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({
-                stash: [],
-            }),
         });
         actionExecutor.jumpTo = jest.fn();
         executeUntilStop(actionExecutor);
@@ -59,9 +56,6 @@ describe('test JumpToLabel', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({
-                stash: [],
-            }),
         });
         executeUntilStop(actionExecutor);
         expect(actionExecutor.errors).toEqual([{

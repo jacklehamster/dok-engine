@@ -37,7 +37,6 @@ describe('test passDoor', () => {
 
         const actionExecutor = new Executor({
             accumulator: actionContext.accumulator,
-            inventoryInitializer: () => ({ stash: []}),
         });
 
         const execute = jest.fn();
