@@ -39,6 +39,7 @@ export class Executor implements IExecutor {
 
     //  doors that can lead to new execution
     doors: Record<string, Door>;
+    initialDoors: Record<string, Door>;
 
     //  state
     nextStep: StepId = 0;           //  Next step
@@ -61,7 +62,8 @@ export class Executor implements IExecutor {
         const stash: Record<string, any>[] = [];
         this.initialInventory = { stash, ...inventory};
         this.inventory = { ...this.initialInventory };
-        this.doors = {...doors};
+        this.initialDoors = doors;
+        this.doors = {...this.initialDoors};
     }
 
     reset() {
@@ -149,15 +151,33 @@ export class Executor implements IExecutor {
         return this.children.spawn();
     }
 
-    cleanup(): void {
-        this.children.cleanup();
-        this.cleanups.forEach(cleanup => cleanup.cleanup());
+    private clearInventory() {
         for (let i in this.inventory) {
             if (this.initialInventory[i] !== undefined) {
-                this.inventory[i] = this.initialInventory;
+                this.inventory[i] = this.initialInventory[i];
             } else {
                 delete this.inventory[i];
             }
         }
+    }
+
+    private clearDoors() {
+        for (let i in this.doors) {
+            if (this.initialDoors[i] !== undefined) {
+                this.doors[i] = this.initialDoors[i];
+            } else {
+                delete this.doors[i];
+            }
+        }
+    }
+
+    cleanup(): void {
+        this.children.cleanup();
+        this.cleanups.forEach(cleanup => cleanup.cleanup());
+        this.clearInventory();
+        this.clearDoors();
+        this.errors.length = 0;
+        this.id = 0;
+        this.reset();
     }
 }
