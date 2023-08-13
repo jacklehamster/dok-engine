@@ -1,5 +1,6 @@
 {
     "configurations": [
+        
         {
             "type": "node",
             "name": "vscode-jest-tests.v2",
@@ -16,7 +17,6 @@
             "cwd": "/Users/vincent/dok-engine",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
-            "disableOptimisticBPs": true,
             "runtimeExecutable": "yarn"
         }
     ]

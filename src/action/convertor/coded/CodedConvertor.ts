@@ -8,6 +8,7 @@ import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { WriterExecutor } from "../writer/WriterExecutor";
 
 interface ConverterConfig {
+    priority?: number;
     field: string;
     validations?: Validation[];
     writerCommands?: WriterCommand[];
@@ -18,8 +19,9 @@ export class CodedConvertor<A extends Action = Action> extends Convertor<A> {
     private validations: Validation[];
     private writerCommands: WriterCommand[];
 
-    constructor({ field, validations = [], writerCommands = [] }: ConverterConfig) {
+    constructor({ field, priority = 0, validations = [], writerCommands = [] }: ConverterConfig) {
         super();
+        this.priority = priority,
         this.field = field;
         this.validations = validations;
         this.writerCommands = writerCommands;

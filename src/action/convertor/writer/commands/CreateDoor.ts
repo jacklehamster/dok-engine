@@ -43,7 +43,7 @@ export class CreateDoorConvertor extends Convertor<CreateDoorCommand, WriterCont
                             subConvertor: context.subConvertor,
                             accumulator: door.accumulator,
                         }));
-}
+                    }
                 });
             },
         });

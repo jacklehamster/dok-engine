@@ -1,8 +1,12 @@
-import { Executor, IExecutor } from "../execution/Executor";
+import { IExecutor } from "../execution/Executor";
 
 export type StepId = number;
 
+export interface ReturnValue {
+    executor?: IExecutor;
+}
+
 export interface ExecutionStep {
     description?: string;
-    execute?(executor: IExecutor): Executor | void;
+    execute?(executor: IExecutor): ReturnValue | void;
 }

@@ -1,5 +1,4 @@
-import { Resolution } from "../../../data/resolution/Resolution";
-import { resolveString } from "../../../data/resolution/StringResolution";
+import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
 import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { WriterExecutor } from "../WriterExecutor";
@@ -12,15 +11,18 @@ export interface DebugConversionCommand extends WriterBaseCommand {
 }
 
 export class DebugConversionConvertor extends Convertor<DebugConversionCommand, WriterContext> {
+    log = console.log;
+
     convert(command: DebugConversionCommand, writerContext: WriterContext): void {
-        const debugResolution = resolveString(command.label);
+        const debugResolution = resolveAny(command.debug);
+        const log = this.log;
         writerContext.accumulator.add({
             description: `Convert: Debug ${command.debug}`,
             execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
-                console.log(writerExecutor.evaluate(debugResolution));
+                log(writerExecutor.evaluate(debugResolution));
             },
         });
     }

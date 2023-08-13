@@ -8,6 +8,7 @@ import { WriterCommand } from "./WriterCommand";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 import { ObjectResolution, resolveObject } from "../../../data/resolution/ObjectResolution";
 import { WriterExecutor } from "../WriterExecutor";
+import { ReturnValue } from "../../../steps/ExecutionStep";
 
 export interface PassDoorCommand extends WriterBaseCommand {
     passDoor: {
@@ -32,18 +33,21 @@ export class PassDoorConvertor extends Convertor<PassDoorCommand, WriterContext>
                 const passedInventoryResolution = resolveObject(passedInventoryValue);
                 const { context } = writerExecutor;
 
+                const returnValue: ReturnValue = {};
                 context.accumulator.add({
-                    description: `Execute: Pass door "${nameConvertValue}"`,
+                    description: `Execute: Pass door "${nameConvertValue}" with ${JSON.stringify(passedInventoryValue)}`,
                     execute(executor) {
                         const doorName = executor.evaluate(nameExecResolution);
                         if (doorName) {
                             const passedInventory = executor.evaluate(passedInventoryResolution) ?? {};
-                            return executor.passDoor(doorName, passedInventory);    
+                            returnValue.executor = executor.passDoor(doorName, passedInventory);    
+                            return returnValue;
                         } else {
                             executor.reportError({
                                 code: "INVALID_DOOR",
                             });
                         }
+                        return;
                     }
                 });
             },

@@ -10,6 +10,8 @@ import { Children } from "./children/Children";
 
 export interface IExecutor {
     get inventory(): Inventory;
+    get parent(): IExecutor | undefined;
+    get errors(): ConvertError[];
     reset(): void;
     ifCondition(bool: ValueOf<boolean>): IExecutor | null;
     evaluate<T>(value: ValueOf<T>): T | null;
@@ -18,9 +20,10 @@ export interface IExecutor {
     stash(itemKeys: string[]): void;
     unstash(): void;
     createDoor(name: string): Door;
-    passDoor(name: string, passedInventory: Obj): void;
+    passDoor(name: string, passedInventory: Obj): IExecutor;
     reportError(error: ConvertError): void;
     addCleanup(cleanup: Cleanup): void;
+    executeSingleStep(): IExecutor | undefined;
 }
 
 interface Props {
@@ -54,9 +57,9 @@ export class Executor implements IExecutor {
 
     //  children
     children: Children = new Children(this);
-    parent?: Executor;
+    parent: IExecutor | undefined;
 
-    constructor({accumulator, inventory = {}, doors = {}}: Props, parent?: Executor) {
+    constructor({accumulator, inventory = {}, doors = {}}: Props, parent?: IExecutor) {
         this.parent = parent;
         this.accumulator = accumulator;
         const stash: Record<string, any>[] = [];
@@ -91,7 +94,7 @@ export class Executor implements IExecutor {
         return value.valueOf(this.inventory) ?? null;
     }
 
-    executeSingleStep(): Executor | undefined {
+    executeSingleStep(): IExecutor | undefined {
         if (!this.id) {
             this.id = nextExecutorId++;
         }
@@ -99,7 +102,8 @@ export class Executor implements IExecutor {
         const executionStep = this.accumulator.getStep(step);
         if (executionStep) {
             console.log(`${this.id}-${step}`, executionStep.description);
-            return executionStep.execute?.(this) ?? this;
+            const returnValue = executionStep.execute?.(this);
+            return returnValue ? returnValue.executor : this;
         }
         return this.parent ?? undefined;
     }
@@ -132,7 +136,7 @@ export class Executor implements IExecutor {
         };
     }
 
-    passDoor(name: string, passedInventory: Obj) {
+    passDoor(name: string, passedInventory: Obj): IExecutor {
         const door = this.doors[name];
         const child = this.spawn();
         child.accumulator = door.accumulator;

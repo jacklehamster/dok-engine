@@ -1,11 +1,11 @@
-import { Executor } from "../Executor";
+import { Executor, IExecutor } from "../Executor";
 
 const MAX_STEPS_TAKEN = 1000;
 
 export function executeUntilStop(executor: Executor) {
     let stepCount = 0;
 
-    let exec: Executor | undefined = executor;
+    let exec: IExecutor | undefined = executor;
     while (exec) {
         exec = exec?.executeSingleStep();
 
