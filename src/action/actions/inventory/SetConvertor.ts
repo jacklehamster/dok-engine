@@ -12,11 +12,7 @@ export const SET_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "set",
-            type: "object",
-            error: {
-                code: "WRONG_TYPE",
-                neededType: "object",
-            },
+            types: ["object"],
         },
     ]
 });

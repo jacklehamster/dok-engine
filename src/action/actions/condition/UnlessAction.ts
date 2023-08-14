@@ -13,11 +13,7 @@ export const UNLESS_CONVERTOR = new CodedConvertor<UnlessAction>({
     validations: [
         {
             field: "do",
-            type: "array",
-            error: {
-                code: "WRONG_TYPE",
-                neededType: "array",
-            },
+            types: ["array"],
         },
     ],
     writerCommands: [

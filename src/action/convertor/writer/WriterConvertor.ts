@@ -6,10 +6,10 @@ import { SkipNextConvertor } from "./commands/ConditionSkipNext";
 import { DebugConversionConvertor } from "./commands/Debug";
 import { InventorySetConvertor } from "./commands/InventorySet";
 import { JumpToLabelConvertor } from "./commands/JumpToLabel";
+import { ReturnConvertor } from "./commands/Return";
 import { SaveLabelConvertor } from "./commands/SaveLabel";
 import { StashConvertor } from "./commands/Stash";
 import { StateConvertor } from "./commands/State";
-import { StepStackConvertor } from "./commands/StepStack";
 import { UnstashConvertor } from "./commands/Unstash";
 import { WriterCommand } from "./commands/WriterCommand";
 
@@ -25,7 +25,7 @@ export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterCo
             new StashConvertor(),
             new UnstashConvertor(),
             new StateConvertor(),
-            new StepStackConvertor(),
+            new ReturnConvertor(),
         );
     }
 }

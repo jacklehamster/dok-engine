@@ -15,11 +15,7 @@ export const SCRIPT_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "script",
-            type: "object",
-            error: {
-                code: "WRONG_TYPE",
-                neededType: "object",
-            },
+            types: ["object"],
         },
     ],
     writerCommands: [
@@ -29,15 +25,11 @@ export const SCRIPT_CONVERTOR = new CodedConvertor({
         {
             label: "~portal-{action.script.name}",
             isGlobal: true,
-        },
-        {
             accumulate: "~{action.script.actions}",
         },
         {
             state: "pop",
-        },
-        {
-            stepStack: "pop",
+            return: {},
         },
         {
             label: "postPortal",

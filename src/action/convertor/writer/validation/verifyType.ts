@@ -14,13 +14,11 @@ export function verifyType(object: Record<string, any>, field: string, types: st
     }
 }
 
-export function verifyArrayOrFormula(object: Record<string, any>, field: string, errors: ConvertError[]) {
-    if (!Array.isArray(object?.[field]) && !isFormula(object?.[field])) {
+export function verifyDefined(object: Record<string, any>, field: string, errors: ConvertError[]) {
+    if (object?.[field] === undefined) {
         errors.push({
-            code: "WRONG_TYPE",
-            field,
-            wrongType: typeof(object?.[field]),
-            neededType: "array|Formula",
+            code: "MISSING_PROPERTY",
+            field: "value",
             object,
         });
     }

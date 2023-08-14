@@ -14,11 +14,7 @@ export const EXECUTE_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "parameters",
-            type: "object",
-            error: {
-                code: "WRONG_TYPE",
-                neededType: "object",
-            },
+            types: ["object"],
         },
     ],
     writerCommands: [

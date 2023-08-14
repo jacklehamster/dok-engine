@@ -5,11 +5,7 @@ export const LOOP_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "do",
-            type: "array",
-            error: {
-                code: "WRONG_TYPE",
-                neededType: "array",
-            },
+            types: ["array"],
         },
     ],
     writerCommands: [

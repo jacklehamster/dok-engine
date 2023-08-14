@@ -12,19 +12,13 @@ export const RETURN_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "return",
-            type: "object",
-            error: {
-                code: "WRONG_TYPE",
-                neededType: "object",
-            },
+            types: ["object"],
         },
     ],
     writerCommands: [
         {
             state: "pop",
-        },
-        {
-            stepStack: "pop",
+            return: {},
         },
     ],
 });

@@ -7,6 +7,7 @@ import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
 import { WriterExecutor } from "../WriterExecutor";
+import { verifyDefined } from "../validation/verifyType";
 
 export interface InventorySetCommand extends WriterBaseCommand {
     property: StringResolution;
@@ -59,12 +60,6 @@ export class InventorySetConvertor extends Convertor<InventorySetCommand, Writer
     }
 
     validationErrors(command: InventorySetCommand, errors: ConvertError[]): void {
-        if (command.value === undefined) {
-            errors.push({
-                code: "MISSING_PROPERTY",
-                field: "value",
-                object: command,
-            });
-        }
+        verifyDefined(command, "value", errors);
     }
 }

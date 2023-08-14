@@ -11,11 +11,7 @@ export const LOG_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "log",
-            type: "array",
-            error: {
-                code: "WRONG_TYPE",
-                neededType: "array",
-            },
+            types: ["array"],
         },
     ]
 });

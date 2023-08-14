@@ -6,6 +6,7 @@ import { WriterCommand } from "../writer/commands/WriterCommand";
 import { Validation } from "./CodedValidator";
 import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { WriterExecutor } from "../writer/WriterExecutor";
+import { verifyDefined, verifyType } from "../writer/validation/verifyType";
 
 interface ConverterConfig {
     priority?: number;
@@ -48,19 +49,15 @@ export class CodedConvertor<A extends Action = Action> extends Convertor<A> {
     }
 
     validationErrors(action: A, errors: ConvertError[]): void {
-        this.validations.forEach(({ field, type, error }) => {
-            const fieldValue = action[field ?? this.field];
-            switch (type) {
-                case 'array':
-                    if (!Array.isArray(fieldValue)) {
-                        errors.push(error);
-                    }
-                    break;
-                case 'string':
-                    if (typeof(fieldValue) !== "string") {
-                        errors.push(error);
-                    }
-                    break;
+        this.validations.forEach(({ field, types, defined }) => {
+            if (!field) {
+                return;
+            }
+            if (types) {
+                verifyType(action, field, types, errors);
+            }
+            if (defined) {
+                verifyDefined(action, field, errors);
             }
         });
     }

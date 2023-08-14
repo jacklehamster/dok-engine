@@ -7,29 +7,26 @@ import { WriterCommand } from "./WriterCommand";
 import { verifyType } from "../validation/verifyType";
 import { WriterExecutor } from "../WriterExecutor";
 
-export interface StepStackCommand extends WriterBaseCommand {
-    stepStack: "push" | "pop";
+export interface ReturnCommand extends WriterBaseCommand {
+    return: {};
 }
 
-export class StepStackConvertor extends Convertor<StepStackCommand, WriterContext> {
-    convert(command: StepStackCommand, writerContext: WriterContext): void {
+export class ReturnConvertor extends Convertor<ReturnCommand, WriterContext> {
+    priority: number = -1;
+
+    convert(command: ReturnCommand, writerContext: WriterContext): void {
         writerContext.accumulator.add({
-            description: `Convert: stepStack ${command.stepStack}.`,
+            description: `Convert: return.`,
             execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
 
                 const { context } = writerExecutor;
-
                 context.accumulator.add({
-                    description: `Execute: stepStack ${command.stepStack}`,
+                    description: `Execute: return`,
                     execute(executor) {
-                        if (command.stepStack === "pop") {
-                            executor.popStep();
-                        } else if (command.stepStack === "push") {
-                            executor.pushStep();
-                        }
+                        executor.popStep();
                     },
                 });
             },
@@ -37,10 +34,10 @@ export class StepStackConvertor extends Convertor<StepStackCommand, WriterContex
     }
 
     validate(command: WriterCommand): boolean {
-        return command.stepStack !== undefined;
+        return command.return !== undefined;
     }
 
-    validationErrors(command: StepStackCommand, errors: ConvertError[]): void {
-        verifyType(command, "stepStack", ["string"], errors);
+    validationErrors(command: ReturnCommand, errors: ConvertError[]): void {
+        verifyType(command, "return", ["object"], errors);
     }
 }

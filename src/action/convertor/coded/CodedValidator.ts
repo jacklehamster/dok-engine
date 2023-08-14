@@ -1,9 +1,7 @@
-import { ConvertError } from "../../error/errors";
-
-type Type = "array"|"string"|"object";
+type Type = "array"|"string"|"object"|"undefined"|"number"|"function"|"bigint"|"boolean";
 
 export interface Validation {
     field?: string;
-    type?: Type;
-    error: ConvertError;
+    types?: Type[];
+    defined?: boolean;
 }

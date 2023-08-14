@@ -18,11 +18,7 @@ export const ASSIGN_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "=",
-            type: "object",
-            error: {
-                code: "WRONG_TYPE",
-                neededType: "object",
-            },
+            types: ["object"],
         },
     ]
 });
