@@ -21,7 +21,10 @@ export const RETURN_CONVERTOR = new CodedConvertor({
     ],
     writerCommands: [
         {
-            "return": {},
+            state: "pop",
+        },
+        {
+            stepStack: "pop",
         },
     ],
 });

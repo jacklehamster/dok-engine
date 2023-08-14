@@ -23,10 +23,12 @@ export const EXECUTE_CONVERTOR = new CodedConvertor({
     ],
     writerCommands: [
         {
-            "passDoor": {
-                name: "~{action.execute}",
-                inventory: "~{action.parameters}"
-            },
+            state: "push",
+            parameters: "~{action.parameters}",
+        },
+        {
+            jumpTo: "~portal-{action.execute}",
+            pushStep: true,
         },
     ],
 });

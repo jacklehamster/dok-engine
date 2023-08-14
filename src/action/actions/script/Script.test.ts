@@ -74,7 +74,7 @@ describe('ScriptConvertor', () => {
                         return: {},
                     },
                     {
-                        log: ["error, this shouldn't be called"],
+                        log: ["error"],
                     },
                 ],
             },
@@ -87,7 +87,13 @@ describe('ScriptConvertor', () => {
             }
         }, context);
 
+        LOG_CONVERTOR.convert({
+            log: ["afterwards"]
+        }, context);
+
         executeUntilStop(executor);
-        expect(log).toHaveBeenLastCalledWith(123);
+        expect(log).toBeCalledWith(123);
+        expect(log).not.toBeCalledWith("error");
+        expect(log).toHaveBeenLastCalledWith("afterwards");
     });
 });

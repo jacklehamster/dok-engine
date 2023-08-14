@@ -24,10 +24,23 @@ export const SCRIPT_CONVERTOR = new CodedConvertor({
     ],
     writerCommands: [
         {
-            "door": {
-                name: "~{action.script.name}",
-                actions: "~{action.script.actions}"
-            },
+            jumpTo: "postPortal",
+        },
+        {
+            label: "~portal-{action.script.name}",
+            isGlobal: true,
+        },
+        {
+            accumulate: "~{action.script.actions}",
+        },
+        {
+            state: "pop",
+        },
+        {
+            stepStack: "pop",
+        },
+        {
+            label: "postPortal",
         },
     ],
 });

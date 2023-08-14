@@ -3,14 +3,13 @@ import { WriterContext } from "./WriterContext";
 import { AccumulateConvertor } from "./commands/Accumulate";
 import { CallConvertor } from "./commands/CallMethod";
 import { SkipNextConvertor } from "./commands/ConditionSkipNext";
-import { CreateDoorConvertor } from "./commands/CreateDoor";
 import { DebugConversionConvertor } from "./commands/Debug";
 import { InventorySetConvertor } from "./commands/InventorySet";
 import { JumpToLabelConvertor } from "./commands/JumpToLabel";
-import { PassDoorConvertor } from "./commands/PassDoor";
-import { ReturnConvertor } from "./commands/Return";
 import { SaveLabelConvertor } from "./commands/SaveLabel";
 import { StashConvertor } from "./commands/Stash";
+import { StateConvertor } from "./commands/State";
+import { StepStackConvertor } from "./commands/StepStack";
 import { UnstashConvertor } from "./commands/Unstash";
 import { WriterCommand } from "./commands/WriterCommand";
 
@@ -25,9 +24,8 @@ export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterCo
             new InventorySetConvertor(),
             new StashConvertor(),
             new UnstashConvertor(),
-            new CreateDoorConvertor(),
-            new PassDoorConvertor(),
-            new ReturnConvertor(),
+            new StateConvertor(),
+            new StepStackConvertor(),
         );
     }
 }

@@ -2,6 +2,7 @@ import { ExecutionStep, StepId } from "./ExecutionStep";
 
 export class StepAccumulator {
     private steps: ExecutionStep[] = [];
+    private labels: Record<string, number> = {};
 
     add(step: ExecutionStep): StepId {
         const id = this.steps.length;
@@ -15,5 +16,13 @@ export class StepAccumulator {
 
     clear() {
         this.steps.length = 0;
+    }
+
+    addLabel(label: string, step: number) {
+        this.labels[label] = step;
+    }
+
+    getLabel(label: string): number | undefined {
+        return this.labels[label];
     }
 }
