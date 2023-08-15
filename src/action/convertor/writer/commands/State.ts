@@ -31,7 +31,7 @@ export class StateConvertor extends Convertor<StateCommand, WriterContext> {
                     description: `Execute: state ${command.state}`,
                     execute(executor) {
                         if (command.state === "pop") {
-                            executor.popState();
+                            executor.unstash(true);
                         } else if (command.state === "push") {
                             const passedInventory = executor.evaluate(passedInventoryResolution) ?? {};
                             executor.pushState(passedInventory);

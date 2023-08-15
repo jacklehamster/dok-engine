@@ -20,7 +20,6 @@ export class ReConvertor<A extends Action = Action> extends BaseConvertor<A> {
 
     convert(action: A, context: Context<A>): void {
         const inventory: Inventory = {
-            stash: [],
             action,
         };
         const newAction = this.action.valueOf(inventory);

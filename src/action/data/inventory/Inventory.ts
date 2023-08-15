@@ -1,5 +1,3 @@
-export type Inventory = Record<string, any> & {
-    stash: Record<string, any>[];
-};
+export type Inventory = Record<string, any>;
 
-export const EMPTY_INVENTORY = {stash:[]};
+export const EMPTY_INVENTORY = {};

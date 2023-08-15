@@ -44,7 +44,7 @@ describe('test Stash', () => {
             },
         });
         executeUntilStop(actionExecutor);
-        expect(actionExecutor.inventory.stash[0]).toEqual({a: 123, b: 456});
+        expect(actionExecutor.stashes[0]).toEqual({a: 123, b: 456});
     });
 
     it('validates on proper WriterCommand', () => {

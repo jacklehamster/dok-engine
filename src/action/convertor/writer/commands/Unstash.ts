@@ -22,7 +22,7 @@ export class UnstashConvertor extends Convertor<UnstashCommand, WriterContext> {
                 context.accumulator.add({
                     description: `Execute: unstash`,
                     execute(executor) {
-                        executor.unstash();
+                        executor.unstash(false);
                     },
                 });
             },
