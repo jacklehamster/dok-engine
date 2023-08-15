@@ -36,7 +36,7 @@ export class CallConvertor extends Convertor<CallCommand, WriterContext> {
                         evaluateArray(argsValues, argsResult, executor);
                         const subject = executor.evaluate(subjectResolution);
                         if (typeIsAnyOf(subject, "function")) {
-                            subject(...argsResult);
+                            subject.apply(null, argsResult);
                         } else {
                             executor.reportError({
                                 code: "WRONG_TYPE",
