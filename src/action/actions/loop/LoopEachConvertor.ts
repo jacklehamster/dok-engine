@@ -1,7 +1,8 @@
 import { CodedConvertor } from "../../convertor/coded/CodedConvertor";
+import { ReConvertor } from "../../convertor/reconvertor/ReConvertor";
 
 export const LOOP_EACH_CONVERTOR = new CodedConvertor({
-    field: "loopEach",
+    field: ["loopEach", "do"],
     validations: [
         {
             field: "do",
@@ -50,4 +51,13 @@ export const LOOP_EACH_CONVERTOR = new CodedConvertor({
             unstash: {},
         },
     ],
+});
+
+export const LOOP_EACH_RECONVERTOR = new ReConvertor({
+    field: "loopEach",
+    forbiddenField: "do",
+    action: {
+        loopEach: "~{action.loopEach}",
+        do: "~{removeFields(action, 'loop')}",
+    },
 });

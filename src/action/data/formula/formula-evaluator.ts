@@ -22,6 +22,11 @@ math.import({
         console.log(value);
         return value[index];
     },
+    removeFields(object: Record<string, any>, ...fields: string[]) {
+        const replacement = {...object};
+        fields.forEach(field => delete replacement[field]);
+        return replacement;
+    }
 });
 
 export function calculateEvaluator<T>(evaluator: math.EvalFunction, parameters: Inventory, formula: Formula): T | null {

@@ -4,7 +4,7 @@ import { Executor } from "../../execution/Executor";
 import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
-import { LOOP_EACH_CONVERTOR } from "./LoopEachConvertor";
+import { LOOP_EACH_CONVERTOR, LOOP_EACH_RECONVERTOR } from "./LoopEachConvertor";
 
 describe('LoopEachConvertor', () => {
     let context: Context;
@@ -15,6 +15,7 @@ describe('LoopEachConvertor', () => {
         context = {
             subConvertor: new MultiConvertor(
                 LOG_CONVERTOR,
+                LOOP_EACH_CONVERTOR,
             ),
             accumulator: new StepAccumulator(),
         };
@@ -27,12 +28,25 @@ describe('LoopEachConvertor', () => {
         expect(LOOP_EACH_CONVERTOR.validate({})).toBeFalsy();
     });
 
-    it('convert loop', () => {
+    it('convert loopEach', () => {
         LOOP_EACH_CONVERTOR.convert({
             loopEach: [0, "one", "2", "III"],
             do: [
                 { log: ["~{element}"] },
             ],
+        }, context);
+        executeUntilStop(executor);
+        expect(log).toBeCalledWith(0);
+        expect(log).toBeCalledWith("one");
+        expect(log).toBeCalledWith("2");
+        expect(log).toBeCalledWith("III");
+    });
+
+
+    it('convert loopEach without do', () => {
+        LOOP_EACH_RECONVERTOR.convert({
+            loopEach: [0, "one", "2", "III"],
+            log: ["~{element}"],
         }, context);
         executeUntilStop(executor);
         expect(log).toBeCalledWith(0);

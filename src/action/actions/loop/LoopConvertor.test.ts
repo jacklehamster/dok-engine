@@ -5,7 +5,7 @@ import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { SET_CONVERTOR } from "../inventory/SetConvertor";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
-import { LOOP_CONVERTOR } from "./LoopConvertor";
+import { LOOP_CONVERTOR, LOOP_RECONVERTOR } from "./LoopConvertor";
 
 describe('LoopConvertor', () => {
     let context: Context;
@@ -18,6 +18,7 @@ describe('LoopConvertor', () => {
                 LOG_CONVERTOR,
                 LOOP_CONVERTOR,
                 SET_CONVERTOR,
+                LOOP_RECONVERTOR,
             ),
             accumulator: new StepAccumulator(),
         };
@@ -70,5 +71,18 @@ describe('LoopConvertor', () => {
         expect(log).toBeCalledWith(10);
         expect(log).toBeCalledWith(11);
         expect(log).toBeCalledWith(12);
+    });
+
+    it('convert loop without do', () => {
+        LOOP_RECONVERTOR.convert({
+            loop: 5,
+            log: ["~{idx}"],
+        }, context);
+        executeUntilStop(executor);
+        expect(log).toBeCalledWith(0);
+        expect(log).toBeCalledWith(1);
+        expect(log).toBeCalledWith(2);
+        expect(log).toBeCalledWith(3);
+        expect(log).toBeCalledWith(4);
     });
 });
