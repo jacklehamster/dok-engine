@@ -1,3 +1,4 @@
+import { asArray } from "../../utils/array-utils";
 import { Formula } from "../formula/Formula";
 import { calculateEvaluator, getFormulaEvaluator } from "../formula/formula-evaluator";
 import { hasFormula, isFormula } from "../formula/formula-utils";
@@ -22,13 +23,13 @@ export function resolveArray(resolution: ArrayResolution): ValueOf<BasicType[]> 
         const evaluator = getFormulaEvaluator(formula);
         return {
             valueOf(parameters?: Inventory): BasicType[] {
-                return calculateEvaluator<BasicType[] | undefined>(evaluator, parameters ?? EMPTY_INVENTORY, formula) ?? [];
+                return asArray(calculateEvaluator<BasicType[] | undefined>(evaluator, parameters ?? EMPTY_INVENTORY, formula));
             },
         };
     }
     const evaluators = resolution as Resolution[]
 
-    const values: ValueOf<any>[] = evaluators.map(resolution => resolveAny(resolution));
+    const values: ValueOf<any>[] = asArray(evaluators).map(resolution => resolveAny(resolution));
     const array: BasicType[] = new Array(values.length);
 
     return {

@@ -28,6 +28,15 @@ export class CallConvertor extends Convertor<CallCommand, WriterContext> {
                 const subjectResolution = getSubjectResolution(command, writerExecutor);
 
                 const args = writerExecutor.evaluate(argumentsArray) as Resolution[];
+                if (!Array.isArray(args)) {
+                    writerExecutor.reportError({
+                        code: "WRONG_TYPE",
+                        field: command.call + "",
+                        neededType: "array",
+                        wrongType: typeof(args),
+                    });
+                    return;
+                }
                 const argsValues = args.map(resolution => resolveAny(resolution));
                 const argsResult = new Array(argsValues.length);
                 context.accumulator.add({

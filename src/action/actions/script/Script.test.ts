@@ -3,6 +3,7 @@ import { MultiConvertor } from "../../convertor/MultiConvertor";
 import { Executor } from "../../execution/Executor";
 import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
+import { ACTIONS_CONVERTOR } from "../actions/ActionsConvertor";
 import { LOG_CONVERTOR } from "../log/LogConvertor";
 import { EXECUTE_CONVERTOR } from "./ExecuteAction";
 import { RETURN_CONVERTOR } from "./ReturnAction";
@@ -20,6 +21,7 @@ describe('ScriptConvertor', () => {
                 SCRIPT_CONVERTOR,
                 EXECUTE_CONVERTOR,
                 RETURN_CONVERTOR,
+                ACTIONS_CONVERTOR,
             ),
             accumulator: new StepAccumulator(),
         };
@@ -95,5 +97,19 @@ describe('ScriptConvertor', () => {
         expect(log).toBeCalledWith(123);
         expect(log).not.toBeCalledWith("error");
         expect(log).toHaveBeenLastCalledWith("afterwards");
+    });
+
+
+    it('execute with return', () => {
+        ACTIONS_CONVERTOR.convert({
+            actions: [
+                { log: 123 },
+                { return: {} },
+                { log: 456 },
+            ],
+        }, context);
+
+        executeUntilStop(executor);
+        expect(log).toHaveBeenLastCalledWith(123);
     });
 });

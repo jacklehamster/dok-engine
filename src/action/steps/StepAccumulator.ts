@@ -14,6 +14,10 @@ export class StepAccumulator {
         return this.steps[stepId];
     }
 
+    count() {
+        return this.steps.length;
+    }
+
     clear() {
         this.steps.length = 0;
     }

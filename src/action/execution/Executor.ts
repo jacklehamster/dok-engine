@@ -3,7 +3,6 @@ import { Inventory } from "../data/inventory/Inventory";
 import { ValueOf } from "../data/resolution/ValueOf";
 import { StepId } from "../steps/ExecutionStep";
 import { StepAccumulator } from "../steps/StepAccumulator";
-import { Cleanup } from "./cleanup/Cleanup";
 import { InventoryPool } from "../data/inventory/InventoryPool";
 import { OBJECT_POOL } from "./pool/ObjPool";
 
@@ -13,12 +12,11 @@ export interface IExecutor {
     reset(): void;
     ifCondition(bool: ValueOf<boolean>): IExecutor | null;
     evaluate<T>(value: ValueOf<T>): T | null;
-    skipNextStep(): IExecutor;
-    jumpTo(step: StepId): IExecutor;
+    skipNextStep(): void;
+    jumpTo(step: StepId): void;
     stash(itemKeys: string[]): void;
     unstash(clean: boolean): void;
     reportError(error: ConvertError): void;
-    addCleanup(cleanup: Cleanup): void;
     executeSingleStep(): boolean;
     pushState(newInventory: Record<string, any>): void;
     pushStep(): void;
@@ -33,27 +31,24 @@ interface Props {
 let nextExecutorId = 1;
 export class Executor implements IExecutor {
     //  Executor ID
-    id: number = 0;
+    private id: number = 0;
 
     //  steps followed by the executor
-    accumulator: StepAccumulator;
+    private accumulator: StepAccumulator;
 
     //  state
-    nextStep: StepId = 0;           //  Next step
+    private nextStep: StepId = 0;           //  Next step
     inventory: Inventory;                   //  inventory carried
-    inventoryPool: InventoryPool;
-    stepStack: number[] = [];
-    stashes: Record<string, any>[] = [];
+    private inventoryPool: InventoryPool;
+    private stepStack: number[] = [];
+    private stashes: Record<string, any>[] = [];
 
     //  error report
     errors: ConvertError[] = [];    //  any error encountered
 
-    //  cleanup
-    cleanups: Set<Cleanup> = new Set();
-
     constructor({accumulator, inventory = {}}: Props) {
-        this.accumulator = accumulator;
         this.inventoryPool = new InventoryPool(inventory);
+        this.accumulator = accumulator;
         this.inventory = this.inventoryPool.get();
     }
 
@@ -66,14 +61,16 @@ export class Executor implements IExecutor {
         this.stashes.length = 0;
     }
 
-    jumpTo(step: StepId): IExecutor {
+    jumpTo(step: StepId): void {
         this.nextStep = step;
-        return this;
     }
 
-    skipNextStep(): IExecutor {
+    jumpToLabel(label: string): void {
+        this.jumpTo(this.accumulator.getLabel(label) ?? this.accumulator.count());
+    }
+
+    skipNextStep(): void {
         this.nextStep++;
-        return this;
     }
 
     ifCondition(bool: boolean): IExecutor | null {
@@ -91,9 +88,10 @@ export class Executor implements IExecutor {
         if (!this.id) {
             this.id = nextExecutorId++;
         }
-        const step = this.nextStep++;
+        const step = this.nextStep;
         const executionStep = this.accumulator.getStep(step);
         if (executionStep) {
+            this.nextStep++;
             console.log(`${this.id}-${step}`, executionStep.description);
             executionStep.execute?.(this);
             return true;
@@ -131,23 +129,11 @@ export class Executor implements IExecutor {
         }
     }
 
-    addCleanup(cleanup: Cleanup): void {
-        this.cleanups.add(cleanup);
-    }
-
     pushStep(): void {
         this.stepStack.push(this.nextStep);
     }
 
     popStep(): void {
-        this.nextStep = this.stepStack.pop() ?? this.nextStep;
-    }
-
-    cleanup(): void {
-        this.cleanups.forEach(cleanup => cleanup.cleanup());
-        this.inventory = this.inventoryPool.cleanup(this.inventory);
-        this.errors.length = 0;
-        this.id = 0;
-        this.reset();
+        this.nextStep = this.stepStack.pop() ?? this.accumulator.count();
     }
 }
