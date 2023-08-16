@@ -4,7 +4,7 @@ export const LOG_CONVERTOR = new CodedConvertor({
     field: "log",
     writerCommands: [
         {
-            subject: "~~{log}",
+            subject: "~~{consoleLog}",
             call: "~{action.log}",
         },
     ],

@@ -14,17 +14,13 @@ export const EXECUTE_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "parameters",
-            types: ["object"],
+            types: ["object", "array"],
         },
     ],
     writerCommands: [
         {
-            state: "push",
-            parameters: "~{action.parameters}",
-        },
-        {
-            jumpTo: "~portal-{action.execute}",
-            pushStep: true,
+            method: "~{action.execute}",
+            call: "~{action.parameters}",
         },
     ],
 });

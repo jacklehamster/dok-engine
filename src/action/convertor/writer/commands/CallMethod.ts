@@ -10,22 +10,24 @@ import { WriterCommand } from "./WriterCommand";
 import { typeIsAnyOf } from "../../../utils/type-utils";
 import { evaluateArray } from "../../../utils/array-utils";
 import { WriterExecutor } from "../WriterExecutor";
+import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
 
 export interface CallCommand extends WriterBaseCommand {
     call: ArrayResolution,
+    method?: StringResolution;
 }
 
 export class CallConvertor extends Convertor<CallCommand, WriterContext> {
     convert(command: CallCommand, writerContext: WriterContext): void {
         const argumentsArray = resolveArray(command.call ?? []);
+        const methodConvertResolution = resolveString(command.method ?? "");
         writerContext.accumulator.add({
-            description: `Convert: call: ${command.subject}(${command.call})`,
+            description: `Convert: call: ${command.subject ?? command.method}(${command.call}).`,
             execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
                 }
                 const { context } = writerExecutor;
-                const subjectResolution = getSubjectResolution(command, writerExecutor);
 
                 const args = writerExecutor.evaluate(argumentsArray) as Resolution[];
                 if (!Array.isArray(args)) {
@@ -37,13 +39,17 @@ export class CallConvertor extends Convertor<CallCommand, WriterContext> {
                     });
                     return;
                 }
+                const subjectResolution = getSubjectResolution(command, writerExecutor);
+                const methodResolution = resolveString(writerExecutor.evaluate(methodConvertResolution) ?? "");
+
                 const argsValues = args.map(resolution => resolveAny(resolution));
                 const argsResult = new Array(argsValues.length);
                 context.accumulator.add({
-                    description: `Execute: ${command.subject}(${args.join(",")})`,
+                    description: `Execute: ${command.subject ?? command.method}(${JSON.stringify(args)})`,
                     execute(executor) {
                         evaluateArray(argsValues, argsResult, executor);
-                        const subject = executor.evaluate(subjectResolution);
+                        const method = executor.evaluate(methodResolution);
+                        const subject = method?.length ? executor.inventory[method] : executor.evaluate(subjectResolution);
                         if (typeIsAnyOf(subject, "function")) {
                             subject.apply(null, argsResult);
                         } else {
@@ -51,7 +57,8 @@ export class CallConvertor extends Convertor<CallCommand, WriterContext> {
                                 code: "WRONG_TYPE",
                                 field: "" + command.subject,
                                 neededType: "function",
-                            })
+                                wrongType: typeof(subject),
+                            });
                         }
                     },
                 });
@@ -65,5 +72,6 @@ export class CallConvertor extends Convertor<CallCommand, WriterContext> {
 
     validationErrors(action: CallCommand, errors: ConvertError[]): void {
         verifyType(action, "call", ["array", "formula"], errors);
+        verifyType(action, "method", ["string", "undefined", "formula"], errors);
     }
 }

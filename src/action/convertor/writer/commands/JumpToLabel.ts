@@ -10,14 +10,13 @@ import { WriterExecutor } from "../WriterExecutor";
 
 export interface JumpToLabelCommand extends WriterBaseCommand {
     jumpTo: StringResolution;
-    pushStep?: boolean;
 }
 
 export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterContext> {
     convert(command: JumpToLabelCommand, writerContext: WriterContext): void {
         const jumpToLabel = resolveString(command.jumpTo);
         writerContext.accumulator.add({
-            description: `Convert: Jump to "${command.jumpTo}". pushStep: ${command.pushStep}`,
+            description: `Convert: Jump to "${command.jumpTo}".`,
             execute(writerExecutor: WriterExecutor) {
                 if (!shouldConvert(command, writerExecutor)) {
                     return;
@@ -32,9 +31,6 @@ export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterCo
                             const label = executor.evaluate(labelConversion) ?? "";
                             const destination = labels[label] ?? context.accumulator.getLabel(label);
                             if (destination !== undefined) {
-                                if (command.pushStep) {
-                                    executor.pushStep();
-                                }
                                 executor.jumpTo(destination);
                             } else {
                                 executor.reportError({

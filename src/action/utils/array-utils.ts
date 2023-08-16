@@ -1,8 +1,10 @@
 import { ValueOf } from "../data/resolution/ValueOf";
 import { IExecutor } from "../execution/Executor";
 
+export const EMPTY_ARRAY: any[] = [];
+
 export function asArray(element: any): any[] {
-    return !element ? [] : Array.isArray(element) ? element : [element];
+    return !element ? EMPTY_ARRAY : Array.isArray(element) ? element : [element];
 }
 
 export function clearObject(obj: any) {

@@ -44,6 +44,6 @@ export class StashConvertor extends Convertor<StashCommand, WriterContext> {
     }
 
     validationErrors(command: StashCommand, errors: ConvertError[]): void {
-        verifyType(command, "stash", ["array"], errors);
+        verifyType(command, "stash", ["array", "formula"], errors);
     }
 }

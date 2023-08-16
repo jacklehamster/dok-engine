@@ -6,7 +6,8 @@ import { Actions } from "../actions/Actions";
 export interface ScriptAction<A extends Action = Action> extends Action {
     script: {
         name: StringResolution;
-        actions: Actions<A>;    
+        parameters: string[];
+        actions: Actions<A>;
     };
 }
 
@@ -20,15 +21,30 @@ export const SCRIPT_CONVERTOR = new CodedConvertor({
     ],
     writerCommands: [
         {
+            method: "~{action.script.name}",
+            portal: "~portal-{action.script.name}"
+        },
+        {
             jumpTo: "postPortal",
         },
         {
             label: "~portal-{action.script.name}",
             isGlobal: true,
+        },
+        {
+            stash: "~{action.script.parameters}"
+        },
+        {
+            subject: "~~{parameters}",
+            spread: "~{action.script.parameters}",
+        },
+        {
             accumulate: "~{action.script.actions}",
         },
         {
-            state: "pop",
+            unstash: {},
+        },
+        {
             return: {},
         },
         {

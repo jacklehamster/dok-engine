@@ -19,7 +19,6 @@ math.import({
         if (!Array.isArray(value)) {
             console.error(`${value} is not an array.`);
         }
-        console.log(value);
         return value[index];
     },
     removeFields(object: Record<string, any>, ...fields: string[]) {

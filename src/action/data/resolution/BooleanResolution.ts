@@ -6,7 +6,7 @@ import { ValueOf } from "./ValueOf";
 
 export type BooleanResolution = Formula | boolean | number | null;
 
-export function resolveBoolean(resolution: BooleanResolution): ValueOf<boolean> {
+export function resolveBoolean(resolution?: BooleanResolution): ValueOf<boolean> {
     if (!resolution)  {
         return false;
     }

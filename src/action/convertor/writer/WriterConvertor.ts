@@ -6,16 +6,18 @@ import { SkipNextConvertor } from "./commands/ConditionSkipNext";
 import { DebugConversionConvertor } from "./commands/Debug";
 import { InventorySetConvertor } from "./commands/InventorySet";
 import { JumpToLabelConvertor } from "./commands/JumpToLabel";
+import { RegisterMethodConvertor } from "./commands/RegisterScript";
 import { ReturnConvertor } from "./commands/Return";
 import { SaveLabelConvertor } from "./commands/SaveLabel";
+import { SpreadConvertor } from "./commands/Spread";
 import { StashConvertor } from "./commands/Stash";
-import { StateConvertor } from "./commands/State";
 import { UnstashConvertor } from "./commands/Unstash";
 import { WriterCommand } from "./commands/WriterCommand";
 
 export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterContext> {
     constructor() {
-        super(new AccumulateConvertor(),
+        super(
+            new AccumulateConvertor(),
             new CallConvertor(),
             new SkipNextConvertor(),
             new SaveLabelConvertor(),
@@ -24,8 +26,9 @@ export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterCo
             new InventorySetConvertor(),
             new StashConvertor(),
             new UnstashConvertor(),
-            new StateConvertor(),
             new ReturnConvertor(),
+            new RegisterMethodConvertor(),
+            new SpreadConvertor(),
         );
     }
 }

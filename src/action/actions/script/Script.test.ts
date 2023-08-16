@@ -26,7 +26,7 @@ describe('ScriptConvertor', () => {
             accumulator: new StepAccumulator(),
         };
         executor = new Executor({ accumulator: context.accumulator, inventory: {
-            log,
+            consoleLog: log,
         } });
     });
 
@@ -39,9 +39,10 @@ describe('ScriptConvertor', () => {
         SCRIPT_CONVERTOR.convert({
             script: {
                 name: "test",
+                parameters: ["param1"],
                 actions: [
                     {
-                        log: ["~{passedValue}"],
+                        log: ["~{param1.passedValue}"],
                     },
                 ],
             },
@@ -70,9 +71,10 @@ describe('ScriptConvertor', () => {
         SCRIPT_CONVERTOR.convert({
             script: {
                 name: "test",
+                parameters: ["param1"],
                 actions: [
                     {
-                        log: ["~{passedValue}"],
+                        log: ["~{param1.passedValue}"],
                         return: {},
                     },
                     {

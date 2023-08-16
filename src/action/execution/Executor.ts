@@ -18,7 +18,6 @@ export interface IExecutor {
     unstash(clean: boolean): void;
     reportError(error: ConvertError): void;
     executeSingleStep(): boolean;
-    pushState(newInventory: Record<string, any>): void;
     pushStep(): void;
     popStep(): void;
 }
@@ -65,10 +64,6 @@ export class Executor implements IExecutor {
         this.nextStep = step;
     }
 
-    jumpToLabel(label: string): void {
-        this.jumpTo(this.accumulator.getLabel(label) ?? this.accumulator.count());
-    }
-
     skipNextStep(): void {
         this.nextStep++;
     }
@@ -103,11 +98,6 @@ export class Executor implements IExecutor {
         this.errors.push(error)
     }
 
-    pushState(newInventory: Record<string, any>): void {
-        this.stashes.push(this.inventory);
-        this.inventory = Object.assign(this.inventoryPool.get(), newInventory);
-    }
-
     stash(itemKeys: string[]): void {
         const items: Record<string, any> = OBJECT_POOL.get();
         this.stashes.push(items);
@@ -116,17 +106,13 @@ export class Executor implements IExecutor {
         }
     }
 
-    unstash(clean: boolean): void {
+    unstash(): void {
         const items = this.stashes.pop();
-        if (clean) {
-            this.inventory = items ?? this.inventoryPool.get();
-        } else if (items) {
-            const inventory = this.inventory as Inventory;
-            for (let key in items) {
-                inventory[key] = items[key];
-            }
-            OBJECT_POOL.recycle(items);
+        const inventory = this.inventory as Inventory;
+        for (let key in items) {
+            inventory[key] = items[key];
         }
+        OBJECT_POOL.recycle(items);
     }
 
     pushStep(): void {

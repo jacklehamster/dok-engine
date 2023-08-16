@@ -24,7 +24,7 @@ describe('WhileConvertor', () => {
             accumulator: new StepAccumulator(),
         };
         executor = new Executor({ accumulator: context.accumulator, inventory: {
-            log,
+            consoleLog: log,
         } });
     });
 

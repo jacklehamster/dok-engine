@@ -4,10 +4,11 @@ import { SkipNextCommand } from "./ConditionSkipNext";
 import { DebugConversionCommand } from "./Debug";
 import { InventorySetCommand } from "./InventorySet";
 import { JumpToLabelCommand } from "./JumpToLabel";
+import { RegisterMethodCommand } from "./RegisterScript";
 import { ReturnCommand } from "./Return";
 import { SaveLabelCommand } from "./SaveLabel";
+import { SpreadCommand } from "./Spread";
 import { StashCommand } from "./Stash";
-import { StateCommand } from "./State";
 import { UnstashCommand } from "./Unstash";
 
 export type WriterCommand = 
@@ -20,6 +21,7 @@ export type WriterCommand =
     |InventorySetCommand
     |StashCommand
     |UnstashCommand
-    |StateCommand
     |ReturnCommand
+    |RegisterMethodCommand
+    |SpreadCommand
 ;

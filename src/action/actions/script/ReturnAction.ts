@@ -17,7 +17,6 @@ export const RETURN_CONVERTOR = new CodedConvertor({
     ],
     writerCommands: [
         {
-            state: "pop",
             return: {},
         },
     ],

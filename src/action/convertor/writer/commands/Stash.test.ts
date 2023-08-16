@@ -7,6 +7,7 @@ import { WriterContext } from "../WriterContext";
 import { StashCommand, StashConvertor } from "./Stash";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { WriterExecutor } from "../WriterExecutor";
+import { InventorySetConvertor } from "./InventorySet";
 
 describe('test Stash', () => {
     let convertor: StashConvertor;
@@ -30,6 +31,11 @@ describe('test Stash', () => {
             stash: ["a", "b"],
         }, writerContext);
 
+        (new InventorySetConvertor()).convert({
+            property: "a",
+            value: 999,
+        }, writerContext);
+
         const executor = new WriterExecutor(writerContext.accumulator, {
             },
             actionContext);
@@ -44,8 +50,8 @@ describe('test Stash', () => {
             },
         });
         executeUntilStop(actionExecutor);
-        actionExecutor.unstash(true);
-        expect(actionExecutor.inventory).toEqual({a: 123, b: 456});
+        actionExecutor.unstash();
+        expect(actionExecutor.inventory).toEqual({a: 123, b: 456, c: 789});
     });
 
     it('validates on proper WriterCommand', () => {
@@ -60,7 +66,7 @@ describe('test Stash', () => {
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
             field: "stash",
-            neededType: "array",
+            neededType: "array|formula",
             wrongType: "string",
             object: command,
         }]);
