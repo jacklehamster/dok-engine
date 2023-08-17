@@ -1,7 +1,7 @@
 import { getFormulaEvaluator } from "../formula/formula-evaluator";
 import { isFormula } from "../formula/formula-utils";
 import { Inventory } from "../inventory/Inventory";
-import { BasicType } from "../types/basic-types";
+import { BasicType } from "../../../types/basic-types";
 import { resolveArray } from "./ArrayResolution";
 import { BooleanResolution } from "./BooleanResolution";
 import { NumberResolution } from "./NumberResolution";

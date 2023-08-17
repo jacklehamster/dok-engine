@@ -1,6 +1,5 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { getSubjectResolution, shouldConvert } from "../convert-utils";
 import { WriterBaseCommand } from "./WriterBaseCommand";
@@ -10,6 +9,7 @@ import { WriterExecutor } from "../WriterExecutor";
 import { verifyDefined } from "../validation/verifyType";
 import { BooleanResolution, resolveBoolean } from "../../../data/resolution/BooleanResolution";
 import { asArray } from "../../../utils/array-utils";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface InventorySetCommand extends WriterBaseCommand {
     property: StringResolution;
@@ -17,7 +17,7 @@ export interface InventorySetCommand extends WriterBaseCommand {
     asArray?: BooleanResolution;
 }
 
-export class InventorySetConvertor extends Convertor<InventorySetCommand, WriterContext> {
+export class InventorySetConvertor extends WriterBaseConvertor<InventorySetCommand> {
     convert(command: InventorySetCommand, writerContext: WriterContext): void {
         const propertyField = resolveString(command.property);
         const valueFormulaField = resolveAny(command.value);

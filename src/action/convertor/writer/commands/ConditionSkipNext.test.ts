@@ -1,8 +1,8 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
-import { Context } from "../../Convertor";
-import { MultiConvertor } from "../../MultiConvertor";
+import { ActionContext } from "../../ActionConvertor";
+import { MultiConvertor } from "../../../../napl/core/conversion/MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { SkipNextCommand, SkipNextConvertor } from "./ConditionSkipNext";
 import { Action } from "../../../actions/Action";
@@ -12,7 +12,7 @@ import { WriterExecutor } from "../WriterExecutor";
 describe('test conditionSkipNext', () => {
     let convertor: SkipNextConvertor;
     let writerContext: WriterContext;
-    let actionContext: Context;
+    let actionContext: ActionContext;
 
     beforeEach(() => {
         jest.clearAllMocks();

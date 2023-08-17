@@ -1,4 +1,4 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { isFormula } from "../../../data/formula/formula-utils";
 import { typeIsAnyOf } from "../../../utils/type-utils";
 

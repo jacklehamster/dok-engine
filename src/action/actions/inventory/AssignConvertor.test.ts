@@ -1,12 +1,12 @@
-import { Context } from "../../convertor/Convertor";
-import { MultiConvertor } from "../../convertor/MultiConvertor";
+import { ActionContext } from "../../convertor/ActionConvertor";
+import { MultiConvertor } from "../../../napl/core/conversion/MultiConvertor";
 import { Executor } from "../../execution/Executor";
 import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { ASSIGN_CONVERTOR } from "./AssignConvertor";
 
 describe('SetConvertor', () => {
-    let context: Context;
+    let context: ActionContext;
     let executor: Executor;
     beforeEach(() => {
         jest.clearAllMocks();

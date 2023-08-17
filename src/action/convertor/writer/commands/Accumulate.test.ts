@@ -1,9 +1,9 @@
 import { Action } from "../../../actions/Action";
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
-import { Context } from "../../Convertor";
-import { MultiConvertor } from "../../MultiConvertor";
+import { ActionContext } from "../../ActionConvertor";
+import { MultiConvertor } from "../../../../napl/core/conversion/MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { WriterExecutor } from "../WriterExecutor";
 import { AccumulateCommand, AccumulateConvertor } from "./Accumulate";
@@ -12,7 +12,7 @@ describe('test accumulate', () => {
     let convertor: AccumulateConvertor;
     let writerContext: WriterContext;
     let convert = jest.fn();
-    let actionContext: Context;
+    let actionContext: ActionContext;
 
     beforeEach(() => {
         jest.clearAllMocks();

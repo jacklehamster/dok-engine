@@ -1,7 +1,6 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { getSubjectResolution, shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
@@ -11,13 +10,14 @@ import { typeIsAnyOf } from "../../../utils/type-utils";
 import { evaluateArray } from "../../../utils/array-utils";
 import { WriterExecutor } from "../WriterExecutor";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface CallCommand extends WriterBaseCommand {
     call: ArrayResolution,
     method?: StringResolution;
 }
 
-export class CallConvertor extends Convertor<CallCommand, WriterContext> {
+export class CallConvertor extends WriterBaseConvertor<CallCommand> {
     convert(command: CallCommand, writerContext: WriterContext): void {
         const argumentsArray = resolveArray(command.call ?? []);
         const methodConvertResolution = resolveString(command.method ?? "");

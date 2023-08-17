@@ -1,18 +1,18 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { WriterExecutor } from "../WriterExecutor";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface JumpToLabelCommand extends WriterBaseCommand {
     jumpTo: StringResolution;
 }
 
-export class JumpToLabelConvertor extends Convertor<JumpToLabelCommand, WriterContext> {
+export class JumpToLabelConvertor extends WriterBaseConvertor<JumpToLabelCommand> {
     convert(command: JumpToLabelCommand, writerContext: WriterContext): void {
         const jumpToLabel = resolveString(command.jumpTo);
         writerContext.accumulator.add({

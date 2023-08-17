@@ -3,7 +3,7 @@ import { Formula } from "../formula/Formula";
 import { calculateEvaluator, getFormulaEvaluator } from "../formula/formula-evaluator";
 import { hasFormula, isFormula } from "../formula/formula-utils";
 import { EMPTY_INVENTORY, Inventory } from "../inventory/Inventory";
-import { BasicType } from "../types/basic-types";
+import { BasicType } from "../../../types/basic-types";
 import { Resolution, resolveAny } from "./Resolution";
 import { ValueOf } from "./ValueOf";
 

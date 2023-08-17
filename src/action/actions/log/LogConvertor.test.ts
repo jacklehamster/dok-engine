@@ -1,12 +1,12 @@
-import { Context } from "../../convertor/Convertor";
-import { MultiConvertor } from "../../convertor/MultiConvertor";
+import { ActionContext } from "../../convertor/ActionConvertor";
+import { MultiConvertor } from "../../../napl/core/conversion/MultiConvertor";
 import { Executor } from "../../execution/Executor";
 import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { LOG_CONVERTOR } from "./LogConvertor";
 
 describe('LogConvertor', () => {
-    let context: Context;
+    let context: ActionContext;
     let log = jest.fn();
     let executor: Executor;
     beforeEach(() => {

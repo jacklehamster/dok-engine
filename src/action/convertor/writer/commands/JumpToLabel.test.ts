@@ -1,8 +1,8 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
-import { Context } from "../../Convertor";
-import { MultiConvertor } from "../../MultiConvertor";
+import { ActionContext } from "../../ActionConvertor";
+import { MultiConvertor } from "../../../../napl/core/conversion/MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { JumpToLabelCommand, JumpToLabelConvertor } from "./JumpToLabel";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
@@ -12,7 +12,7 @@ describe('test JumpToLabel', () => {
     let convertor: JumpToLabelConvertor;
     let writerContext: WriterContext;
     let convert = jest.fn();
-    let actionContext: Context;
+    let actionContext: ActionContext;
 
     beforeEach(() => {
         jest.clearAllMocks();

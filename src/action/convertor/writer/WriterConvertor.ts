@@ -1,4 +1,4 @@
-import { MultiConvertor } from "../MultiConvertor";
+import { MultiConvertor } from "../../../napl/core/conversion/MultiConvertor";
 import { WriterContext } from "./WriterContext";
 import { AccumulateConvertor } from "./commands/Accumulate";
 import { CallConvertor } from "./commands/CallMethod";
@@ -14,21 +14,20 @@ import { StashConvertor } from "./commands/Stash";
 import { UnstashConvertor } from "./commands/Unstash";
 import { WriterCommand } from "./commands/WriterCommand";
 
-export class MultiWriterConvertor extends MultiConvertor<WriterCommand, WriterContext> {
-    constructor() {
-        super(
-            new AccumulateConvertor(),
-            new CallConvertor(),
-            new SkipNextConvertor(),
-            new SaveLabelConvertor(),
-            new JumpToLabelConvertor(),
-            new DebugConversionConvertor(),
-            new InventorySetConvertor(),
-            new StashConvertor(),
-            new UnstashConvertor(),
-            new ReturnConvertor(),
-            new RegisterMethodConvertor(),
-            new SpreadConvertor(),
-        );
-    }
-}
+export const MULTI_WRITER_CONVERTOR = new MultiConvertor<WriterCommand, WriterContext>([
+    new AccumulateConvertor(),
+    new CallConvertor(),
+    new SkipNextConvertor(),
+    new SaveLabelConvertor(),
+    new JumpToLabelConvertor(),
+    new DebugConversionConvertor(),
+    new InventorySetConvertor(),
+    new StashConvertor(),
+    new UnstashConvertor(),
+    new ReturnConvertor(),
+    new RegisterMethodConvertor(),
+    new SpreadConvertor(),
+]);
+
+
+

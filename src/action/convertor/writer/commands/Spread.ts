@@ -1,5 +1,4 @@
-import { ConvertError } from "../../../error/errors";
-import { Convertor } from "../../Convertor";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { WriterContext } from "../WriterContext";
 import { getSubjectResolution, shouldConvert } from "../convert-utils";
 import { WriterBaseCommand } from "./WriterBaseCommand";
@@ -7,12 +6,13 @@ import { WriterCommand } from "./WriterCommand";
 import { WriterExecutor } from "../WriterExecutor";
 import { verifyType } from "../validation/verifyType";
 import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayResolution";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface SpreadCommand extends WriterBaseCommand {
     spread: ArrayResolution;
 }
 
-export class SpreadConvertor extends Convertor<SpreadCommand, WriterContext> {
+export class SpreadConvertor extends WriterBaseConvertor<SpreadCommand> {
     convert(command: SpreadCommand, writerContext: WriterContext): void {
         const spreadArray = resolveArray(command.spread);
         writerContext.accumulator.add({

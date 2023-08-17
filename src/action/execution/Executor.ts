@@ -1,4 +1,4 @@
-import { ConvertError } from "../error/errors";
+import { ConvertError } from "../../napl/core/error/errors";
 import { Inventory } from "../data/inventory/Inventory";
 import { ValueOf } from "../data/resolution/ValueOf";
 import { StepId } from "../steps/ExecutionStep";

@@ -1,9 +1,9 @@
 import { StepAccumulator } from "../../steps/StepAccumulator";
-import { Context, Convertor } from "../Convertor";
-import { MultiWriterConvertor } from "./WriterConvertor";
+import { ActionContext, ActionConvertor } from "../ActionConvertor";
+import { MULTI_WRITER_CONVERTOR } from "./WriterConvertor";
 import { WriterCommand } from "./commands/WriterCommand";
 
-export class WriterContext implements Context<WriterCommand> {
+export class WriterContext implements ActionContext<WriterCommand> {
     accumulator: StepAccumulator = new StepAccumulator();
-    subConvertor: Convertor<WriterCommand, WriterContext> = new MultiWriterConvertor();
+    subConvertor: ActionConvertor<WriterCommand, WriterContext> = MULTI_WRITER_CONVERTOR;
 }

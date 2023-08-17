@@ -1,7 +1,6 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { resolveBoolean } from "../../../data/resolution/BooleanResolution";
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
@@ -9,12 +8,13 @@ import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { IExecutor } from "../../../execution/Executor";
 import { WriterExecutor } from "../WriterExecutor";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface SkipNextCommand extends WriterBaseCommand {
     skipNextOnCondition: Resolution,
 }
 
-export class SkipNextConvertor extends Convertor<SkipNextCommand, WriterContext> {
+export class SkipNextConvertor extends WriterBaseConvertor<SkipNextCommand>  {
     convert(command: SkipNextCommand, writerContext: WriterContext): void {
         const conditionField = resolveAny(command.skipNextOnCondition);
         writerContext.accumulator.add({

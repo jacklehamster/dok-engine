@@ -1,17 +1,17 @@
-import { ConvertError } from "../../../error/errors";
-import { Convertor } from "../../Convertor";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { WriterContext } from "../WriterContext";
 import { shouldConvert } from "../convert-utils";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { verifyType } from "../validation/verifyType";
 import { WriterExecutor } from "../WriterExecutor";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface ReturnCommand extends WriterBaseCommand {
     return: {};
 }
 
-export class ReturnConvertor extends Convertor<ReturnCommand, WriterContext> {
+export class ReturnConvertor extends WriterBaseConvertor<ReturnCommand> {
     priority: number = -1;
 
     convert(command: ReturnCommand, writerContext: WriterContext): void {

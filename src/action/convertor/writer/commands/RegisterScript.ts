@@ -1,19 +1,19 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
 import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { WriterExecutor } from "../WriterExecutor";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface RegisterMethodCommand extends WriterBaseCommand {
     method: StringResolution;
     portal: StringResolution;
 }
 
-export class RegisterMethodConvertor extends Convertor<RegisterMethodCommand, WriterContext> {
+export class RegisterMethodConvertor extends WriterBaseConvertor<RegisterMethodCommand> {
     convert(command: RegisterMethodCommand, writerContext: WriterContext): void {
         const nameResolution = resolveString(command.method);
         const portalResolution = resolveString(command.portal);

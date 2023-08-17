@@ -1,5 +1,5 @@
-import { Context } from "../../convertor/Convertor";
-import { MultiConvertor } from "../../convertor/MultiConvertor";
+import { ActionContext } from "../../convertor/ActionConvertor";
+import { MultiConvertor } from "../../../napl/core/conversion/MultiConvertor";
 import { Executor } from "../../execution/Executor";
 import { executeUntilStop } from "../../execution/utils/execution-utils";
 import { StepAccumulator } from "../../steps/StepAccumulator";
@@ -7,16 +7,16 @@ import { LOG_CONVERTOR } from "../log/LogConvertor";
 import { LOOP_EACH_CONVERTOR, LOOP_EACH_RECONVERTOR } from "./LoopEachConvertor";
 
 describe('LoopEachConvertor', () => {
-    let context: Context;
+    let context: ActionContext;
     let log = jest.fn();
     let executor: Executor;
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
-            subConvertor: new MultiConvertor(
+            subConvertor: new MultiConvertor([
                 LOG_CONVERTOR,
                 LOOP_EACH_CONVERTOR,
-            ),
+            ]),
             accumulator: new StepAccumulator(),
         };
         executor = new Executor({ accumulator: context.accumulator, inventory: {

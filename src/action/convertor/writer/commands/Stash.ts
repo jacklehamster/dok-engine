@@ -1,6 +1,5 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { shouldConvert } from "../convert-utils";
 import { WriterBaseCommand } from "./WriterBaseCommand";
@@ -9,12 +8,13 @@ import { ArrayResolution, resolveArray } from "../../../data/resolution/ArrayRes
 import { verifyType } from "../validation/verifyType";
 import { evaluateArray } from "../../../utils/array-utils";
 import { WriterExecutor } from "../WriterExecutor";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface StashCommand extends WriterBaseCommand {
     stash: ArrayResolution;
 }
 
-export class StashConvertor extends Convertor<StashCommand, WriterContext> {
+export class StashConvertor extends WriterBaseConvertor<StashCommand> {
     convert(command: StashCommand, writerContext: WriterContext): void {
         const stashConvertResolution = resolveArray(command.stash);
         writerContext.accumulator.add({

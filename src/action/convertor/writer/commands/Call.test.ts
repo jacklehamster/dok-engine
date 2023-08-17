@@ -1,8 +1,8 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { Executor } from "../../../execution/Executor";
 import { StepAccumulator } from "../../../steps/StepAccumulator";
-import { Context } from "../../Convertor";
-import { MultiConvertor } from "../../MultiConvertor";
+import { ActionContext } from "../../ActionConvertor";
+import { MultiConvertor } from "../../../../napl/core/conversion/MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { CallCommand, CallConvertor } from "./CallMethod";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
@@ -11,7 +11,7 @@ import { WriterExecutor } from "../WriterExecutor";
 describe('test call', () => {
     let convertor: CallConvertor;
     let writerContext: WriterContext;
-    let actionContext: Context;
+    let actionContext: ActionContext;
     let log = jest.fn();
 
     beforeEach(() => {

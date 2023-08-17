@@ -1,7 +1,8 @@
-import { Convertor } from "../../convertor/Convertor";
-import { MultiConvertor } from "../../convertor/MultiConvertor";
+import { ActionConvertor } from "../../convertor/ActionConvertor";
+import { MultiConvertor } from "../../../napl/core/conversion/MultiConvertor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { ACTIONS_CONVERTOR } from "./ActionsConvertor";
+import { Deserializer } from "../../../napl/core/conversion/Deserializer";
 
 describe('ActionsConvertor', () => {
     it('Ignore action without actions', () => {
@@ -10,7 +11,7 @@ describe('ActionsConvertor', () => {
 
     it('convert subactions', () => {
         const receiveAction = jest.fn();
-        const subConvertor: Convertor = new MultiConvertor();
+        const subConvertor: ActionConvertor = new MultiConvertor();
         subConvertor.convert = (action) => receiveAction(action);
         const accumulator = new StepAccumulator();
         ACTIONS_CONVERTOR.convert({
@@ -25,5 +26,12 @@ describe('ActionsConvertor', () => {
         }, { accumulator, subConvertor });
         expect(receiveAction).toBeCalledWith({ name: "sampleAction" });
         expect(receiveAction).toBeCalledWith({ name: "sampleAction2" });
+    });
+
+    it('serialize', () => {
+        const deserializer = new Deserializer();
+        const serialized = ACTIONS_CONVERTOR.serialize();
+        const result = deserializer.deserialize(serialized);
+        expect(result.serialize()).toEqual(serialized);
     });
 });

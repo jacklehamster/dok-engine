@@ -1,6 +1,5 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { StringResolution, resolveString } from "../../../data/resolution/StringResolution";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
@@ -8,13 +7,14 @@ import { WriterBaseCommand } from "./WriterBaseCommand";
 import { WriterCommand } from "./WriterCommand";
 import { WriterExecutor } from "../WriterExecutor";
 import { BooleanResolution, resolveBoolean } from "../../../data/resolution/BooleanResolution";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface SaveLabelCommand extends WriterBaseCommand {
     label: StringResolution;
     isGlobal?: BooleanResolution;
 }
 
-export class SaveLabelConvertor extends Convertor<SaveLabelCommand, WriterContext> {
+export class SaveLabelConvertor extends WriterBaseConvertor<SaveLabelCommand> {
     priority: number = 1;
 
     convert(command: SaveLabelCommand, writerContext: WriterContext): void {

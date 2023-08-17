@@ -1,6 +1,6 @@
 import { StepAccumulator } from "../../../steps/StepAccumulator";
-import { Context } from "../../Convertor";
-import { MultiConvertor } from "../../MultiConvertor";
+import { ActionContext } from "../../ActionConvertor";
+import { MultiConvertor } from "../../../../napl/core/conversion/MultiConvertor";
 import { WriterContext } from "../WriterContext";
 import { executeUntilStop } from "../../../execution/utils/execution-utils";
 import { WriterExecutor } from "../WriterExecutor";
@@ -9,7 +9,7 @@ import { DebugConversionConvertor } from "./Debug";
 describe('test debug', () => {
     let convertor: DebugConversionConvertor;
     let writerContext: WriterContext;
-    let actionContext: Context;
+    let actionContext: ActionContext;
 
     beforeEach(() => {
         jest.clearAllMocks();

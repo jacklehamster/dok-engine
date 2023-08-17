@@ -1,6 +1,6 @@
 import { Resolution, resolveAny } from "../../../data/resolution/Resolution";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 import { WriterExecutor } from "../WriterExecutor";
 import { shouldConvert } from "../convert-utils";
 import { WriterBaseCommand } from "./WriterBaseCommand";
@@ -10,7 +10,7 @@ export interface DebugConversionCommand extends WriterBaseCommand {
     debug: Resolution;
 }
 
-export class DebugConversionConvertor extends Convertor<DebugConversionCommand, WriterContext> {
+export class DebugConversionConvertor extends WriterBaseConvertor<DebugConversionCommand> {
     log = console.log;
 
     convert(command: DebugConversionCommand, writerContext: WriterContext): void {

@@ -1,5 +1,5 @@
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 import { WriterExecutor } from "../WriterExecutor";
 import { shouldConvert } from "../convert-utils";
 import { WriterBaseCommand } from "./WriterBaseCommand";
@@ -9,7 +9,7 @@ export interface UnstashCommand extends WriterBaseCommand {
     unstash: {};
 }
 
-export class UnstashConvertor extends Convertor<UnstashCommand, WriterContext> {
+export class UnstashConvertor extends WriterBaseConvertor<UnstashCommand> {
     convert(command: UnstashCommand, writerContext: WriterContext): void {
         writerContext.accumulator.add({
             description: `Convert: unstash.`,

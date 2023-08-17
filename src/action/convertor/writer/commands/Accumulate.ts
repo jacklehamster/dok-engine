@@ -1,6 +1,5 @@
-import { ConvertError } from "../../../error/errors";
+import { ConvertError } from "../../../../napl/core/error/errors";
 import { asArray } from "../../../utils/array-utils";
-import { Convertor } from "../../Convertor";
 import { WriterContext } from "../WriterContext";
 import { shouldConvert } from "../convert-utils";
 import { verifyType } from "../validation/verifyType";
@@ -10,12 +9,13 @@ import { ArrayResolution } from "../../../data/resolution/ArrayResolution";
 import { ObjectResolution } from "../../../data/resolution/ObjectResolution";
 import { resolveAny } from "../../../data/resolution/Resolution";
 import { WriterExecutor } from "../WriterExecutor";
+import { WriterBaseConvertor } from "../WriterBaseConvertor";
 
 export interface AccumulateCommand extends WriterBaseCommand {
     accumulate: ArrayResolution | ObjectResolution;
 }
 
-export class AccumulateConvertor extends Convertor<AccumulateCommand, WriterContext> {
+export class AccumulateConvertor extends WriterBaseConvertor<AccumulateCommand> {
     convert(command: AccumulateCommand, writerContext: WriterContext): void {
         const actionsResolution = resolveAny(command.accumulate);
         writerContext.accumulator.add({
