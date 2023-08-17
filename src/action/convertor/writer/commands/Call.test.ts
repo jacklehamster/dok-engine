@@ -19,6 +19,7 @@ describe('test call', () => {
         convertor = new CallConvertor();
         writerContext = new WriterContext();
         actionContext = {
+            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };

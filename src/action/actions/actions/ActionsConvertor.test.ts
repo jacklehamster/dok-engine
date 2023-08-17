@@ -23,7 +23,7 @@ describe('ActionsConvertor', () => {
                     name: "sampleAction2",
                 },
             ],
-        }, { accumulator, subConvertor });
+        }, { accumulator, subConvertor, subject: {} });
         expect(receiveAction).toBeCalledWith({ name: "sampleAction" });
         expect(receiveAction).toBeCalledWith({ name: "sampleAction2" });
     });

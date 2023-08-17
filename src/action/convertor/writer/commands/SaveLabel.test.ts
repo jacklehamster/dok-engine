@@ -18,6 +18,7 @@ describe('test SaveLabel', () => {
         convertor = new SaveLabelConvertor();
         writerContext = new WriterContext();
         actionContext = {
+            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };

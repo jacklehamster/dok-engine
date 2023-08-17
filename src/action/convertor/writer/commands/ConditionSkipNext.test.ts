@@ -19,6 +19,7 @@ describe('test conditionSkipNext', () => {
         convertor = new SkipNextConvertor();
         writerContext = new WriterContext();
         actionContext = {
+            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };

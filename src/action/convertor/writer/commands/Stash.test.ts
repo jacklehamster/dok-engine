@@ -20,6 +20,7 @@ describe('test Stash', () => {
         convertor = new StashConvertor();
         writerContext = new WriterContext();
         actionContext = {
+            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };

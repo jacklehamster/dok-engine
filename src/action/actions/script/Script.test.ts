@@ -16,6 +16,7 @@ describe('ScriptConvertor', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
+            subject: {},
             subConvertor: new MultiConvertor([
                 LOG_CONVERTOR,
                 SCRIPT_CONVERTOR,

@@ -16,6 +16,7 @@ describe('UnlessConvertor', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
+            subject: {},
             subConvertor: new MultiConvertor([
                 LOG_CONVERTOR,
                 UNLESS_CONVERTOR,

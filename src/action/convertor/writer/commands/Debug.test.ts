@@ -16,6 +16,7 @@ describe('test debug', () => {
         convertor = new DebugConversionConvertor();
         writerContext = new WriterContext();
         actionContext = {
+            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };

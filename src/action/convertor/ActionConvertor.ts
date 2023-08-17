@@ -1,9 +1,9 @@
-import { Convertor } from "../../napl/core/conversion/Convertor";
+import { Context, Convertor } from "../../napl/core/conversion/Convertor";
 import { Action } from "../actions/Action";
 import { ConvertError } from "../../napl/core/error/errors";
 import { StepAccumulator } from "../steps/StepAccumulator";
 
-export interface ActionContext<A extends Action = Action> {
+export interface ActionContext<A extends Action = Action> extends Context {
     accumulator: StepAccumulator,
     subConvertor: ActionConvertor<A, ActionContext<A>>,
 };

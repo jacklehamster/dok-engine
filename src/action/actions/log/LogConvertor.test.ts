@@ -12,6 +12,7 @@ describe('LogConvertor', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
+            subject: {},
             subConvertor: new MultiConvertor(),
             accumulator: new StepAccumulator(),
         };

@@ -19,6 +19,7 @@ describe('test Inventory Set', () => {
         convertor = new InventorySetConvertor();
         writerContext = new WriterContext();
         actionContext = {
+            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };

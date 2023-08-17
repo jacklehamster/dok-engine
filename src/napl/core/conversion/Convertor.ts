@@ -1,12 +1,15 @@
 import { ConvertError } from "../error/errors";
 import { Aux } from "../../../types/Aux";
+import { Entity } from "../../../types/Entity";
 
 export interface ConvertorConfig {
     type: string;
     config?: any;
 }
 
-export interface Context {
+export interface Context<A extends Aux = Aux> {
+    subject: Entity;
+    subConvertor: Convertor<A>;
 }
 
 export abstract class Convertor<A extends Aux = Aux, C extends Context = Context> {
@@ -14,15 +17,15 @@ export abstract class Convertor<A extends Aux = Aux, C extends Context = Context
         return this.constructor.name;
     }
 
-    abstract validate(action: Aux): boolean;
+    abstract validate(aux: Aux): boolean;
 
     priority: number = 0;
 
-    validationErrors(_: A, __: ConvertError[]): void {
+    validationErrors(_aux: A, _errors: ConvertError[]): void {
         //  can override
     }
 
-    abstract convert(action: A, context: C): void;
+    abstract convert(aux: A, context: C): void;
 
     abstract serialize(): ConvertorConfig;
 }

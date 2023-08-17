@@ -19,6 +19,7 @@ describe('test JumpToLabel', () => {
         convertor = new JumpToLabelConvertor();
         writerContext = new WriterContext();
         actionContext = {
+            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };

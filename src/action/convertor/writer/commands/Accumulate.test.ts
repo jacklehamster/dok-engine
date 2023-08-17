@@ -19,6 +19,7 @@ describe('test accumulate', () => {
         convertor = new AccumulateConvertor();
         writerContext = new WriterContext();
         actionContext = {
+            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };

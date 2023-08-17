@@ -11,8 +11,10 @@ import { SaveLabelConvertor } from "../../../action/convertor/writer/commands/Sa
 import { SpreadConvertor } from "../../../action/convertor/writer/commands/Spread";
 import { StashConvertor } from "../../../action/convertor/writer/commands/Stash";
 import { UnstashConvertor } from "../../../action/convertor/writer/commands/Unstash";
+import { ChildrenConvertor } from "./ChildrenConvertor";
 import { Convertor, ConvertorConfig } from "./Convertor";
 import { MultiConvertor } from "./MultiConvertor";
+import { NameConvertor } from "./NameConvertor";
 
 const CONVERTOR_REGISTRY: {
     new (config?: ConvertorConfig["config"], deserializer?: Deserializer): Convertor;
@@ -31,6 +33,8 @@ const CONVERTOR_REGISTRY: {
     UnstashConvertor,
     CodedConvertor,
     MultiConvertor,
+    ChildrenConvertor,
+    NameConvertor,
 ];
 
 
