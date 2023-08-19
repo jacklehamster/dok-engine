@@ -42,7 +42,7 @@ export class SkipNextConvertor extends WriterBaseConvertor<SkipNextCommand>  {
         return command.skipNextOnCondition !== undefined;
     }
 
-    validationErrors(command: SkipNextCommand, errors: ConvertError[]): void {
+    validationErrors(command: SkipNextCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(command, "skipNextOnCondition", ["boolean", "formula"], errors);
     }
 }

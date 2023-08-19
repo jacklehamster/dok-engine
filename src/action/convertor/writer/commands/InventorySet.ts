@@ -66,7 +66,7 @@ export class InventorySetConvertor extends WriterBaseConvertor<InventorySetComma
         return command.property !== undefined;
     }
 
-    validationErrors(command: InventorySetCommand, errors: ConvertError[]): void {
+    validationErrors(command: InventorySetCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyDefined(command, "value", errors);
     }
 }

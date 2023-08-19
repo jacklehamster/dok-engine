@@ -18,7 +18,6 @@ describe('test SaveLabel', () => {
         convertor = new SaveLabelConvertor();
         writerContext = new WriterContext();
         actionContext = {
-            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };
@@ -64,7 +63,7 @@ describe('test SaveLabel', () => {
     it('has validation errors when field is an invalid type', () => {
         const errors: ConvertError[] = [];
         const command = { label: 123 };
-        convertor.validationErrors(command as unknown as SaveLabelCommand, errors);
+        convertor.validationErrors(command as unknown as SaveLabelCommand, writerContext, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
             field: "label",

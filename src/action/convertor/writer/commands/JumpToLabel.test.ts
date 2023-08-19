@@ -19,7 +19,6 @@ describe('test JumpToLabel', () => {
         convertor = new JumpToLabelConvertor();
         writerContext = new WriterContext();
         actionContext = {
-            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };
@@ -73,7 +72,7 @@ describe('test JumpToLabel', () => {
     it('has validation errors when field is an invalid type', () => {
         const errors: ConvertError[] = [];
         const command = { jumpTo: 123 };
-        convertor.validationErrors(command as unknown as JumpToLabelCommand, errors);
+        convertor.validationErrors(command as unknown as JumpToLabelCommand, writerContext, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
             field: "jumpTo",

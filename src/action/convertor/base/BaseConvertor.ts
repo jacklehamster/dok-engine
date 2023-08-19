@@ -1,10 +1,10 @@
-import { ConvertorConfig } from "../../../napl/core/conversion/Convertor";
-import { Action } from "../../actions/Action";
+import { Context, Convertor } from "../../../napl/core/conversion/Convertor";
+import { SerializerConfig } from "../../../napl/core/serialization/SerializerConfig";
 import { ConvertError } from "../../../napl/core/error/errors";
 import { asArray } from "../../utils/array-utils";
-import { ActionConvertor } from "../ActionConvertor";
 import { Validation } from "../coded/CodedValidator";
 import { verifyDefined, verifyType } from "../writer/validation/verifyType";
+import { Aux } from "../../../types/Aux";
 
 
 export interface BaseConvertorConfig {
@@ -14,7 +14,7 @@ export interface BaseConvertorConfig {
     validations?: Validation[];
 }
 
-export abstract class BaseConvertor<A extends Action = Action> extends ActionConvertor<A> {
+export abstract class BaseConvertor<A extends Aux = Aux, C extends Context<A> = Context<A>> extends Convertor<A, C> {
     protected config: BaseConvertorConfig;
     private field: string[];
     private forbiddenField: string[];
@@ -30,12 +30,12 @@ export abstract class BaseConvertor<A extends Action = Action> extends ActionCon
         this.validations = validations;
     }
 
-    validate(action: Action): boolean {
+    validate(action: Aux): boolean {
         return this.field.every(field => action[field] !== undefined)
             && this.forbiddenField.every(field => action[field] === undefined || action[field] === null);
     }
 
-    validationErrors(action: A, errors: ConvertError[]): void {
+    validationErrors(action: A, _context: C, errors: ConvertError[]): void {
         this.validations.forEach(({ field, types, defined }) => {
             if (!field) {
                 return;
@@ -49,7 +49,7 @@ export abstract class BaseConvertor<A extends Action = Action> extends ActionCon
         });
     }
 
-    serialize(): ConvertorConfig {
+    serialize(): SerializerConfig {
         return {
             type: this.constructor.name,
             config: this.config,

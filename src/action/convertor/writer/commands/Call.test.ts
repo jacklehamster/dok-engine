@@ -19,7 +19,6 @@ describe('test call', () => {
         convertor = new CallConvertor();
         writerContext = new WriterContext();
         actionContext = {
-            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };
@@ -53,7 +52,7 @@ describe('test call', () => {
     it('has validation errors when call is invalid', () => {
         const errors: ConvertError[] = [];
         const command = { call: 123 };
-        convertor.validationErrors(command as unknown as CallCommand, errors);
+        convertor.validationErrors(command as unknown as CallCommand, writerContext, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
             field: "call",

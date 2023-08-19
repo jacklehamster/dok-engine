@@ -19,7 +19,6 @@ describe('test conditionSkipNext', () => {
         convertor = new SkipNextConvertor();
         writerContext = new WriterContext();
         actionContext = {
-            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };
@@ -87,7 +86,7 @@ describe('test conditionSkipNext', () => {
     it('has validation errors when field type is invalid', () => {
         const errors: ConvertError[] = [];
         const command = { skipNextOnCondition: {} };
-        convertor.validationErrors(command as unknown as SkipNextCommand, errors);
+        convertor.validationErrors(command as unknown as SkipNextCommand, writerContext, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
             field: "skipNextOnCondition",

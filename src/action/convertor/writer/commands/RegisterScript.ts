@@ -60,7 +60,7 @@ export class RegisterMethodConvertor extends WriterBaseConvertor<RegisterMethodC
         return command.method !== undefined && command.call === undefined;
     }
 
-    validationErrors(command: RegisterMethodCommand, errors: ConvertError[]): void {
+    validationErrors(command: RegisterMethodCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(command, "method", ["string"], errors);        
     }
 }

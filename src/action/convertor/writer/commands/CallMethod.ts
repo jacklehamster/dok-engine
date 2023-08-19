@@ -70,7 +70,7 @@ export class CallConvertor extends WriterBaseConvertor<CallCommand> {
         return action.call !== undefined;
     }
 
-    validationErrors(action: CallCommand, errors: ConvertError[]): void {
+    validationErrors(action: CallCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(action, "call", ["array", "formula"], errors);
         verifyType(action, "method", ["string", "undefined", "formula"], errors);
     }

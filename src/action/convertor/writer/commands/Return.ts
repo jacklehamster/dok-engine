@@ -37,7 +37,7 @@ export class ReturnConvertor extends WriterBaseConvertor<ReturnCommand> {
         return command.return !== undefined;
     }
 
-    validationErrors(command: ReturnCommand, errors: ConvertError[]): void {
+    validationErrors(command: ReturnCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(command, "return", ["object"], errors);
     }
 }

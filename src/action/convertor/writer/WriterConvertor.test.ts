@@ -1,4 +1,4 @@
-import { Deserializer } from "../../../napl/core/conversion/Deserializer";
+import { Deserializer } from "../../../napl/core/serialization/Deserializer";
 import { MULTI_WRITER_CONVERTOR } from "./WriterConvertor";
 
 describe('WriterConvertor', () => {

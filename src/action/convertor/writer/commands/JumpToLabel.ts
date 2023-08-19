@@ -54,7 +54,7 @@ export class JumpToLabelConvertor extends WriterBaseConvertor<JumpToLabelCommand
         return command.jumpTo !== undefined;
     }
 
-    validationErrors(command: JumpToLabelCommand, errors: ConvertError[]): void {
+    validationErrors(command: JumpToLabelCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(command, "jumpTo", ["string"], errors);
     }
 }

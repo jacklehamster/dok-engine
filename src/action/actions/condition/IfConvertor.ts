@@ -6,7 +6,11 @@ export const IF_CONVERTOR = new CodedConvertor<IfAction>({
     validations: [
         {
             field: "then",
-            types: ["array"],
+            types: ["array", "object"],
+        },
+        {
+            field: "else",
+            types: ["array", "object", "undefined"],
         },
     ],
     writerCommands: [

@@ -6,7 +6,7 @@ export const LOOP_CONVERTOR = new CodedConvertor({
     validations: [
         {
             field: "do",
-            types: ["array"],
+            types: ["array", "object"],
         },
     ],
     writerCommands: [

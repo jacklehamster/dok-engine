@@ -55,7 +55,7 @@ export class SpreadConvertor extends WriterBaseConvertor<SpreadCommand> {
         return command.spread !== undefined;
     }
 
-    validationErrors(command: SpreadCommand, errors: ConvertError[]): void {
+    validationErrors(command: SpreadCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(command, "spread", ["array", "formula"], errors);
     }
 }

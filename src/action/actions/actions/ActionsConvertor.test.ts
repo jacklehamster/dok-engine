@@ -2,7 +2,7 @@ import { ActionConvertor } from "../../convertor/ActionConvertor";
 import { MultiConvertor } from "../../../napl/core/conversion/MultiConvertor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { ACTIONS_CONVERTOR } from "./ActionsConvertor";
-import { Deserializer } from "../../../napl/core/conversion/Deserializer";
+import { Deserializer } from "../../../napl/core/serialization/Deserializer";
 
 describe('ActionsConvertor', () => {
     it('Ignore action without actions', () => {
@@ -23,7 +23,7 @@ describe('ActionsConvertor', () => {
                     name: "sampleAction2",
                 },
             ],
-        }, { accumulator, subConvertor, subject: {} });
+        }, { accumulator, subConvertor });
         expect(receiveAction).toBeCalledWith({ name: "sampleAction" });
         expect(receiveAction).toBeCalledWith({ name: "sampleAction2" });
     });

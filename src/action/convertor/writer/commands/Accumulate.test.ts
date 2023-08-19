@@ -19,7 +19,6 @@ describe('test accumulate', () => {
         convertor = new AccumulateConvertor();
         writerContext = new WriterContext();
         actionContext = {
-            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };
@@ -85,7 +84,7 @@ describe('test accumulate', () => {
     it('has validation errors when accumulate is an invalid type', () => {
         const errors: ConvertError[] = [];
         const command = { accumulate: 123 };
-        convertor.validationErrors(command as unknown as AccumulateCommand, errors);
+        convertor.validationErrors(command as unknown as AccumulateCommand, writerContext, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
             field: "accumulate",

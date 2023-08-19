@@ -43,7 +43,7 @@ export class StashConvertor extends WriterBaseConvertor<StashCommand> {
         return command.stash !== undefined;
     }
 
-    validationErrors(command: StashCommand, errors: ConvertError[]): void {
+    validationErrors(command: StashCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(command, "stash", ["array", "formula"], errors);
     }
 }

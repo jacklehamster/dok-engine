@@ -1,4 +1,5 @@
 import { CodedConvertor } from "../../../action/convertor/coded/CodedConvertor";
+import { ReConvertor } from "../../../action/convertor/reconvertor/ReConvertor";
 import { AccumulateConvertor } from "../../../action/convertor/writer/commands/Accumulate";
 import { CallConvertor } from "../../../action/convertor/writer/commands/CallMethod";
 import { SkipNextConvertor } from "../../../action/convertor/writer/commands/ConditionSkipNext";
@@ -11,14 +12,14 @@ import { SaveLabelConvertor } from "../../../action/convertor/writer/commands/Sa
 import { SpreadConvertor } from "../../../action/convertor/writer/commands/Spread";
 import { StashConvertor } from "../../../action/convertor/writer/commands/Stash";
 import { UnstashConvertor } from "../../../action/convertor/writer/commands/Unstash";
-import { ChildrenConvertor } from "./ChildrenConvertor";
-import { Convertor, ConvertorConfig } from "./Convertor";
-import { MultiConvertor } from "./MultiConvertor";
-import { NameConvertor } from "./NameConvertor";
+import { Convertor } from "../conversion/Convertor";
+import { SerializerConfig } from "./SerializerConfig";
+import { MultiConvertor } from "../conversion/MultiConvertor";
+import { PropConvertor } from "../conversion/PropConvertor";
+import { ScenesConvertor } from "../conversion/ScenesConvertor";
+import { SerialClass } from "./SerialClass";
 
-const CONVERTOR_REGISTRY: {
-    new (config?: ConvertorConfig["config"], deserializer?: Deserializer): Convertor;
-}[] = [
+const REGISTRY: SerialClass[] = [
     AccumulateConvertor,
     CallConvertor,
     SkipNextConvertor,
@@ -33,19 +34,26 @@ const CONVERTOR_REGISTRY: {
     UnstashConvertor,
     CodedConvertor,
     MultiConvertor,
-    ChildrenConvertor,
-    NameConvertor,
+    ReConvertor,
+    ScenesConvertor,
+    PropConvertor,
 ];
 
 
 export class Deserializer {
-    deserialize(config: ConvertorConfig) {
-        const ConvertorClass = CONVERTOR_REGISTRY.find(Const => {
-            return Const.name === config.type;
-        });
-        if (!ConvertorClass) {
-            throw new Error("Invalid convertor type: " + config.type);
+    parentConvertor?: Convertor;
+    constructor(parentConvertor?: Convertor) {
+        this.parentConvertor = parentConvertor;
+    }
+
+    deserialize(config: SerializerConfig) {
+        if (config.type === this.parentConvertor?.type) {
+            return this.parentConvertor;
         }
-        return new ConvertorClass(config.config, this);
+        const Class = REGISTRY.find(Const => Const.name === config.type);
+        if (!Class) {
+            throw new Error("Invalid convertor type: " + config.type + ". Add it to Deserializer.ts");
+        }
+        return new Class(config.config, { deserializer: this });
     }
 }

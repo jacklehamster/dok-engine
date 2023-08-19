@@ -58,7 +58,7 @@ export class SaveLabelConvertor extends WriterBaseConvertor<SaveLabelCommand> {
         return command.label !== undefined;
     }
 
-    validationErrors(command: SaveLabelCommand, errors: ConvertError[]): void {
+    validationErrors(command: SaveLabelCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(command, "label", ["string"], errors);        
     }
 }

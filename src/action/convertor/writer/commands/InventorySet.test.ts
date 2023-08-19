@@ -19,7 +19,6 @@ describe('test Inventory Set', () => {
         convertor = new InventorySetConvertor();
         writerContext = new WriterContext();
         actionContext = {
-            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };
@@ -103,7 +102,7 @@ describe('test Inventory Set', () => {
     it('has validation errors when field is an invalid type', () => {
         const errors: ConvertError[] = [];
         const command = { property: "test" };
-        convertor.validationErrors(command as unknown as InventorySetCommand, errors);
+        convertor.validationErrors(command as unknown as InventorySetCommand, writerContext, errors);
         expect(errors).toEqual([{
             code: "MISSING_PROPERTY",
             field: "value",

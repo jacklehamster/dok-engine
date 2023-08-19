@@ -9,11 +9,11 @@ export interface ActionContext<A extends Action = Action> extends Context {
 };
 
 export abstract class ActionConvertor<A extends Action = Action, C extends ActionContext<A> = ActionContext<A>> extends Convertor<A, C> {
-    abstract validate(action: Action): boolean;
+    abstract validate(action: Action, context: C): boolean;
 
     priority: number = 0;
 
-    validationErrors(_: A, __: ConvertError[]): void {
+    validationErrors(_action: A, _context: C, _errors: ConvertError[]): void {
         //  can override
     }
 

@@ -8,10 +8,4 @@ export const LOG_CONVERTOR = new CodedConvertor({
             call: "~{action.log}",
         },
     ],
-    validations: [
-        {
-            field: "log",
-            types: ["array"],
-        },
-    ]
 });

@@ -20,7 +20,6 @@ describe('test Stash', () => {
         convertor = new StashConvertor();
         writerContext = new WriterContext();
         actionContext = {
-            subject: {},
             accumulator: new StepAccumulator(),
             subConvertor: new MultiConvertor(),
         };
@@ -63,7 +62,7 @@ describe('test Stash', () => {
     it('has validation errors when field is an invalid type', () => {
         const errors: ConvertError[] = [];
         const command = { stash: "test" };
-        convertor.validationErrors(command as unknown as StashCommand, errors);
+        convertor.validationErrors(command as unknown as StashCommand, writerContext, errors);
         expect(errors).toEqual([{
             code: "WRONG_TYPE",
             field: "stash",

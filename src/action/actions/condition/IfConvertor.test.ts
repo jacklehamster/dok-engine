@@ -16,7 +16,6 @@ describe('IfConvertor', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
-            subject: {},
             subConvertor: new MultiConvertor([
                 LOG_CONVERTOR,
                 IF_CONVERTOR,
@@ -30,7 +29,7 @@ describe('IfConvertor', () => {
     });
 
     it('Ignore action without if', () => {
-        expect(convertor.validate({})).toBeFalsy();
+        expect(convertor.validate({}, context)).toBeFalsy();
     });
 
     it('convert then if true', () => {

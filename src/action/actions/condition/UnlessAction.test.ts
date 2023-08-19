@@ -16,7 +16,6 @@ describe('UnlessConvertor', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
-            subject: {},
             subConvertor: new MultiConvertor([
                 LOG_CONVERTOR,
                 UNLESS_CONVERTOR,
@@ -28,7 +27,7 @@ describe('UnlessConvertor', () => {
     });
 
     it('Ignore action without unless', () => {
-        expect(convertor.validate({})).toBeFalsy();
+        expect(convertor.validate({}, context)).toBeFalsy();
     });
 
     it('convert then unless false', () => {

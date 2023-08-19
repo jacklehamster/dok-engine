@@ -13,7 +13,6 @@ describe('LoopEachConvertor', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
-            subject: {},
             subConvertor: new MultiConvertor([
                 LOG_CONVERTOR,
                 LOOP_EACH_CONVERTOR,

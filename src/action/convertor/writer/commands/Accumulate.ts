@@ -35,7 +35,7 @@ export class AccumulateConvertor extends WriterBaseConvertor<AccumulateCommand> 
         return action.accumulate !== undefined;
     }
 
-    validationErrors(action: AccumulateCommand, errors: ConvertError[]): void {
+    validationErrors(action: AccumulateCommand, _context: WriterContext, errors: ConvertError[]): void {
         verifyType(action, "accumulate", ["array", "object", "formula"], errors);
     }
 }

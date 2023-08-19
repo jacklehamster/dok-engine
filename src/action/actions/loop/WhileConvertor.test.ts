@@ -15,7 +15,6 @@ describe('WhileConvertor', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         context = {
-            subject: {},
             subConvertor: new MultiConvertor([
                 LOG_CONVERTOR,
                 SET_CONVERTOR,

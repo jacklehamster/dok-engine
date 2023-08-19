@@ -1,5 +1,4 @@
 import { Action } from "../../actions/Action";
-import { ConvertError } from "../../../napl/core/error/errors";
 import { ActionContext } from "../ActionConvertor";
 import { WriterContext } from "../writer/WriterContext";
 import { WriterCommand } from "../writer/commands/WriterCommand";
@@ -23,12 +22,9 @@ export class CodedConvertor<A extends Action = Action> extends BaseConvertor<A> 
         const writerContext: WriterContext = new WriterContext();
         const { accumulator, subConvertor } = writerContext;
         this.writerCommands?.forEach(command => {
-            const errors: ConvertError[] = [];
-            subConvertor.validationErrors(command, errors);
-            if (errors.length) {
-                throw new Error("Errors in conversion : " + JSON.stringify(errors));
+            if (subConvertor.validate(command, writerContext)) {
+                subConvertor.convert(command, writerContext);    
             }
-            subConvertor.convert(command, writerContext);
         });
         executeUntilStop(new WriterExecutor(accumulator, action, context));
     }
