@@ -12,7 +12,6 @@ import { SaveLabelConvertor } from "../../../action/convertor/writer/commands/Sa
 import { SpreadConvertor } from "../../../action/convertor/writer/commands/Spread";
 import { StashConvertor } from "../../../action/convertor/writer/commands/Stash";
 import { UnstashConvertor } from "../../../action/convertor/writer/commands/Unstash";
-import { Convertor } from "../conversion/Convertor";
 import { SerializerConfig } from "./SerializerConfig";
 import { MultiConvertor } from "../conversion/MultiConvertor";
 import { PropConvertor } from "../conversion/PropConvertor";
@@ -41,16 +40,19 @@ const REGISTRY: SerialClass[] = [
 
 
 export class Deserializer {
-    parentConvertor?: Convertor;
-    constructor(parentConvertor?: Convertor) {
-        this.parentConvertor = parentConvertor;
+    instances: any[];
+    registry: SerialClass[];
+    constructor(...instances: any[]) {
+        this.registry = REGISTRY;
+        this.instances = instances;
     }
 
     deserialize(config: SerializerConfig) {
-        if (config.type === this.parentConvertor?.type) {
-            return this.parentConvertor;
+        const instance = this.instances.find(({constructor: {name}}) => name === config.type);
+        if (instance) {
+            return instance;
         }
-        const Class = REGISTRY.find(Const => Const.name === config.type);
+        const Class = this.registry.find(Const => Const.name === config.type);
         if (!Class) {
             throw new Error("Invalid convertor type: " + config.type + ". Add it to Deserializer.ts");
         }

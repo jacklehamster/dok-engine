@@ -12,7 +12,12 @@ export interface ConvertorsAux {
 
 export class ConvertorsConvertor extends Convertor<ConvertorsAux> {
     priority: number = 1;
-    deserializer: Deserializer = new Deserializer(this);
+    deserializer: Deserializer;;
+
+    constructor() {
+        super();
+        this.deserializer = new Deserializer(this);
+    }
 
     validate(aux: Aux): boolean {
         return aux.convertors;
