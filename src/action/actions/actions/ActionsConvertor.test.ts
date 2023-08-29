@@ -2,7 +2,7 @@ import { ActionConvertor } from "../../convertor/ActionConvertor";
 import { MultiConvertor } from "../../../napl/core/conversion/MultiConvertor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { ACTIONS_CONVERTOR } from "./ActionsConvertor";
-import { Deserializer } from "../../../napl/core/serialization/Deserializer";
+import { Deserializer } from "../../../napl/core/serialization/ConvertorDeserializer";
 
 describe('ActionsConvertor', () => {
     it('Ignore action without actions', () => {

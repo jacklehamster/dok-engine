@@ -1,4 +1,4 @@
-import { Deserializer } from "./Deserializer";
+import { Deserializer } from "./ConvertorDeserializer";
 
 describe('describe', () => {
     it('test deserialize', () => {

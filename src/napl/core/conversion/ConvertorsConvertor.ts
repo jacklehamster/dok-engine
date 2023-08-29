@@ -3,7 +3,7 @@ import { Aux } from "../../../types/Aux";
 import { ConvertError } from "../error/errors";
 import { Context, Convertor } from "./Convertor";
 import { SerializerConfig } from "../serialization/SerializerConfig";
-import { Deserializer } from "../serialization/Deserializer";
+import { Deserializer } from "../serialization/ConvertorDeserializer";
 import { MultiConvertor } from "./MultiConvertor";
 
 export interface ConvertorsAux {

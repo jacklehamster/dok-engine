@@ -1,5 +1,5 @@
 import { SerializerConfig } from "./SerializerConfig";
-import { Deserializer } from "./Deserializer";
+import { Deserializer } from "./ConvertorDeserializer";
 
 
 export interface SerialClass<T = any> {
