@@ -2,7 +2,7 @@ import { ActionConvertor } from "../../convertor/ActionConvertor";
 import { MultiConvertor } from "../../../napl/core/conversion/MultiConvertor";
 import { StepAccumulator } from "../../steps/StepAccumulator";
 import { ACTIONS_CONVERTOR } from "./ActionsConvertor";
-import { Deserializer } from "../../../napl/core/serialization/ConvertorDeserializer";
+import { ConvertorDeserializer } from "../../../napl/core/serialization/ConvertorDeserializer";
 
 describe('ActionsConvertor', () => {
     it('Ignore action without actions', () => {
@@ -29,7 +29,7 @@ describe('ActionsConvertor', () => {
     });
 
     it('serialize', () => {
-        const deserializer = new Deserializer();
+        const deserializer = new ConvertorDeserializer();
         const serialized = ACTIONS_CONVERTOR.serialize();
         const result = deserializer.deserialize(serialized);
         expect(result.serialize()).toEqual(serialized);

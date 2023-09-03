@@ -3,7 +3,7 @@ import { Aux } from "../../../types/Aux";
 import { ConvertError } from "../error/errors";
 import { Context, Convertor } from "./Convertor";
 import { SerializerConfig } from "../serialization/SerializerConfig";
-import { Deserializer } from "../serialization/ConvertorDeserializer";
+import { ConvertorDeserializer } from "../serialization/ConvertorDeserializer";
 import { MultiConvertor } from "./MultiConvertor";
 
 export interface ConvertorsAux {
@@ -12,11 +12,11 @@ export interface ConvertorsAux {
 
 export class ConvertorsConvertor extends Convertor<ConvertorsAux> {
     priority: number = 1;
-    deserializer: Deserializer;;
+    deserializer: ConvertorDeserializer;;
 
     constructor() {
         super();
-        this.deserializer = new Deserializer(this);
+        this.deserializer = new ConvertorDeserializer({ instances: [this] });
     }
 
     validate(aux: Aux): boolean {

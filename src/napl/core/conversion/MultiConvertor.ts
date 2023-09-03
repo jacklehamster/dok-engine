@@ -2,7 +2,7 @@ import { Context, Convertor } from "./Convertor";
 import { SerializerConfig } from "../serialization/SerializerConfig";
 import { ConvertError } from "../error/errors";
 import { Aux } from "../../../types/Aux";
-import { Deserializer } from "../serialization/ConvertorDeserializer";
+import { ConvertorDeserializer } from "../serialization/ConvertorDeserializer";
 import { asArray } from "../../../action/utils/array-utils";
 
 export class MultiConvertor<A extends Aux = Aux, C extends Context = Context> extends Convertor<A, C> {
@@ -12,7 +12,7 @@ export class MultiConvertor<A extends Aux = Aux, C extends Context = Context> ex
     constructor(convertors?: Convertor<A, C>[] | { convertors: SerializerConfig[]; subjectType: string[] }, {
         deserializer,
         subjectType,
-    }: { deserializer?: Deserializer, subjectType?: string } = {} ) {
+    }: { deserializer?: ConvertorDeserializer, subjectType?: string } = {} ) {
         super();
         if (Array.isArray(convertors)) {
             this.subjectType = asArray(subjectType);

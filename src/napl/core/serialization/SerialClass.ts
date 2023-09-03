@@ -1,7 +1,7 @@
 import { SerializerConfig } from "./SerializerConfig";
-import { Deserializer } from "./ConvertorDeserializer";
+import { ConvertorDeserializer } from "./ConvertorDeserializer";
 
 
 export interface SerialClass<T = any> {
-    new(config?: SerializerConfig["config"], dependencies?: { deserializer?: Deserializer; }): T;
+    new(config?: SerializerConfig["config"], dependencies?: { deserializer?: ConvertorDeserializer; }): T;
 }
