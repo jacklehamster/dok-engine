@@ -12,12 +12,13 @@ import { SaveLabelConvertor } from "../../../action/convertor/writer/commands/Sa
 import { SpreadConvertor } from "../../../action/convertor/writer/commands/Spread";
 import { StashConvertor } from "../../../action/convertor/writer/commands/Stash";
 import { UnstashConvertor } from "../../../action/convertor/writer/commands/Unstash";
+import { Convertor } from "../conversion/Convertor";
 import { MultiConvertor } from "../conversion/MultiConvertor";
 import { PropConvertor } from "../conversion/PropConvertor";
 import { ScenesConvertor } from "../conversion/ScenesConvertor";
 import { SerialClass } from "./SerialClass";
 
-export const CONVERTOR_REGISTRY: SerialClass[] = [
+export const CONVERTOR_REGISTRY: SerialClass<Convertor<any, any>>[] = [
     AccumulateConvertor,
     CallConvertor,
     SkipNextConvertor,

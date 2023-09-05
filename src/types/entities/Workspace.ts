@@ -1,15 +1,14 @@
 import { Entity } from "./Entity";
-import { Scene } from "./Scene";
 
 export class Workspace extends Entity {
-    private scenes: Scene[] = [];
+    private scenes: Entity[] = [];
 
     constructor() {
         super();
         this.root = this;
     }
 
-    addScene(scene: Scene): void {
+    addScene(scene: Entity): void {
         this.scenes.push(scene);
     }
 }

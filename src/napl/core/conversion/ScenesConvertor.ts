@@ -1,8 +1,8 @@
 import { Aux } from "../../../types/Aux";
-import { Scene } from "../../../types/entities/Scene";
 import { Workspace } from "../../../types/entities/Workspace";
 import { Context, Convertor } from "./Convertor";
 import { SerializerConfig } from "../serialization/SerializerConfig";
+import { Entity } from "../../../types/entities/Entity";
 
 export interface ScenesAux {
     scenes: Aux[];
@@ -16,7 +16,7 @@ export class ScenesConvertor extends Convertor<ScenesAux, Context<Aux, Workspace
     convert(aux: ScenesAux, context: Context<Aux, Workspace>): void {
         const workspace = context.subject;
         aux.scenes.forEach(child => {
-            const scene = new Scene(workspace);
+            const scene = new Entity(workspace);
             workspace?.addScene(scene);
             context.subConvertor?.convert(child, { ...context, subject: scene });
         });
